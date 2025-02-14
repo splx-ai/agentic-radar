@@ -1,0 +1,76 @@
+{
+    "nodes": [
+        {
+            "type": "agent",
+            "name": "researcher_agent",
+            "label": "researcher"
+        },
+        {
+            "type": "tool",
+            "name": "ChatBedrock_tool",
+            "label": "ChatBedrock",
+            "category": "llm"
+        },
+        {
+            "type": "tool",
+            "name": "TavilySearchResult_tool",
+            "label": "TavilySearchResult",
+            "category": "web_search"
+        },
+        {
+            "type": "custom_tool",
+            "name": "create_issue_custom_tool",
+            "label": "create_issue"
+        },
+        {
+            "type": "custom_tool",
+            "name": "search_issue_custom_tool",
+            "label": "search_issue"
+        },
+        {
+            "type": "custom_tool",
+            "name": "retriever_tool_custom_tool",
+            "label": "retriever_tool"
+        },
+        {
+            "type": "custom_tool",
+            "name": "run_query_custom_tool",
+            "label": "run_query"
+        },
+        {
+            "type": "custom_tool",
+            "name": "generate_document_parsed_custom_tool",
+            "label": "generate_document_parsed"
+        }
+    ],
+    "edges": [
+        {
+            "start": "researcher_agent",
+            "end": "ChatBedrock_tool"
+        },
+        {
+            "start": "researcher_agent",
+            "end": "TavilySearchResult_tool"
+        },
+        {
+            "start": "researcher_agent",
+            "end": "create_issue_custom_tool"
+        },
+        {
+            "start": "researcher_agent",
+            "end": "search_issue_custom_tool"
+        },
+        {
+            "start": "researcher_agent",
+            "end": "retriever_tool_custom_tool"
+        },
+        {
+            "start": "researcher_agent",
+            "end": "run_query_custom_tool"
+        },
+        {
+            "start": "researcher_agent",
+            "end": "generate_document_parsed_custom_tool"
+        }
+    ]
+}

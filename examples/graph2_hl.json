@@ -1,0 +1,191 @@
+{
+    "nodes": [
+        {
+            "type": "agent",
+            "name": "primary_assistant_agent",
+            "label": "primary_assistant"
+        },
+        {
+            "type": "agent",
+            "name": "update_flight_agent",
+            "label": "update_flight"
+        },
+        {
+            "type": "agent",
+            "name": "book_car_rental_agent",
+            "label": "book_car_rental"
+        },
+        {
+            "type": "agent",
+            "name": "book_hotel_agent",
+            "label": "book_hotel"
+        },
+        {
+            "type": "agent",
+            "name": "book_excursion_agent",
+            "label": "book_excursion"
+        },
+        {
+            "type": "custom_tool",
+            "name": "ToBookCarRental_custom_tool",
+            "label": "ToBookCarRental"
+        },
+        {
+            "type": "custom_tool",
+            "name": "ToFlightBookingAssistant_custom_tool",
+            "label": "ToFlightBookingAssistant"
+        },
+        {
+            "type": "custom_tool",
+            "name": "ToHotelBookingAssistant_custom_tool",
+            "label": "ToHotelBookingAssistant"
+        },
+        {
+            "type": "custom_tool",
+            "name": "ToBookExcursion_custom_tool",
+            "label": "ToBookExcursion"
+        },
+        {
+            "type": "custom_tool",
+            "name": "lookup_policy_custom_tool",
+            "label": "lookup_policy"
+        },
+        {
+            "type": "custom_tool",
+            "name": "search_flights_custom_tool",
+            "label": "search_flights"
+        },
+        {
+            "type": "tool",
+            "name": "TavilySearchResults_tool",
+            "label": "TavilySearchResults",
+            "category": "web_search"
+        }
+    ],
+    "edges": [
+        {
+            "start": "primary_assistant_agent",
+            "end": "ToBookCarRental_custom_tool"
+        },
+        {
+            "start": "primary_assistant_agent",
+            "end": "ToFlightBookingAssistant_custom_tool"
+        },
+        {
+            "start": "primary_assistant_agent",
+            "end": "ToHotelBookingAssistant_custom_tool"
+        },
+        {
+            "start": "primary_assistant_agent",
+            "end": "ToBookExcursion_custom_tool"
+        },
+        {
+            "start": "primary_assistant_agent",
+            "end": "search_flights_custom_tool"
+        },
+        {
+            "start": "primary_assistant_agent",
+            "end": "lookup_policy_custom_tool"
+        },
+        {
+            "start": "primary_assistant_agent",
+            "end": "TavilySearchResults_tool"
+        },
+        {
+            "start": "update_flight_agent",
+            "end": "cancel_ticket_custom_tool"
+        },
+        {
+            "start": "update_flight_agent",
+            "end": "search_flights_custom_tool"
+        },
+        {
+            "start": "update_flight_agent",
+            "end": "update_ticket_to_new_flight_custom_tool"
+        },
+        {
+            "start": "update_flight_agent",
+            "end": "CompleteOrEscalate_custom_tool"
+        },
+        {
+            "start": "book_car_rental_agent",
+            "end": "search_car_rentals_custom_tool"
+        },
+        {
+            "start": "book_car_rental_agent",
+            "end": "update_car_rental_custom_tool"
+        },
+        {
+            "start": "book_car_rental_agent",
+            "end": "book_car_rental_custom_tool"
+        },
+        {
+            "start": "book_car_rental_agent",
+            "end": "cancel_car_rental_custom_tool"
+        },
+        {
+            "start": "book_car_rental_agent",
+            "end": "CompleteOrEscalate_custom_tool"
+        },
+        {
+            "start": "book_hotel_agent",
+            "end": "search_hotel_custom_tool"
+        },
+        {
+            "start": "book_hotel_agent",
+            "end": "update_hotel_custom_tool"
+        },
+        {
+            "start": "book_hotel_agent",
+            "end": "book_hotel_custom_tool"
+        },
+        {
+            "start": "book_hotel_agent",
+            "end": "cancel_hotel_custom_tool"
+        },
+        {
+            "start": "book_hotel_agent",
+            "end": "CompleteOrEscalate_custom_tool"
+        },
+        {
+            "start": "book_excursion_agent",
+            "end": "search_trip_recommendations_custom_tool"
+        },
+        {
+            "start": "book_excursion_agent",
+            "end": "update_excursion_custom_tool"
+        },
+        {
+            "start": "book_excursion_agent",
+            "end": "book_excursion_custom_tool"
+        },
+        {
+            "start": "book_excursion_agent",
+            "end": "cancel_excursion_custom_tool"
+        },
+        {
+            "start": "book_excursion_agent",
+            "end": "CompleteOrEscalate_custom_tool"
+        },
+        {
+            "start": "primary_assistant_agent",
+            "end": "update_flight_agent",
+            "condition": "some condition"
+        },
+        {
+            "start": "primary_assistant_agent",
+            "end": "book_car_rental_agent",
+            "condition": "some condition"
+        },
+        {
+            "start": "primary_assistant_agent",
+            "end": "book_hotel_agent",
+            "condition": "some condition"
+        },
+        {
+            "start": "primary_assistant_agent",
+            "end": "book_excursion_agent",
+            "condition": "some condition"
+        }
+    ]
+}

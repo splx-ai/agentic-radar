@@ -2,12 +2,29 @@
 name = "agentic-scanner"
 version = "0.1.0"
 description = ""
-authors = ["Vinko Kolobara <kolobara.vinko@gmail.com>"]
+authors = ["SplxAI Developers <developers@splx.ai>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
+pydot = "^3.0.4"
+pydantic = "^2.10.6"
 
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+isort = "^6.0.0"
+mypy = "^1.15.0"
+pylint = "^3.3.4"
+
+[tool.isort]
+profile = "black"
+
+[tool.pylint]
+disable = "E1101" # dynamic attributes
+
+[tool.mypy]
+disable_error_code = ["import-untyped"] # pydot is untyped
 
 [build-system]
 requires = ["poetry-core"]
