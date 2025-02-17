@@ -9,7 +9,10 @@ readme = "README.md"
 python = "^3.11"
 pydot = "^3.0.4"
 pydantic = "^2.10.6"
+typer-slim = "^0.15.1"
 
+[tool.poetry.scripts]
+agentic-scanner = "agentic_scanner.cli:app"
 
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
