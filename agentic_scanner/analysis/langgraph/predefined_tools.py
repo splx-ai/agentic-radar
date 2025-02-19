@@ -2,8 +2,7 @@ import ast
 import os
 import json
 from typing import List, Set, Dict
-
-PREDEFINED_TOOLS_JSON_PATH = "./agentic_scanner/analysis/predefined_tools.json"
+import importlib.resources as resources
 
 def extract_imports_with_ast(file_content: str) -> List[str]:
     imports = []
@@ -37,11 +36,12 @@ def parse_all_imports_from_directory(directory_path: str) -> Set[str]:
     
     return all_imports
 
-def get_all_predefined_tools_from_directory(directpry_path: str) -> List[Dict[str, Dict[str, str]]]:
-    with open(PREDEFINED_TOOLS_JSON_PATH, "r") as f:
+def get_all_predefined_tools_from_directory(directory_path: str) -> List[Dict[str, Dict[str, str]]]:
+    input_file = resources.files(__package__) / "predefined_tools.json"
+    with input_file.open("r") as f:
         predefined_tools = json.loads(f.read())
 
-    all_imports = parse_all_imports_from_directory(directpry_path)
+    all_imports = parse_all_imports_from_directory(directory_path)
 
     possible_predefined_tools = []
 

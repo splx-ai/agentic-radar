@@ -1,43 +1,33 @@
-from typing import List, Optional
+from typing import List
 
 import pydot
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
+from agentic_scanner import graph
 from agentic_scanner.visualization.edge import ConditionalEdge, Edge
 from agentic_scanner.visualization.graph import Graph
 from agentic_scanner.visualization.node import (
     AgentNode,
     BasicNode,
     CustomToolNode,
-    NodeType,
     ToolNode,
-    ToolType,
 )
 
 
-class NodeDefinition(BaseModel):
-    node_type: NodeType = Field(alias="type")
-    name: str
-    label: Optional[str] = None
-    category: Optional[ToolType] = None
-
+class NodeDefinition(graph.NodeDefinition):
     def to_pydot(self) -> pydot.Node:
-        if self.node_type == NodeType.AGENT:
+        if self.node_type == graph.NodeType.AGENT:
             return AgentNode(self.name, self.label or self.name)
-        if self.node_type == NodeType.BASIC:
+        if self.node_type == graph.NodeType.BASIC:
             return BasicNode(self.name, self.label or self.name)
-        if self.node_type == NodeType.TOOL:
+        if self.node_type == graph.NodeType.TOOL:
             return ToolNode(self.name, self.label or self.name, self.category)
-        if self.node_type == NodeType.CUSTOM_TOOL:
+        if self.node_type == graph.NodeType.CUSTOM_TOOL:
             return CustomToolNode(self.name, self.label or self.name)
         raise ValueError(f"Unknown node type: {self.node_type}")
 
 
-class EdgeDefinition(BaseModel):
-    start: str
-    end: str
-    condition: Optional[str] = None
-
+class EdgeDefinition(graph.EdgeDefinition):
     def to_pydot(self) -> pydot.Edge:
         if self.condition is not None:
             return ConditionalEdge(self.start, self.end, self.condition)
@@ -49,7 +39,7 @@ class GraphDefinition(BaseModel):
     edges: List[EdgeDefinition]
 
 
-def __from_input(definition: GraphDefinition) -> Graph:
+def from_definition(definition: GraphDefinition) -> Graph:
     return Graph(
         nodes=[node.to_pydot() for node in definition.nodes],
         edges=[edge.to_pydot() for edge in definition.edges],
@@ -57,8 +47,8 @@ def __from_input(definition: GraphDefinition) -> Graph:
 
 
 def from_json(definition: str) -> Graph:
-    return __from_input(GraphDefinition.model_validate_json(definition))
+    return from_definition(GraphDefinition.model_validate_json(definition))
 
 
 def from_dict(definition: dict) -> Graph:
-    return __from_input(GraphDefinition.model_validate(definition))
+    return from_definition(GraphDefinition.model_validate(definition))

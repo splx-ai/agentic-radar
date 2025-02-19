@@ -3,10 +3,17 @@ from typing import Optional
 import typer
 from typing_extensions import Annotated
 
+from agentic_scanner.analysis.langgraph.analyze import LangGraphAnalyzer
+from agentic_scanner.visualization.parse import (
+    EdgeDefinition,
+    GraphDefinition,
+    NodeDefinition,
+    from_definition,
+)
+
 app = typer.Typer()
 
 from agentic_scanner import __version__
-from agentic_scanner.visualization import from_json
 
 
 def version_callback(value: bool):
@@ -17,15 +24,6 @@ def version_callback(value: bool):
 
 @app.command()
 def main(
-    definition_file: Annotated[
-        str,
-        typer.Option(
-            "--definition-file",
-            "-f",
-            help="Path to the file where the graph is defined",
-            envvar="AGENTIC_SCANNER_DEFINITION_FILE",
-        ),
-    ],
     input_directory: Annotated[
         str,
         typer.Option(
@@ -49,9 +47,17 @@ def main(
         typer.Option("--version", callback=version_callback, is_eager=True),
     ] = None,
 ):
-    # TODO: call analysis, generate graph and write it to the output file
-    # from_json().generate(output_file)
-    pass
+    analyzer = LangGraphAnalyzer()
+    graph = analyzer.analyze(input_directory)
+    pydot_graph = GraphDefinition(
+        nodes=[
+            NodeDefinition.model_validate(n, from_attributes=True) for n in graph.nodes
+        ],
+        edges=[
+            EdgeDefinition.model_validate(e, from_attributes=True) for e in graph.edges
+        ],
+    )
+    from_definition(pydot_graph).generate(output_file)
 
 
 if __name__ == "__main__":
