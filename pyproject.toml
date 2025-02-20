@@ -6,7 +6,7 @@ authors = ["SplxAI Developers <developers@splx.ai>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.11,<4.0"
 pydot = "^3.0.4"
 pydantic = "^2.10.6"
 typer-slim = "^0.15.1"
