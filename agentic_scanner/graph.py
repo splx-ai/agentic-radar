@@ -1,23 +1,29 @@
-from enum import StrEnum
+from enum import Enum
 from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class NodeType(StrEnum):
+class NodeType(Enum):
     AGENT = "agent"
     BASIC = "basic"
     TOOL = "tool"
     CUSTOM_TOOL = "custom_tool"
     DEFAULT = "default"
 
+    def __str__(self) -> str:
+        return self.value
 
-class ToolType(StrEnum):
+
+class ToolType(Enum):
     WEB_SEARCH = "web_search"
     LLM = "llm"
     CODE_INTERPRETER = "code_interpreter"
     DOCUMENT_LOADER = "document_loader"
     DEFAULT = "default"
+
+    def __str__(self) -> str:
+        return self.value
 
 
 class NodeDefinition(BaseModel):

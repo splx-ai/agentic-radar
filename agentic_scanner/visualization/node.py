@@ -1,4 +1,3 @@
-from enum import StrEnum
 from typing import Optional
 
 import pydot
