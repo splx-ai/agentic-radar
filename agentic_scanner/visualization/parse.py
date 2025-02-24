@@ -40,10 +40,12 @@ class GraphDefinition(BaseModel):
 
 
 def from_definition(definition: GraphDefinition) -> Graph:
-    return Graph(
+    g = Graph(
         nodes=[node.to_pydot() for node in definition.nodes],
         edges=[edge.to_pydot() for edge in definition.edges],
     )
+    print(g)
+    return g
 
 
 def from_json(definition: str) -> Graph:
