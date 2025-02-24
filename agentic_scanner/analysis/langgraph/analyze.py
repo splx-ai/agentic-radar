@@ -11,6 +11,7 @@ from .predefined_tools import get_all_predefined_tools_from_directory
 from .utils import build_global_registry
 
 GRAPH_CLASS = "langgraph.graph.StateGraph"
+COMMAND_CLASS = "langgraph.types.Command"
 ADD_CONDITIONAL_EDGES_METHOD_NAME = "add_conditional_edges"
 ADD_NODE_METHOD_NAME = "add_node"
 
@@ -26,6 +27,7 @@ class LangGraphAnalyzer(Analyzer):
         all_graphs = parse_all_graph_instances_in_directory(
             root_directory,
             GRAPH_CLASS,
+            COMMAND_CLASS,
             ADD_CONDITIONAL_EDGES_METHOD_NAME,
             ADD_NODE_METHOD_NAME,
             global_functions,
