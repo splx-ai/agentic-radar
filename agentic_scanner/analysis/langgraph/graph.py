@@ -644,12 +644,6 @@ def parse_all_graph_instances_in_directory(root_directory, graph_class_fqcn, com
                                     "start_node": arguments[0],
                                     "end_node": end_node
                                 })
-                    # TODO remove this if not needed
-                    # elif single_call["path"].get("function_fq_name", False):
-                    #     conditional_edges.append({
-                    #         "resolved": False,
-                    #         "function_fq_name": single_call["path"].get("function_fq_name")
-                    #     })
                 elif single_call.get("path_map", False):
                     if single_call["path_map"].get("list_values", False):
                         for end_node in single_call["path_map"].get("list_values"):
@@ -667,12 +661,6 @@ def parse_all_graph_instances_in_directory(root_directory, graph_class_fqcn, com
                                     "start_node": arguments[0],
                                     "end_node": end_node
                                 })
-                    # TODO remove this if not needed
-                    # elif single_call["path_map"].get("map_fq_name", False):
-                    #     conditional_edges.append({
-                    #         "resolved": False,
-                    #         "map_fq_name": single_call["path_map"].get("map_fq_name")
-                    #     })
         
         graphs.append({
             "graph_name": graph,
