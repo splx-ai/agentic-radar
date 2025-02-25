@@ -1,8 +1,10 @@
 from typing import Optional
 
 import typer
+from pydantic import BaseModel
 from typing_extensions import Annotated
 
+from agentic_scanner import __version__
 from agentic_scanner.analysis.langgraph.analyze import LangGraphAnalyzer
 from agentic_scanner.visualization.parse import (
     EdgeDefinition,
@@ -11,9 +13,15 @@ from agentic_scanner.visualization.parse import (
     from_definition,
 )
 
-app = typer.Typer()
 
-from agentic_scanner import __version__
+class Args(BaseModel):
+    input_directory: str
+    output_file: str
+    version: Optional[bool]
+
+
+app = typer.Typer()
+args: Args
 
 
 def version_callback(value: bool):
@@ -22,7 +30,7 @@ def version_callback(value: bool):
         raise typer.Exit()
 
 
-@app.command()
+@app.callback()
 def main(
     input_directory: Annotated[
         str,
@@ -47,8 +55,16 @@ def main(
         typer.Option("--version", callback=version_callback, is_eager=True),
     ] = None,
 ):
+    global args
+    args = Args(
+        input_directory=input_directory, output_file=output_file, version=version
+    )
+
+
+@app.command("langgraph")
+def langgraph():
     analyzer = LangGraphAnalyzer()
-    graph = analyzer.analyze(input_directory)
+    graph = analyzer.analyze(args.input_directory)
     pydot_graph = GraphDefinition(
         nodes=[
             NodeDefinition.model_validate(n, from_attributes=True) for n in graph.nodes
@@ -57,7 +73,7 @@ def main(
             EdgeDefinition.model_validate(e, from_attributes=True) for e in graph.edges
         ],
     )
-    from_definition(pydot_graph).generate(output_file)
+    from_definition(pydot_graph).generate(args.output_file)
 
 
 if __name__ == "__main__":

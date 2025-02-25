@@ -44,7 +44,6 @@ def from_definition(definition: GraphDefinition) -> Graph:
         nodes=[node.to_pydot() for node in definition.nodes],
         edges=[edge.to_pydot() for edge in definition.edges],
     )
-    print(g)
     return g
 
 
