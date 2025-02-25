@@ -661,7 +661,20 @@ def parse_all_graph_instances_in_directory(root_directory, graph_class_fqcn, com
                                     "start_node": arguments[0],
                                     "end_node": end_node
                                 })
-        
+        if call_records.get("set_entry_point", False):
+            call_data = call_records.get("set_entry_point")
+            entrypoints = []
+            for single_call in call_data:
+                for node_name in single_call["positional"]:
+                    entrypoints.append(node_name)
+                for _, node_name in single_call["keyword"].items():
+                    entrypoints.append(node_name)
+
+            for node_name in entrypoints:
+                basic_edges.append({
+                    "start_node": "START",
+                    "end_node": node_name
+                })        
         graphs.append({
             "graph_name": graph,
             "graph_file_path": call_records["filepath"],
