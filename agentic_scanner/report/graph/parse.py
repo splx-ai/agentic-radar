@@ -3,10 +3,10 @@ from typing import List
 import pydot
 from pydantic import BaseModel
 
-from agentic_scanner import graph
-from agentic_scanner.visualization.edge import ConditionalEdge, Edge
-from agentic_scanner.visualization.graph import Graph
-from agentic_scanner.visualization.node import (
+from ... import graph
+from .edge import ConditionalEdge, Edge
+from .graph import Graph
+from .node import (
     AgentNode,
     BasicNode,
     CustomToolNode,

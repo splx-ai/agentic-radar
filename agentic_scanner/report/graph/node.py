@@ -1,9 +1,9 @@
-import importlib.resources as resources
+from importlib import resources
 from typing import Optional
 
 import pydot
 
-from ..graph import ToolType
+from ...graph import ToolType
 
 
 class AgentNode(pydot.Node):
@@ -47,15 +47,14 @@ class BasicNode(pydot.Node):
 
 class ToolNode(pydot.Node):
     def __init__(self, name: str, label: str, tool_type: Optional[ToolType] = None):
-        # TODO: depending on tool type, set different icon
+        ttype = str(tool_type or ToolType.DEFAULT)
         super().__init__(
             name,
             label="",
-            xlabel=f"< <B>{label}</B>"
-            + "<BR/>"
-            + str(tool_type or ToolType.DEFAULT)
-            + " >",
-            image=str(resources.files(__package__) / "assets" / "tool.svg"),
+            xlabel=f"< <B>{label}</B><BR/>{ttype} >",
+            image=str(
+                resources.files(__package__) / "assets" / "tools" / f"{ttype}.svg"
+            ),
             imagescale=True,
             fixedsize=True,
             shape="box",

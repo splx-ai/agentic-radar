@@ -1,7 +1,7 @@
 import ast
-import importlib.resources as resources
 import json
 import os
+from importlib import resources
 from typing import Dict, List, Set
 
 

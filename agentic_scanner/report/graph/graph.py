@@ -26,9 +26,8 @@ class Graph(pydot.Dot):
         for edge in edges:
             self.add_edge(edge)
 
-    def generate(self, output_file: str):
-        subprocess.run(
-            ["dot", "-Tsvg:cairo", "-o", output_file],
+    def generate(self) -> str:
+        return subprocess.check_output(
+            ["dot", "-Tsvg:cairo"],
             input=str(self).encode(),
-            check=True,
-        )
+        ).decode("utf-8")

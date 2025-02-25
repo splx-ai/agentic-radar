@@ -1,3 +1,6 @@
+import datetime
+import logging
+import time
 from typing import Optional
 
 import typer
@@ -5,12 +8,12 @@ from pydantic import BaseModel
 from typing_extensions import Annotated
 
 from agentic_scanner import __version__
-from agentic_scanner.analysis.langgraph.analyze import LangGraphAnalyzer
-from agentic_scanner.visualization.parse import (
+from agentic_scanner.analysis import LangGraphAnalyzer
+from agentic_scanner.report import (
     EdgeDefinition,
     GraphDefinition,
     NodeDefinition,
-    from_definition,
+    generate,
 )
 
 
@@ -31,7 +34,7 @@ def version_callback(value: bool):
 
 
 @app.callback()
-def main(
+def _main(
     input_directory: Annotated[
         str,
         typer.Option(
@@ -49,7 +52,7 @@ def main(
             help="Where should the output report be stored",
             envvar="AGENTIC_SCANNER_OUTPUT_FILE",
         ),
-    ] = "out.svg",
+    ] = f"report_{datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d_%H%M%S')}.html",
     version: Annotated[
         Optional[bool],
         typer.Option("--version", callback=version_callback, is_eager=True),
@@ -63,6 +66,7 @@ def main(
 
 @app.command("langgraph")
 def langgraph():
+    print(f"Analyzing {args.input_directory} for LangGraph graphs")
     analyzer = LangGraphAnalyzer()
     graph = analyzer.analyze(args.input_directory)
     pydot_graph = GraphDefinition(
@@ -73,7 +77,10 @@ def langgraph():
             EdgeDefinition.model_validate(e, from_attributes=True) for e in graph.edges
         ],
     )
-    from_definition(pydot_graph).generate(args.output_file)
+    print("Generating report")
+    generate(pydot_graph, args.output_file)
+    print(f"Report {args.output_file} generated")
+
 
 
 if __name__ == "__main__":
