@@ -1,8 +1,11 @@
 import ast
 import os
-from typing import List, Dict
+from typing import Dict, List
 
-def extract_custom_tools_with_ast(file_content: str, file_path: str) -> List[Dict[str, str]]:
+
+def extract_custom_tools_with_ast(
+    file_content: str, file_path: str
+) -> List[Dict[str, str]]:
     custom_tools = []
     tree = ast.parse(file_content)
 
@@ -17,15 +20,12 @@ def extract_custom_tools_with_ast(file_content: str, file_path: str) -> List[Dic
                         decorator_names.append(decorator.func.id)
                     elif isinstance(decorator.func, ast.Attribute):
                         decorator_names.append(decorator.func.attr)
-            
+
             if "tool" in decorator_names:
-                custom_tools.append({
-                    "name": node.name,
-                    "filepath": file_path
-                })
-    
+                custom_tools.append({"name": node.name, "filepath": file_path})
+
     return custom_tools
-    
+
 
 def get_all_custom_tools_from_directory(directory_path: str) -> List[Dict[str, str]]:
     all_custom_tools = []
@@ -35,8 +35,10 @@ def get_all_custom_tools_from_directory(directory_path: str) -> List[Dict[str, s
                 file_path = os.path.join(root, file)
                 with open(file_path, "r", encoding="utf-8") as f:
                     file_content = f.read()
-                    custom_tools = extract_custom_tools_with_ast(file_content, file_path)
+                    custom_tools = extract_custom_tools_with_ast(
+                        file_content, file_path
+                    )
                     for single_custom_tool in custom_tools:
                         all_custom_tools.append(single_custom_tool)
-    
+
     return all_custom_tools

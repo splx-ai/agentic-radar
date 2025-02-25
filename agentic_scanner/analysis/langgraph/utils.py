@@ -2,7 +2,13 @@ import ast
 import os
 from typing import Dict, Tuple, Union
 
-def build_global_registry(root_dir: str) -> Tuple[Dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]], Dict[str, Union[ast.List, ast.Dict]]]:
+
+def build_global_registry(
+    root_dir: str,
+) -> Tuple[
+    Dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]],
+    Dict[str, Union[ast.List, ast.Dict]],
+]:
     """
     Recursively walk `root_dir`,
     parse each .py file to find top-level function defs and variable defs
@@ -18,15 +24,18 @@ def build_global_registry(root_dir: str) -> Tuple[Dict[str, Union[ast.FunctionDe
             if filename.endswith(".py"):
                 fullpath = os.path.join(dirpath, filename)
                 module_name = derive_module_name(dirpath, filename, root_dir)
-                local_functions, local_variables = parse_for_top_level_defs(fullpath, module_name)
+                local_functions, local_variables = parse_for_top_level_defs(
+                    fullpath, module_name
+                )
 
-                for k,v in local_functions.items():
+                for k, v in local_functions.items():
                     global_functions[k] = v
-                
-                for k,v in local_variables.items():
+
+                for k, v in local_variables.items():
                     global_variables[k] = v
 
     return global_functions, global_variables
+
 
 def derive_module_name(dirpath: str, filename: str, root_dir: str) -> str:
     """
@@ -37,7 +46,6 @@ def derive_module_name(dirpath: str, filename: str, root_dir: str) -> str:
     parts = []
     if rel_path != ".":
         parts = rel_path.split(os.sep)
-
 
     base_name = filename.removesuffix(".py")
     parts.append(base_name)

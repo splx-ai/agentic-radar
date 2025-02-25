@@ -1,17 +1,26 @@
-[tool.poetry]
+[project]
 name = "agentic-scanner"
-version = "0.1.0"
+dynamic = [ "version" ]
 description = ""
-authors = ["SplxAI Developers <developers@splx.ai>"]
+license = { file = "LICENSE" }
 readme = "README.md"
+requires-python = "^3.9"
+authors = [ {name = "SplxAI Developers", email = "developers@splx.ai"} ]
+dependencies = [
+    "pydot>=3.0.4",
+    "pydantic>=2.10.6",
+    "typer-slim>=0.15.1",
+    "jinja2 (>=3.1.5,<4.0.0)",
+]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-pydot = "^3.0.4"
-pydantic = "^2.10.6"
-typer-slim = "^0.15.1"
+[tool.poetry]
+version = "0.1.0"
 
-[tool.poetry.scripts]
+[project.optional-dependencies]
+langgraph = []
+all = []
+
+[project.scripts]
 agentic-scanner = "agentic_scanner.cli:app"
 
 [tool.poetry.group.dev.dependencies]
@@ -32,3 +41,8 @@ disable_error_code = ["import-untyped"] # pydot is untyped
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[jinja-lsp]
+templates="./agentic_scanner/report/templates"
+backend = ["./agentic_scanner"]
+lang = "python"

@@ -1,6 +1,6 @@
 import ast
 import os
-from typing import List, Dict, Any, Union, Optional
+from typing import Any, Dict, List, Optional, Union
 
 
 class GraphInstanceTracker(ast.NodeVisitor):
@@ -16,7 +16,14 @@ class GraphInstanceTracker(ast.NodeVisitor):
          - If called with 2 positional arguments -> gather information about it
     """
 
-    def __init__(self, graph_class_fqcn: str, add_conditional_edges_method_name: str, add_node_method_name: str, global_functions, global_variables):
+    def __init__(
+        self,
+        graph_class_fqcn: str,
+        add_conditional_edges_method_name: str,
+        add_node_method_name: str,
+        global_functions,
+        global_variables,
+    ):
         """
         graph_class_fqcn: The fully qualified class name of the Graph class to look for.
         add_conditional_edges_method_name: The method name that, when called, triggers addition of conditional edges.
@@ -143,12 +150,14 @@ class GraphInstanceTracker(ast.NodeVisitor):
                             kw.arg: self._stringify_ast_node(kw.value)
                             for kw in node.keywords
                             if kw.arg is not None
-                        }
+                        },
                     }
 
                     # If it is one of the two special methods, examine them further
                     if method_name == self.add_conditional_edges_method_name:
-                        self._process_add_conditional_edges_method_call(node, call_record)
+                        self._process_add_conditional_edges_method_call(
+                            node, call_record
+                        )
 
                     if method_name == self.add_node_method_name:
                         self._handle_add_node_argument(node, call_record)
@@ -158,7 +167,9 @@ class GraphInstanceTracker(ast.NodeVisitor):
                     if method_name not in self.instance_methods[instance_name]:
                         self.instance_methods[instance_name][method_name] = []
 
-                    self.instance_methods[instance_name][method_name].append(call_record)
+                    self.instance_methods[instance_name][method_name].append(
+                        call_record
+                    )
 
         self.generic_visit(node)
 
@@ -175,7 +186,6 @@ class GraphInstanceTracker(ast.NodeVisitor):
             info = self._analyze_argument(call_node.args[1])
             call_record["node_definition_argument_info"] = info
 
-
     def _analyze_argument(self, node: ast.AST) -> Dict[str, Optional[str]]:
         """
         Return a dictionary describing the argument:
@@ -184,7 +194,7 @@ class GraphInstanceTracker(ast.NodeVisitor):
         """
         result: Dict[str, Optional[str]] = {
             "original": self._stringify_ast_node(node),
-            "fq_name": None
+            "fq_name": None,
         }
 
         # 1) If it's a bare name (like "some_func")
@@ -209,7 +219,9 @@ class GraphInstanceTracker(ast.NodeVisitor):
 
         return result
 
-    def _process_add_conditional_edges_method_call(self, call_node: ast.Call, call_record: dict) -> None:
+    def _process_add_conditional_edges_method_call(
+        self, call_node: ast.Call, call_record: dict
+    ) -> None:
 
         # Combine all arguments (positional + keyword) in source order.
         # The 'value' of each keyword is the actual expression.
@@ -220,65 +232,60 @@ class GraphInstanceTracker(ast.NodeVisitor):
             if isinstance(second_arg, ast.Name):
                 func_name = second_arg.id
                 if func_name in self.function_defs:
-                    returns = self._get_return_expressions(self.function_defs[func_name])
-                    call_record["path"] = {
-                        "function_returns": returns
-                    }
+                    returns = self._get_return_expressions(
+                        self.function_defs[func_name]
+                    )
+                    call_record["path"] = {"function_returns": returns}
                 elif self._resolve_fq_name(second_arg) in self.global_functions:
-                    returns = self._get_return_expressions(self.global_functions[self._resolve_fq_name(second_arg)])
-                    call_record["path"] = {
-                        "function_returns": returns
-                    }
+                    returns = self._get_return_expressions(
+                        self.global_functions[self._resolve_fq_name(second_arg)]
+                    )
+                    call_record["path"] = {"function_returns": returns}
 
         elif len(all_args_in_order) == 3:
             third_arg = all_args_in_order[2]
 
             if isinstance(third_arg, ast.List):
                 list_vals = [self._stringify_ast_node(elt) for elt in third_arg.elts]
-                call_record["path_map"] = {
-                    "list_values": list_vals
-                }
+                call_record["path_map"] = {"list_values": list_vals}
 
             elif isinstance(third_arg, ast.Dict):
                 dict_vals = [self._stringify_ast_node(v) for v in third_arg.values]
-                call_record["path_map"] = {
-                    "dict_values": dict_vals
-                }
+                call_record["path_map"] = {"dict_values": dict_vals}
 
             elif isinstance(third_arg, ast.Name):
                 var_name = third_arg.id
                 if var_name in self.variable_values:
                     val_node = self.variable_values[var_name]
                     if isinstance(val_node, ast.List):
-                        list_vals = [self._stringify_ast_node(elt) for elt in val_node.elts]
-                        call_record["path_map"] = {
-                            "list_values": list_vals
-                        }
+                        list_vals = [
+                            self._stringify_ast_node(elt) for elt in val_node.elts
+                        ]
+                        call_record["path_map"] = {"list_values": list_vals}
                     elif isinstance(val_node, ast.Dict):
-                        dict_vals = [self._stringify_ast_node(v) for v in val_node.values]
-                        call_record["path_map"] = {
-                            "dict_values": dict_vals
-                        }
+                        dict_vals = [
+                            self._stringify_ast_node(v) for v in val_node.values
+                        ]
+                        call_record["path_map"] = {"dict_values": dict_vals}
                 elif self._resolve_fq_name(third_arg) in self.global_variables:
                     val_node = self.global_variables[self._resolve_fq_name(third_arg)]
                     if isinstance(val_node, ast.List):
-                        list_vals = [self._stringify_ast_node(elt) for elt in val_node.elts]
-                        call_record["path_map"] = {
-                            "list_values": list_vals
-                        }
+                        list_vals = [
+                            self._stringify_ast_node(elt) for elt in val_node.elts
+                        ]
+                        call_record["path_map"] = {"list_values": list_vals}
                     elif isinstance(val_node, ast.Dict):
-                        dict_vals = [self._stringify_ast_node(v) for v in val_node.values]
-                        call_record["path_map"] = {
-                            "dict_values": dict_vals
-                        }
-
+                        dict_vals = [
+                            self._stringify_ast_node(v) for v in val_node.values
+                        ]
+                        call_record["path_map"] = {"dict_values": dict_vals}
 
     def _call_is_target_class(self, call_node: ast.Call) -> bool:
         """
         Checks if the call instantiates our target Graph class
         """
         fq_name = self._resolve_fq_name(call_node.func)
-        return (fq_name == self.graph_class_fqcn)
+        return fq_name == self.graph_class_fqcn
 
     def _resolve_fq_name(self, node: Union[ast.Name, ast.Attribute]) -> str:
         """
@@ -311,7 +318,11 @@ class GraphInstanceTracker(ast.NodeVisitor):
             return f"Call({ast.dump(node)})"
         elif isinstance(node, ast.List):
             # Convert elements recursively
-            return "ListLiteral([" + ", ".join(self._stringify_ast_node(elt) for elt in node.elts) + "])"
+            return (
+                "ListLiteral(["
+                + ", ".join(self._stringify_ast_node(elt) for elt in node.elts)
+                + "])"
+            )
         elif isinstance(node, ast.Dict):
             # Convert key-value pairs recursively
             keys = [self._stringify_ast_node(k) for k in node.keys]
@@ -320,7 +331,7 @@ class GraphInstanceTracker(ast.NodeVisitor):
             return f"DictLiteral({{{pairs_str}}})"
         else:
             return ast.dump(node)
-        
+
     def _get_all_args_in_call(self, call_node: ast.Call) -> List[ast.expr]:
         """
         Returns a list of all arguments (positional first, then each
@@ -334,8 +345,7 @@ class GraphInstanceTracker(ast.NodeVisitor):
         return combined
 
     def _get_return_expressions(
-        self,
-        func_def: Union[ast.FunctionDef, ast.AsyncFunctionDef]
+        self, func_def: Union[ast.FunctionDef, ast.AsyncFunctionDef]
     ) -> List[str]:
         """
         Traverse the body of a function definition and collect all returns
@@ -355,12 +365,18 @@ class GraphInstanceTracker(ast.NodeVisitor):
                 inner_self.variables: Dict[str, str] = {}
 
             def visit_Return(inner_self, return_node: ast.Return):
-                if return_node.value is not None and isinstance(return_node.value, ast.Name):
+                if return_node.value is not None and isinstance(
+                    return_node.value, ast.Name
+                ):
                     if return_node.value.id in inner_self.variables:
                         returns.extend(inner_self.variables[return_node.value.id])
                     else:
-                        returns.append(inner_self.outer._stringify_ast_node(return_node.value))
-                if return_node.value is not None and isinstance(return_node.value, ast.Constant):
+                        returns.append(
+                            inner_self.outer._stringify_ast_node(return_node.value)
+                        )
+                if return_node.value is not None and isinstance(
+                    return_node.value, ast.Constant
+                ):
                     returns.append(return_node.value.value)
 
             def visit_Assign(inner_self, node: ast.Assign) -> Any:
@@ -380,15 +396,25 @@ class GraphInstanceTracker(ast.NodeVisitor):
                     # If the right side is a literal list or dict, store it for later.
                     if isinstance(node.value, ast.Constant):
                         # and node.value accounts for None
-                        if var_name not in inner_self.variables and node.value.value is not None:
+                        if (
+                            var_name not in inner_self.variables
+                            and node.value.value is not None
+                        ):
                             inner_self.variables[var_name] = [node.value.value]
                         elif node.value.value:
                             inner_self.variables[var_name].append(node.value.value)
                     elif isinstance(node.value, ast.Name):
-                        if var_name not in inner_self.variables and node.value.value is not None:
-                            inner_self.variables[var_name] = [inner_self.outer._stringify_ast_node(node.value)]
+                        if (
+                            var_name not in inner_self.variables
+                            and node.value.value is not None
+                        ):
+                            inner_self.variables[var_name] = [
+                                inner_self.outer._stringify_ast_node(node.value)
+                            ]
                         elif node.value:
-                            inner_self.variables[var_name].append(inner_self.outer._stringify_ast_node(node.value))
+                            inner_self.variables[var_name].append(
+                                inner_self.outer._stringify_ast_node(node.value)
+                            )
 
         ReturnCollector(self).visit(func_def)
         return returns
@@ -400,7 +426,7 @@ def parse_python_file(
     add_conditional_edges_method_name: str,
     add_node_method_name: str,
     global_functions,
-    global_variables
+    global_variables,
 ) -> Dict[str, Dict[str, List[Dict[str, Any]]]]:
     """
     Parse a single Python file for:
@@ -412,11 +438,13 @@ def parse_python_file(
 
     tree = ast.parse(source, filename=filepath)
 
-    tracker = GraphInstanceTracker(target_class,
-                                   add_conditional_edges_method_name,
-                                   add_node_method_name,
-                                   global_functions,
-                                   global_variables)
+    tracker = GraphInstanceTracker(
+        target_class,
+        add_conditional_edges_method_name,
+        add_node_method_name,
+        global_functions,
+        global_variables,
+    )
 
     tracker.visit(tree)
 
@@ -429,7 +457,7 @@ def walk_directory_and_parse(
     add_conditional_edges_method_name: str,
     add_node_method_name: str,
     global_functions,
-    global_variables
+    global_variables,
 ) -> Dict[str, Dict[str, List[Dict[str, Any]]]]:
     """
     Recursively walk a directory (root_dir), parse each .py file,
@@ -441,12 +469,14 @@ def walk_directory_and_parse(
         for filename in filenames:
             if filename.endswith(".py"):
                 fullpath = os.path.join(dirpath, filename)
-                file_results = parse_python_file(fullpath,
-                                                 target_class,
-                                                 add_conditional_edges_method_name,
-                                                 add_node_method_name,
-                                                 global_functions,
-                                                 global_variables)
+                file_results = parse_python_file(
+                    fullpath,
+                    target_class,
+                    add_conditional_edges_method_name,
+                    add_node_method_name,
+                    global_functions,
+                    global_variables,
+                )
 
                 for instance_name, methods_dict in file_results.items():
                     if instance_name not in combined_results:
@@ -460,9 +490,23 @@ def walk_directory_and_parse(
     return combined_results
 
 
-def parse_all_graph_instances_in_directory(root_directory, graph_class_fqcn, add_conditional_edges_method_name, add_node_method_name, global_functions, global_variables):
+def parse_all_graph_instances_in_directory(
+    root_directory,
+    graph_class_fqcn,
+    add_conditional_edges_method_name,
+    add_node_method_name,
+    global_functions,
+    global_variables,
+):
 
-    results = walk_directory_and_parse(root_directory, graph_class_fqcn, add_conditional_edges_method_name, add_node_method_name, global_functions, global_variables)
+    results = walk_directory_and_parse(
+        root_directory,
+        graph_class_fqcn,
+        add_conditional_edges_method_name,
+        add_node_method_name,
+        global_functions,
+        global_variables,
+    )
     graphs = []
     for graph, call_records in results.items():
         nodes = []
@@ -475,11 +519,8 @@ def parse_all_graph_instances_in_directory(root_directory, graph_class_fqcn, add
                 # The actual name if the method received 2 arguments, and the name of the function if it received one
                 node_name = single_call["positional"][0]
                 node_definition = single_call["node_definition_argument_info"]
-                nodes.append({
-                    "name": node_name,
-                    "definition": node_definition
-                })
-            
+                nodes.append({"name": node_name, "definition": node_definition})
+
         if call_records.get("add_edge", False):
             all_node_names = [node["name"] for node in nodes] + ["START", "END"]
             call_data = call_records.get("add_edge")
@@ -491,11 +532,13 @@ def parse_all_graph_instances_in_directory(root_directory, graph_class_fqcn, add
                 for _, node_name in single_call["keyword"].items():
                     nodes_in_edge.append(node_name)
 
-                if nodes_in_edge[0] in all_node_names and nodes_in_edge[1] in all_node_names:
-                    basic_edges.append({
-                        "start_node": nodes_in_edge[0],
-                        "end_node": nodes_in_edge[1]
-                    })
+                if (
+                    nodes_in_edge[0] in all_node_names
+                    and nodes_in_edge[1] in all_node_names
+                ):
+                    basic_edges.append(
+                        {"start_node": nodes_in_edge[0], "end_node": nodes_in_edge[1]}
+                    )
 
         if call_records.get("add_conditional_edges", False):
             all_node_names = [node["name"] for node in nodes] + ["START", "END"]
@@ -507,51 +550,76 @@ def parse_all_graph_instances_in_directory(root_directory, graph_class_fqcn, add
                     arguments.append(argument)
                 for _, argument in single_call["keyword"].items():
                     arguments.append(argument)
-                
+
                 if single_call.get("path", False):
                     if single_call["path"].get("function_returns", False):
                         for end_node in single_call["path"].get("function_returns"):
-                            if arguments[0] in all_node_names and end_node in all_node_names:
-                                conditional_edges.append({
-                                    "resolved": True,
-                                    "start_node": arguments[0],
-                                    "end_node": end_node
-                                })
+                            if (
+                                arguments[0] in all_node_names
+                                and end_node in all_node_names
+                            ):
+                                conditional_edges.append(
+                                    {
+                                        "resolved": True,
+                                        "start_node": arguments[0],
+                                        "end_node": end_node,
+                                    }
+                                )
                     elif single_call["path"].get("function_fq_name", False):
-                        conditional_edges.append({
-                            "resolved": False,
-                            "function_fq_name": single_call["path"].get("function_fq_name")
-                        })
+                        conditional_edges.append(
+                            {
+                                "resolved": False,
+                                "function_fq_name": single_call["path"].get(
+                                    "function_fq_name"
+                                ),
+                            }
+                        )
                 elif single_call.get("path_map", False):
                     if single_call["path_map"].get("list_values", False):
                         for end_node in single_call["path_map"].get("list_values"):
-                            if arguments[0] in all_node_names and end_node in all_node_names:
-                                conditional_edges.append({
-                                    "resolved": True,
-                                    "start_node": arguments[0],
-                                    "end_node": end_node
-                                })
+                            if (
+                                arguments[0] in all_node_names
+                                and end_node in all_node_names
+                            ):
+                                conditional_edges.append(
+                                    {
+                                        "resolved": True,
+                                        "start_node": arguments[0],
+                                        "end_node": end_node,
+                                    }
+                                )
                     elif single_call["path_map"].get("dict_values", False):
                         for end_node in single_call["path_map"].get("dict_values"):
-                            if arguments[0] in all_node_names and end_node in all_node_names:
-                                conditional_edges.append({
-                                    "resolved": True,
-                                    "start_node": arguments[0],
-                                    "end_node": end_node
-                                })
+                            if (
+                                arguments[0] in all_node_names
+                                and end_node in all_node_names
+                            ):
+                                conditional_edges.append(
+                                    {
+                                        "resolved": True,
+                                        "start_node": arguments[0],
+                                        "end_node": end_node,
+                                    }
+                                )
                     elif single_call["path_map"].get("map_fq_name", False):
-                        conditional_edges.append({
-                            "resolved": False,
-                            "map_fq_name": single_call["path_map"].get("map_fq_name")
-                        })
-        
-        graphs.append({
-            "graph_name": graph,
-            "graph_file_path": call_records["filepath"],
-            "graph_info": {
-                "nodes": nodes,
-                "basic_edges": basic_edges,
-                "conditional_edges": conditional_edges
+                        conditional_edges.append(
+                            {
+                                "resolved": False,
+                                "map_fq_name": single_call["path_map"].get(
+                                    "map_fq_name"
+                                ),
+                            }
+                        )
+
+        graphs.append(
+            {
+                "graph_name": graph,
+                "graph_file_path": call_records["filepath"],
+                "graph_info": {
+                    "nodes": nodes,
+                    "basic_edges": basic_edges,
+                    "conditional_edges": conditional_edges,
+                },
             }
-        })
+        )
     return graphs
