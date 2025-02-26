@@ -44,6 +44,8 @@ You can run the current development version with:
 python agentic_scanner/cli.py --help
 ```
 
+When writing the code, please use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary). This enables automated versioning and utilizes a common practice for writing commit messages.
+
 ### Submitting a PR
 
 Before submitting a PR make sure that your branch is rebased against the upstream main:
