@@ -28,15 +28,19 @@ black = "^25.1.0"
 isort = "^6.0.0"
 mypy = "^1.15.0"
 pylint = "^3.3.4"
+pre-commit = "^4.1.0"
 
 [tool.isort]
 profile = "black"
 
 [tool.pylint]
-disable = "E1101" # dynamic attributes
+disable = ["E1101", "C0114", "C0115", "C0116"] # dynamic attributes
 
 [tool.mypy]
 disable_error_code = ["import-untyped"] # pydot is untyped
+
+[tool.black]
+check = true
 
 [build-system]
 requires = ["poetry-core"]

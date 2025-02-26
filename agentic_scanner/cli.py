@@ -1,5 +1,4 @@
 import datetime
-import logging
 import time
 from typing import Optional
 
@@ -25,7 +24,6 @@ class Args(BaseModel):
 
 app = typer.Typer()
 args: Args
-
 
 def version_callback(value: bool):
     if value:
@@ -64,7 +62,7 @@ def _main(
     )
 
 
-@app.command("langgraph")
+@app.command("langgraph", help="Run scan for code written with LangGraph")
 def langgraph():
     print(f"Analyzing {args.input_directory} for LangGraph graphs")
     analyzer = LangGraphAnalyzer()
@@ -80,7 +78,6 @@ def langgraph():
     print("Generating report")
     generate(pydot_graph, args.output_file)
     print(f"Report {args.output_file} generated")
-
 
 
 if __name__ == "__main__":
