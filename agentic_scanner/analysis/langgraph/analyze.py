@@ -1,15 +1,16 @@
+from pathlib import Path
+
 from agentic_scanner.analysis.analyze import Analyzer
 from agentic_scanner.graph import GraphDefinition
 
-from ...graph import EdgeDefinition as Edge, ToolType
+from ...graph import EdgeDefinition as Edge
 from ...graph import GraphDefinition
 from ...graph import NodeDefinition as Node
-from ...graph import NodeType
+from ...graph import NodeType, ToolType, VulnerabilityDefinition
 from .custom_tools import get_all_custom_tools_from_directory
 from .graph import parse_all_graph_instances_in_directory
 from .predefined_tools import get_all_predefined_tools_from_directory
 from .utils import build_global_registry
-from pathlib import Path
 
 GRAPH_CLASS = "langgraph.graph.StateGraph"
 COMMAND_CLASS = "langgraph.types.Command"
@@ -40,8 +41,6 @@ class LangGraphAnalyzer(Analyzer):
         nodes = []
         edges = []
 
-        tools = []
-
         for graph in all_graphs:
             for i, node in enumerate(graph["graph_info"]["nodes"]):
                 type = NodeType.BASIC
@@ -53,10 +52,6 @@ class LangGraphAnalyzer(Analyzer):
                     type = NodeType.AGENT
 
                 nodes.append(Node(type=type, name=node["name"], label=node["name"]))
-                if type == NodeType.TOOL:
-                    nodes[-1].category = ToolType.CODE_INTERPRETER
-                # if type in (NodeType.CUSTOM_TOOL, NodeType.TOOL):
-                    # tools.append(nodes[-1])
 
             nodes.append(Node(type=NodeType.BASIC, name="START", label="START"))
 
@@ -76,5 +71,61 @@ class LangGraphAnalyzer(Analyzer):
                     )
                 )
 
+        tools = [
+            Node(
+                name="create_issue",
+                type=NodeType.TOOL,
+                category=ToolType.CODE_INTERPRETER,
+                description="Tool description",
+                vulnerabilities=[
+                    VulnerabilityDefinition(
+                        name="Improper Output Handling",
+                        description="Generated",
+                        security_framework_mapping={
+                            "CVE": "blabla",
+                            "OWASP LLM TOP 10": "blabla",
+                        },
+                        remediation="Remediate placholder",
+                    ),
+                    VulnerabilityDefinition(
+                        name="Improper Output Handling 2",
+                        description="Generated",
+                        security_framework_mapping={
+                            "CVE": "blabla",
+                            "OWASP LLM TOP 10": "blabla",
+                        },
+                        remediation="Placeholder",
+                    ),
+                ],
+            ),
+            Node(
+                name="create_issue 2",
+                type=NodeType.TOOL,
+                category=ToolType.CODE_INTERPRETER,
+                description="Tool description",
+                vulnerabilities=[
+                    VulnerabilityDefinition(
+                        name="Improper Output Handling",
+                        description="Generated",
+                        security_framework_mapping={
+                            "CVE": '<span style="color: black; font-size: 10px; font-family: Inter; font-weight: 400; text-decoration: underline; line-height: 15px; word-wrap: break-word">CVE-2023-44467</span>',
+                            "OWASP LLM TOP 10": "blabla",
+                        },
+                        remediation="Remediate placholder",
+                    ),
+                    VulnerabilityDefinition(
+                        name="Improper Output Handling 2",
+                        description="Generated",
+                        security_framework_mapping={
+                            "CVE": "blabla",
+                            "OWASP LLM TOP 10": "blabla",
+                        },
+                        remediation="Placeholder",
+                    ),
+                ],
+            ),
+        ]
 
-        return GraphDefinition(name=Path(root_directory).name, nodes=nodes, edges=edges)
+        return GraphDefinition(
+            name=Path(root_directory).name, nodes=nodes, edges=edges, tools=tools
+        )

@@ -62,7 +62,7 @@ module = "openai"
 ignore_missing_imports = true
 
 [tool.black]
-check = true
+#check = true
 
 [build-system]
 requires = ["poetry-core"]

@@ -8,6 +8,7 @@ from typing_extensions import Annotated
 
 from agentic_scanner import __version__
 from agentic_scanner.analysis import LangGraphAnalyzer
+from agentic_scanner.graph import NodeType, ToolType, VulnerabilityDefinition
 from agentic_scanner.report import (
     EdgeDefinition,
     GraphDefinition,
@@ -70,12 +71,15 @@ def langgraph():
     graph = analyzer.analyze(args.input_directory)
     pydot_graph = GraphDefinition(
         framework="LangGraph",
-        name = graph.name,
+        name=graph.name,
         nodes=[
             NodeDefinition.model_validate(n, from_attributes=True) for n in graph.nodes
         ],
         edges=[
             EdgeDefinition.model_validate(e, from_attributes=True) for e in graph.edges
+        ],
+        tools=[
+            NodeDefinition.model_validate(t, from_attributes=True) for t in graph.tools
         ],
     )
     print("Generating report")

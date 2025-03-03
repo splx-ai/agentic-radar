@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -26,12 +26,21 @@ class ToolType(Enum):
         return self.value
 
 
+class VulnerabilityDefinition(BaseModel):
+    name: str
+    description: str
+    security_framework_mapping: Dict[str, str]
+    remediation: str
+
+
 class NodeDefinition(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
     node_type: NodeType = Field(..., alias="type")
     name: str
+    description: Optional[str] = None
     label: Optional[str] = None
     category: Optional[ToolType] = None
+    vulnerabilities: List[VulnerabilityDefinition] = Field(default_factory=list)
 
 
 class EdgeDefinition(BaseModel):
@@ -45,3 +54,4 @@ class GraphDefinition(BaseModel):
     name: str
     nodes: List[NodeDefinition]
     edges: List[EdgeDefinition]
+    tools: List[NodeDefinition] = Field(default_factory=list)

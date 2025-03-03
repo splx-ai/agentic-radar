@@ -16,7 +16,15 @@ class GraphInstanceTracker(ast.NodeVisitor):
          - If called with 2 positional arguments -> gather information about it
     """
 
-    def __init__(self, graph_class_fqcn: str, command_class_fqn: str, add_conditional_edges_method_name: str, add_node_method_name: str, global_functions, global_variables):
+    def __init__(
+        self,
+        graph_class_fqcn: str,
+        command_class_fqn: str,
+        add_conditional_edges_method_name: str,
+        add_node_method_name: str,
+        global_functions,
+        global_variables,
+    ):
         """
         graph_class_fqcn: The fully qualified class name of the Graph class to look for.
         command_class_fqcn: The fully qualified class name of the Command class to look for.
@@ -183,7 +191,6 @@ class GraphInstanceTracker(ast.NodeVisitor):
             call_record["node_definition_argument_info"] = info
             call_record["gotos"] = gotos
 
-
     def _analyze_argument(self, node: ast.AST) -> Dict[str, Optional[str]]:
         """
         Return a dictionary describing the argument:
@@ -203,10 +210,14 @@ class GraphInstanceTracker(ast.NodeVisitor):
             result["fq_name"] = fq_name
 
             if fq_name in self.function_defs:
-                gotos = self._get_goto_arguments_of_returned_command_objects(self.function_defs[fq_name])
+                gotos = self._get_goto_arguments_of_returned_command_objects(
+                    self.function_defs[fq_name]
+                )
 
             elif fq_name in self.global_functions:
-                gotos = self._get_goto_arguments_of_returned_command_objects(self.global_functions[fq_name])
+                gotos = self._get_goto_arguments_of_returned_command_objects(
+                    self.global_functions[fq_name]
+                )
 
         # 2) If it's an attribute, e.g. "some_import.func"
         elif isinstance(node, ast.Attribute):
@@ -214,10 +225,14 @@ class GraphInstanceTracker(ast.NodeVisitor):
             result["fq_name"] = fq_name
 
             if fq_name in self.function_defs:
-                gotos = self._get_goto_arguments_of_returned_command_objects(self.function_defs[fq_name])
+                gotos = self._get_goto_arguments_of_returned_command_objects(
+                    self.function_defs[fq_name]
+                )
 
             elif fq_name in self.global_functions:
-                gotos = self._get_goto_arguments_of_returned_command_objects(self.global_functions[fq_name])
+                gotos = self._get_goto_arguments_of_returned_command_objects(
+                    self.global_functions[fq_name]
+                )
 
         # 3) If it's a call, e.g. "some_import.function(...)" or "local_func(...)" or "Name()"
         elif isinstance(node, ast.Call):
@@ -428,11 +443,10 @@ class GraphInstanceTracker(ast.NodeVisitor):
 
         ReturnCollector(self).visit(func_def)
         return returns
-    
+
     def _get_goto_arguments_of_returned_command_objects(
-            self,
-            func_def: Union[ast.FunctionDef, ast.AsyncFunctionDef]
-        ) -> List[str]:
+        self, func_def: Union[ast.FunctionDef, ast.AsyncFunctionDef]
+    ) -> List[str]:
 
         gotos = set()
 
@@ -444,30 +458,42 @@ class GraphInstanceTracker(ast.NodeVisitor):
                 inner_self.variables: Dict[str, str] = {}
 
             def visit_Return(inner_self, return_node: ast.Return):
-                if return_node.value is not None and isinstance(return_node.value, ast.Call):
+                if return_node.value is not None and isinstance(
+                    return_node.value, ast.Call
+                ):
                     call_node = return_node.value
                     # Ends with because we may be using global function definition in which we don't have access to fqn
-                    if isinstance(call_node.func, ast.Name) and inner_self.outer.command_class_fqn.endswith(call_node.func.id):
+                    if isinstance(
+                        call_node.func, ast.Name
+                    ) and inner_self.outer.command_class_fqn.endswith(
+                        call_node.func.id
+                    ):
                         for kw in call_node.keywords:
                             if kw.arg == "goto":
                                 val_node = kw.value
-                                if isinstance(val_node, ast.Constant) and isinstance(val_node.value, str):
+                                if isinstance(val_node, ast.Constant) and isinstance(
+                                    val_node.value, str
+                                ):
                                     gotos.add(val_node.value)
-                                
+
                                 elif isinstance(val_node, ast.List):
                                     for elt in val_node.elts:
-                                        if (
-                                            isinstance(elt, ast.Constant) 
-                                            and isinstance(elt.value, str)
+                                        if isinstance(elt, ast.Constant) and isinstance(
+                                            elt.value, str
                                         ):
                                             gotos.add(elt.value)
-                                
+
                                 elif isinstance(val_node, ast.Name):
                                     var_name = val_node.id
                                     if var_name in inner_self.outer.variable_values:
-                                        var_node = inner_self.outer.variable_values[var_name]
+                                        var_node = inner_self.outer.variable_values[
+                                            var_name
+                                        ]
                                         if isinstance(var_node, ast.List):
-                                            list_vals = [self._stringify_ast_node(elt) for elt in var_node.elts]
+                                            list_vals = [
+                                                self._stringify_ast_node(elt)
+                                                for elt in var_node.elts
+                                            ]
                                             for val in list_vals:
                                                 gotos.add(val)
                                     elif var_name in inner_self.variables:
@@ -475,8 +501,11 @@ class GraphInstanceTracker(ast.NodeVisitor):
                                         for val in list_vals:
                                             gotos.add(val)
                                     else:
-                                        gotos.add(inner_self.outer._stringify_ast_node(val_node))
-                                    
+                                        gotos.add(
+                                            inner_self.outer._stringify_ast_node(
+                                                val_node
+                                            )
+                                        )
 
             def visit_Assign(inner_self, node: ast.Assign) -> Any:
                 """
@@ -495,20 +524,37 @@ class GraphInstanceTracker(ast.NodeVisitor):
                     # If the right side is a literal list or dict, store it for later.
                     if isinstance(node.value, ast.Constant):
                         # and node.value accounts for None
-                        if var_name not in inner_self.variables and node.value.value is not None:
+                        if (
+                            var_name not in inner_self.variables
+                            and node.value.value is not None
+                        ):
                             inner_self.variables[var_name] = [node.value.value]
                         elif node.value.value:
                             inner_self.variables[var_name].append(node.value.value)
                     elif isinstance(node.value, ast.Name):
-                        if var_name not in inner_self.variables and node.value.value is not None:
-                            inner_self.variables[var_name] = [inner_self.outer._stringify_ast_node(node.value)]
+                        if (
+                            var_name not in inner_self.variables
+                            and node.value.value is not None
+                        ):
+                            inner_self.variables[var_name] = [
+                                inner_self.outer._stringify_ast_node(node.value)
+                            ]
                         elif node.value:
-                            inner_self.variables[var_name].append(inner_self.outer._stringify_ast_node(node.value))
+                            inner_self.variables[var_name].append(
+                                inner_self.outer._stringify_ast_node(node.value)
+                            )
                     elif isinstance(node.value, ast.List):
                         if var_name not in inner_self.variables and node.value:
-                            inner_self.variables[var_name] = [self._stringify_ast_node(elt) for elt in node.value.elts]
+                            inner_self.variables[var_name] = [
+                                self._stringify_ast_node(elt) for elt in node.value.elts
+                            ]
                         elif node.value:
-                            inner_self.variables[var_name].extend([self._stringify_ast_node(elt) for elt in node.value.elts])
+                            inner_self.variables[var_name].extend(
+                                [
+                                    self._stringify_ast_node(elt)
+                                    for elt in node.value.elts
+                                ]
+                            )
 
         GotoCollector(self).visit(func_def)
         return gotos
@@ -619,32 +665,30 @@ def parse_all_graph_instances_in_directory(
                 # The actual name if the method received 2 arguments, and the name of the function if it received one
                 node_name = single_call["positional"][0]
                 node_definition = single_call["node_definition_argument_info"]
-                nodes.append({
-                    "name": node_name,
-                    "definition": node_definition
-                })
-            
+                nodes.append({"name": node_name, "definition": node_definition})
+
             # Resolving the goto arguments of the Command objects
             for single_call in call_data:
                 node_name = single_call["positional"][0]
                 all_node_names = [node["name"] for node in nodes] + ["START", "END"]
-                resolved_gotos = [goto for goto in single_call["gotos"] if goto in all_node_names]
+                resolved_gotos = [
+                    goto for goto in single_call["gotos"] if goto in all_node_names
+                ]
 
                 if len(resolved_gotos) > 1:
                     for resolved_goto in resolved_gotos:
-                        conditional_edges.append({
-                            "resolved": True,
-                            "start_node": node_name,
-                            "end_node": resolved_goto
-                        })
+                        conditional_edges.append(
+                            {
+                                "resolved": True,
+                                "start_node": node_name,
+                                "end_node": resolved_goto,
+                            }
+                        )
                 elif len(resolved_gotos) == 1:
-                    basic_edges.append({
-                        "start_node": node_name,
-                        "end_node": resolved_gotos[0]
-                    })
-                
-                
-            
+                    basic_edges.append(
+                        {"start_node": node_name, "end_node": resolved_gotos[0]}
+                    )
+
         if call_records.get("add_edge", False):
             all_node_names = [node["name"] for node in nodes] + ["START", "END"]
             call_data = call_records.get("add_edge")
@@ -656,11 +700,13 @@ def parse_all_graph_instances_in_directory(
                 for _, node_name in single_call["keyword"].items():
                     nodes_in_edge.append(node_name)
 
-                if nodes_in_edge[0] in all_node_names and nodes_in_edge[1] in all_node_names:
-                    basic_edges.append({
-                        "start_node": nodes_in_edge[0],
-                        "end_node": nodes_in_edge[1]
-                    })
+                if (
+                    nodes_in_edge[0] in all_node_names
+                    and nodes_in_edge[1] in all_node_names
+                ):
+                    basic_edges.append(
+                        {"start_node": nodes_in_edge[0], "end_node": nodes_in_edge[1]}
+                    )
 
         if call_records.get("add_conditional_edges", False):
             all_node_names = [node["name"] for node in nodes] + ["START", "END"]
@@ -686,7 +732,7 @@ def parse_all_graph_instances_in_directory(
                                         "start_node": arguments[0],
                                         "end_node": end_node,
                                     }
-                               )
+                                )
                 elif single_call.get("path_map", False):
                     if single_call["path_map"].get("list_values", False):
                         for end_node in single_call["path_map"].get("list_values"):
@@ -707,11 +753,13 @@ def parse_all_graph_instances_in_directory(
                                 arguments[0] in all_node_names
                                 and end_node in all_node_names
                             ):
-                                conditional_edges.append({
-                                    "resolved": True,
-                                    "start_node": arguments[0],
-                                    "end_node": end_node
-                                })
+                                conditional_edges.append(
+                                    {
+                                        "resolved": True,
+                                        "start_node": arguments[0],
+                                        "end_node": end_node,
+                                    }
+                                )
         if call_records.get("set_entry_point", False):
             call_data = call_records.get("set_entry_point")
             entrypoints = []
@@ -722,17 +770,16 @@ def parse_all_graph_instances_in_directory(
                     entrypoints.append(node_name)
 
             for node_name in entrypoints:
-                basic_edges.append({
-                    "start_node": "START",
-                    "end_node": node_name
-                })        
-        graphs.append({
-            "graph_name": graph,
-            "graph_file_path": call_records["filepath"],
-            "graph_info": {
-                "nodes": nodes,
-                "basic_edges": basic_edges,
-                "conditional_edges": conditional_edges
+                basic_edges.append({"start_node": "START", "end_node": node_name})
+        graphs.append(
+            {
+                "graph_name": graph,
+                "graph_file_path": call_records["filepath"],
+                "graph_info": {
+                    "nodes": nodes,
+                    "basic_edges": basic_edges,
+                    "conditional_edges": conditional_edges,
+                },
             }
-        })
+        )
     return graphs
