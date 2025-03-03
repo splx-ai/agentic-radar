@@ -658,7 +658,7 @@ def parse_all_graph_instances_in_directory(
                 for _, node_name in single_call["keyword"].items():
                     nodes_in_edge.append(node_name)
 
-if nodes_in_edge[0] in all_node_names and nodes_in_edge[1] in all_node_names:
+                if nodes_in_edge[0] in all_node_names and nodes_in_edge[1] in all_node_names:
                     basic_edges.append({
                         "start_node": nodes_in_edge[0],
                         "end_node": nodes_in_edge[1]
