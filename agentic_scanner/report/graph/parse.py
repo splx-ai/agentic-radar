@@ -1,7 +1,7 @@
 from typing import List
 
 import pydot
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ... import graph
 from .edge import ConditionalEdge, Edge
@@ -35,8 +35,12 @@ class EdgeDefinition(graph.EdgeDefinition):
 
 
 class GraphDefinition(BaseModel):
+    name: str
+
     nodes: List[NodeDefinition]
     edges: List[EdgeDefinition]
+
+    tools: List[NodeDefinition] = Field(default_factory=list)
 
 
 def from_definition(definition: GraphDefinition) -> Graph:

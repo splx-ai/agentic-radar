@@ -1,7 +1,7 @@
 from agentic_scanner.analysis.analyze import Analyzer
 from agentic_scanner.graph import GraphDefinition
 
-from ...graph import EdgeDefinition as Edge
+from ...graph import EdgeDefinition as Edge, ToolType
 from ...graph import GraphDefinition
 from ...graph import NodeDefinition as Node
 from ...graph import NodeType
@@ -9,6 +9,7 @@ from .custom_tools import get_all_custom_tools_from_directory
 from .graph import parse_all_graph_instances_in_directory
 from .predefined_tools import get_all_predefined_tools_from_directory
 from .utils import build_global_registry
+from pathlib import Path
 
 GRAPH_CLASS = "langgraph.graph.StateGraph"
 COMMAND_CLASS = "langgraph.types.Command"
@@ -39,6 +40,8 @@ class LangGraphAnalyzer(Analyzer):
         nodes = []
         edges = []
 
+        tools = []
+
         for graph in all_graphs:
             for i, node in enumerate(graph["graph_info"]["nodes"]):
                 type = NodeType.BASIC
@@ -50,6 +53,10 @@ class LangGraphAnalyzer(Analyzer):
                     type = NodeType.AGENT
 
                 nodes.append(Node(type=type, name=node["name"], label=node["name"]))
+                if type == NodeType.TOOL:
+                    nodes[-1].category = ToolType.CODE_INTERPRETER
+                # if type in (NodeType.CUSTOM_TOOL, NodeType.TOOL):
+                    # tools.append(nodes[-1])
 
             nodes.append(Node(type=NodeType.BASIC, name="START", label="START"))
 
@@ -69,4 +76,5 @@ class LangGraphAnalyzer(Analyzer):
                     )
                 )
 
-        return GraphDefinition(nodes=nodes, edges=edges)
+
+        return GraphDefinition(name=Path(root_directory).name, nodes=nodes, edges=edges)

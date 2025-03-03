@@ -1,22 +1,277 @@
 <html>
 <head>
 <style>
-#svgwrapper{
-  width:1024px;
-  height:1280px;
+.main {
+    width: 65%;
+    margin: auto;
 }
-svg {
-}
+
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
-
-<div id="svgwrapper" >
-{{ graph }}
+<div class="main">
+    <div style="width:100%; background: white; flex-direction: column; justify-content: flex-start; gap: 20px; align-items: flex-start; display: flex">
+        <div style="width: 100%; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
+            <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
+                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px">Scan Details</div>
+                <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
+            </div>
+            <div style="width: 100%; align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: flex">
+                <div style="align-self: stretch; background: white; border: 0.50px #D4D4D4 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
+                    <div style="width: 100%; justify-content: flex-start; align-items: flex-start; display: inline-flex">
+                        <div style="width: 100%; border-right: 0.50px #D4D4D4 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
+                            <div style="align-self: stretch; padding: 6px; background: #F5F5F5; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
+                                <div style="flex: 60%; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Project Name</div>
+                            </div>
+                            <div style="align-self: stretch; padding: 6px; background: #F5F5F5; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
+                                <div style="flex: 60%; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Scan Timestamp</div>
+                            </div>
+                        </div>
+                        <div style="width: 100%; border-right: 0.50px #D4D4D4 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
+                            <div style="align-self: stretch; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
+                                <div style="flex: 40%; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{project_name}}</div>
+                            </div>
+                            <div style="align-self: stretch; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
+                                <div style="flex: 40%; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{timestamp}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="width: 100%; margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
+            <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
+                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Dependency Check</div>
+                <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
+            </div>
+            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: flex">
+                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
+                        <div style="align-self:stretch; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Agentic Workflow Graph</div>
+                    </div>
+                    <div style="align-self: stretch; padding: 12px; background: #F5F5F5; border: 0.50px #C3C3C3 solid; flex-direction: column; justify-content: center; align-items: flex-end; gap: 12px; display: flex">
+                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: flex">
+                            <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 500; line-height: 12px; word-wrap: break-word">Legend</div>
+                            <div style="justify-content: flex-start; align-items: center; gap: 32px; display: inline-flex">
+                                <div style="height: 24px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
+                                    <div data-svg-wrapper style="position: relative">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_4850_35822)">
+                                    <path d="M24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24C18.6274 24 24 18.6274 24 12Z" fill="#164EAF"/>
+                                    <path d="M12 7V8M10.5 12V16.5M13.5 12V16.5M8.5 14L10.5 13M13.5 13L15.5 14M10.5 15H13.5M11 10V10.005M13 10V10.005M9 9C9 8.73478 9.10536 8.48043 9.29289 8.29289C9.48043 8.10536 9.73478 8 10 8H14C14.2652 8 14.5196 8.10536 14.7071 8.29289C14.8946 8.48043 15 8.73478 15 9V11C15 11.2652 14.8946 11.5196 14.7071 11.7071C14.5196 11.8946 14.2652 12 14 12H10C9.73478 12 9.48043 11.8946 9.29289 11.7071C9.10536 11.5196 9 11.2652 9 11V9Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </g>
+                                    <defs>
+                                    <clipPath id="clip0_4850_35822">
+                                    <rect width="24" height="24" fill="white"/>
+                                    </clipPath>
+                                    </defs>
+                                    </svg>
+                                    </div>
+                                    <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Agent</div>
+                                </div>
+                                <div style="height: 24px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
+                                    <div data-svg-wrapper>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="24" height="24" rx="4" fill="#A738D6"/>
+                                    <path d="M9.9281 10.9999H11.4281V9.49993L9.6781 7.74993C10.2379 7.48256 10.8669 7.39533 11.4783 7.50024C12.0898 7.60515 12.6536 7.89704 13.0923 8.33571C13.531 8.77439 13.8229 9.33828 13.9278 9.94973C14.0327 10.5612 13.9455 11.1901 13.6781 11.7499L16.6781 14.7499C16.877 14.9488 16.9888 15.2186 16.9888 15.4999C16.9888 15.7812 16.877 16.051 16.6781 16.2499C16.4792 16.4488 16.2094 16.5606 15.9281 16.5606C15.6468 16.5606 15.377 16.4488 15.1781 16.2499L12.1781 13.2499C11.6183 13.5173 10.9894 13.6045 10.3779 13.4996C9.76646 13.3947 9.20257 13.1028 8.76389 12.6641C8.32521 12.2255 8.03332 11.6616 7.92842 11.0501C7.82351 10.4387 7.91074 9.80974 8.1781 9.24993L9.9281 10.9999Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    </div>
+                                    <div style="flex-direction: column; justify-content: center; align-items: flex-start; display: inline-flex">
+                                        <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 11.20px; word-wrap: break-word">Tool</div>
+                                        <div style="text-align: justify; color: black; font-size: 6px; font-family: Inter; font-weight: 500; line-height: 8.40px; word-wrap: break-word">Tool Category</div>
+                                    </div>
+                                </div>
+                                <div style="height: 24px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
+                                    <div data-svg-wrapper>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" fill="#F5DDFF"/>
+                                    <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" stroke="#A738D6" stroke-dasharray="2 2"/>
+                                    <path d="M9.3562 10.9999H10.8562V9.49993L9.1062 7.74993C9.66602 7.48256 10.295 7.39533 10.9064 7.50024C11.5178 7.60515 12.0817 7.89704 12.5204 8.33571C12.9591 8.77439 13.251 9.33828 13.3559 9.94973C13.4608 10.5612 13.3736 11.1901 13.1062 11.7499L16.1062 14.7499C16.3051 14.9488 16.4169 15.2186 16.4169 15.4999C16.4169 15.7812 16.3051 16.051 16.1062 16.2499C15.9073 16.4488 15.6375 16.5606 15.3562 16.5606C15.0749 16.5606 14.8051 16.4488 14.6062 16.2499L11.6062 13.2499C11.0464 13.5173 10.4175 13.6045 9.806 13.4996C9.19455 13.3947 8.63066 13.1028 8.19199 12.6641C7.75331 12.2255 7.46142 11.6616 7.35651 11.0501C7.2516 10.4387 7.33884 9.80974 7.6062 9.24993L9.3562 10.9999Z" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    </div>
+                                    <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">CustomTool</div>
+                                </div>
+                                <div style="height: 28.28px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
+                                    <div data-svg-wrapper>
+                                    <svg width="29" height="30" viewBox="0 0 29 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_4850_35482)">
+                                    <rect x="14.1421" y="0.85791" width="20" height="20" rx="4" transform="rotate(45 14.1421 0.85791)" fill="#009C92"/>
+                                    <g clip-path="url(#clip1_4850_35482)">
+                                    <path d="M16.2635 12.8786L17.3241 11.818M17.1473 14.9999L18.6676 14.9999M16.2635 17.1213L17.3241 18.1819M14.1421 18.0052V19.5254M12.0208 17.1213L10.9602 18.1819M11.1369 14.9999L9.61665 14.9999M12.0208 12.8786L10.9602 11.818M14.1421 11.9947V10.4745" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </g>
+                                    </g>
+                                    <defs>
+                                    <clipPath id="clip0_4850_35482">
+                                    <rect x="14.1421" y="0.85791" width="20" height="20" rx="4" transform="rotate(45 14.1421 0.85791)" fill="white"/>
+                                    </clipPath>
+                                    <clipPath id="clip1_4850_35482">
+                                    <rect width="12" height="12" fill="white" transform="translate(14.1421 6.51465) rotate(45)"/>
+                                    </clipPath>
+                                    </defs>
+                                    </svg>
+                                    </div>
+                                    <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Basic</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="align-self: stretch; height: 0px; border: 0.50px #C3C3C3 solid"></div>
+                        <div data-svg-wrapper style="position: relative; height:100%; width:100%">
+                        {{graph}}
+                        </div>
+                    </div>
+                </div>
+                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
+                        <div style="align-self: stretch; justify-content: center; align-items: center; display: inline-flex">
+                            <div style="flex: 1 1 0; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Findings</div>
+                        </div>
+                        <div style="align-self: stretch; color: #777777; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word"></div>
+                    </div>
+                    <div style="align-self: stretch; border: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; display: inline-flex">
+                        <div style="flex: 1 1 0; height: 64px; padding: 12px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: center; gap: 10px; display: flex">
+                            <div data-svg-wrapper>
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="40" height="40" rx="20" fill="url(#paint0_linear_4895_70604)"/>
+                            <path d="M11 20C11 21.1819 11.2328 22.3522 11.6851 23.4442C12.1374 24.5361 12.8003 25.5282 13.636 26.364C14.4718 27.1997 15.4639 27.8626 16.5558 28.3149C17.6478 28.7672 18.8181 29 20 29M11 20C11 18.8181 11.2328 17.6478 11.6851 16.5558C12.1374 15.4639 12.8003 14.4718 13.636 13.636C14.4718 12.8003 15.4639 12.1374 16.5558 11.6851C17.6478 11.2328 18.8181 11 20 11M11 20H15M20 29C21.1819 29 22.3522 28.7672 23.4442 28.3149C24.5361 27.8626 25.5282 27.1997 26.364 26.364C27.1997 25.5282 27.8626 24.5361 28.3149 23.4442C28.7672 22.3522 29 21.1819 29 20M20 29V26M29 20C29 18.8181 28.7672 17.6478 28.3149 16.5558C27.8626 15.4639 27.1997 14.4718 26.364 13.636C25.5282 12.8003 24.5361 12.1374 23.4442 11.6851C22.3522 11.2328 21.1819 11 20 11M29 20H26M20 11V15M20 20V20.01" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs>
+                            <linearGradient id="paint0_linear_4895_70604" x1="36.5779" y1="4.53249" x2="13.8706" y2="43.8339" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#BC00FF"/>
+                            <stop offset="0.508871" stop-color="#49BAEA"/>
+                            <stop offset="1" stop-color="#AFFF00"/>
+                            </linearGradient>
+                            </defs>
+                            </svg>
+                            </div>
+                            <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: inline-flex">
+                                <div style="text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 500; line-height: 15px; word-wrap: break-word">Vulnerabilities</div>
+                                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 20px; word-wrap: break-word">{{count["vulnerability"]}}</div>
+                            </div>
+                        </div>
+                        <div style="flex: 1 1 0; height: 64px; padding: 12px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: center; gap: 10px; display: flex">
+                            <div data-svg-wrapper>
+                            <svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666672" width="40" height="40" rx="20" fill="url(#paint0_linear_4895_70615)"/>
+                            <path d="M20.6667 10V12M17.6667 20V29M23.6667 20V29M13.6667 24L17.6667 22M23.6667 22L27.6667 24M17.6667 26H23.6667M18.6667 16V16.01M22.6667 16V16.01M14.6667 14C14.6667 13.4696 14.8774 12.9609 15.2525 12.5858C15.6275 12.2107 16.1362 12 16.6667 12H24.6667C25.1971 12 25.7058 12.2107 26.0809 12.5858C26.456 12.9609 26.6667 13.4696 26.6667 14V18C26.6667 18.5304 26.456 19.0391 26.0809 19.4142C25.7058 19.7893 25.1971 20 24.6667 20H16.6667C16.1362 20 15.6275 19.7893 15.2525 19.4142C14.8774 19.0391 14.6667 18.5304 14.6667 18V14Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs>
+                            <linearGradient id="paint0_linear_4895_70615" x1="37.2446" y1="4.53249" x2="14.5373" y2="43.8339" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#BC00FF"/>
+                            <stop offset="0.508871" stop-color="#49BAEA"/>
+                            <stop offset="1" stop-color="#AFFF00"/>
+                            </linearGradient>
+                            </defs>
+                            </svg>
+                            </div>
+                            <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: inline-flex">
+                                <div style="text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 500; line-height: 15px; word-wrap: break-word">Agents</div>
+                                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 20px; word-wrap: break-word">{{count["agents"]}}</div>
+                            </div>
+                        </div>
+                        <div style="flex: 1 1 0; height: 64px; padding: 12px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: center; gap: 10px; display: flex">
+                            <div data-svg-wrapper>
+                            <svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.333313" width="40" height="40" rx="20" fill="url(#paint0_linear_4895_70620)"/>
+                            <path d="M15.3333 18H18.3333V15L14.8333 11.5C15.9529 10.9652 17.2108 10.7908 18.4337 11.0006C19.6566 11.2104 20.7844 11.7942 21.6617 12.6715C22.5391 13.5489 23.1229 14.6767 23.3327 15.8996C23.5425 17.1225 23.368 18.3803 22.8333 19.5L28.8333 25.5C29.2311 25.8978 29.4546 26.4374 29.4546 27C29.4546 27.5626 29.2311 28.1022 28.8333 28.5C28.4355 28.8978 27.8959 29.1213 27.3333 29.1213C26.7707 29.1213 26.2311 28.8978 25.8333 28.5L19.8333 22.5C18.7137 23.0347 17.4558 23.2092 16.2329 22.9994C15.01 22.7895 13.8822 22.2058 13.0049 21.3284C12.1275 20.451 11.5438 19.3233 11.3339 18.1004C11.1241 16.8775 11.2986 15.6196 11.8333 14.5L15.3333 18Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs>
+                            <linearGradient id="paint0_linear_4895_70620" x1="36.9112" y1="4.53249" x2="14.204" y2="43.8339" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#BC00FF"/>
+                            <stop offset="0.508871" stop-color="#49BAEA"/>
+                            <stop offset="1" stop-color="#AFFF00"/>
+                            </linearGradient>
+                            </defs>
+                            </svg>
+                            </div>
+                            <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: inline-flex">
+                                <div style="text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 500; line-height: 15px; word-wrap: break-word">Tools</div>
+                                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 600; line-height: 20px; word-wrap: break-word">{{count["tools"]}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
+                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Tools</div>
+                    </div>
+                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
+                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: justify; line-height: 150%; padding: 6px; gap: 12px">
+                            <th style="border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Name</th>
+                            <th style="border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Category</th>
+                            <th style="border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Description</th>
+                            <th style="border-bottom: 0.50px #D4D4D4 solid;">Number of Vulnerabilities</th>
+                        </tr>
+                        {% for tool in tools %}
+                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
+                            <td style="border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.name}}</td>
+                            <td style="border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.category}}</td>
+                            <td style="border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.description}}</td>
+                            <td style="border-bottom: 0.50px #D4D4D4 solid;">{{tool.vulnerabilities | length}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
+            <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
+                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Tool Vulnerabilities</div>
+                <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
+                {% for tool in tools %}
+                {% if tool.vulnerabilities|length > 0 %}
+                <div style="width: 100%; margin-top:20px; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: inline-flex">
+                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                        <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex">
+                            <div style="color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">{{tool.name}}</div>
+                        </div>
+                        {% for v in tool.vulnerabilities %}
+                        <div style="width:100%; align-self: stretch; border: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; display: inline-flex">
+                            <div style="flex: 1 1 0; border-right: 0.50px #D4D4D4 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
+                                <div style="width: 100%; align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
+                                    <div style="flex: 40%; padding: 6px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Vulnerability</div>
+                                    </div>
+                                    <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{v.name}}</div>
+                                    </div>
+                                </div>
+                                <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
+                                    <div style="flex: 40%; align-self: stretch; padding: 6px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Description</div>
+                                    </div>
+                                    <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{v.description}}</div>
+                                    </div>
+                                </div>
+                                <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
+                                    <div style="flex: 40%; align-self: stretch; padding: 6px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Security Framework Mapping</div>
+                                    </div>
+                                    <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
+                                        {% for key, value in v.security_framework_mapping.items() %}
+                                        <div style="text-align: justify"><span style="color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{key}}:<br/></span><span style="color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{value|safe}}</span></div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
+                                    <div style="flex: 40%; align-self: stretch; padding: 6px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Remediation Steps</div>
+                                    </div>
+                                    <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{v.remediation}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
-
-
 </body>
-
 </html>

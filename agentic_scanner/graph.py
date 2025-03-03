@@ -42,5 +42,6 @@ class EdgeDefinition(BaseModel):
 
 
 class GraphDefinition(BaseModel):
+    name: str
     nodes: List[NodeDefinition]
     edges: List[EdgeDefinition]

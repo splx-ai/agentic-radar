@@ -25,6 +25,7 @@ class Args(BaseModel):
 app = typer.Typer()
 args: Args
 
+
 def version_callback(value: bool):
     if value:
         print(f"SplxAI Agentic Scanner Version: {__version__}")
@@ -68,6 +69,7 @@ def langgraph():
     analyzer = LangGraphAnalyzer()
     graph = analyzer.analyze(args.input_directory)
     pydot_graph = GraphDefinition(
+        name = graph.name,
         nodes=[
             NodeDefinition.model_validate(n, from_attributes=True) for n in graph.nodes
         ],

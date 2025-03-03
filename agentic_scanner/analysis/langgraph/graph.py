@@ -306,14 +306,12 @@ class GraphInstanceTracker(ast.NodeVisitor):
         if isinstance(node, ast.Name):
             if node.id in self.import_aliases_fully:
                 return self.import_aliases_fully[node.id]
-            else:
-                return self.import_aliases.get(node.id, node.id)
-        elif isinstance(node, ast.Attribute):
+            return self.import_aliases.get(node.id, node.id)
+        if isinstance(node, ast.Attribute):
             base_fq = self._resolve_fq_name(node.value)
             if base_fq:
                 return base_fq + "." + node.attr
-            else:
-                return node.attr
+            return node.attr
         return ""
 
     def _stringify_ast_node(self, node: ast.AST) -> str:
@@ -324,25 +322,25 @@ class GraphInstanceTracker(ast.NodeVisitor):
             if isinstance(node.value, str):
                 return node.value
             return repr(node.value)
-        elif isinstance(node, ast.Name):
+        if isinstance(node, ast.Name):
             return node.id
-        elif isinstance(node, ast.Call):
+        if isinstance(node, ast.Call):
             return f"Call({ast.dump(node)})"
-        elif isinstance(node, ast.List):
+        if isinstance(node, ast.List):
             # Convert elements recursively
             return (
                 "ListLiteral(["
                 + ", ".join(self._stringify_ast_node(elt) for elt in node.elts)
                 + "])"
             )
-        elif isinstance(node, ast.Dict):
+        if isinstance(node, ast.Dict):
             # Convert key-value pairs recursively
             keys = [self._stringify_ast_node(k) for k in node.keys]
             vals = [self._stringify_ast_node(v) for v in node.values]
             pairs_str = ", ".join(f"{k}: {v}" for k, v in zip(keys, vals))
             return f"DictLiteral({{{pairs_str}}})"
-        else:
-            return ast.dump(node)
+
+        return ast.dump(node)
 
     def _get_all_args_in_call(self, call_node: ast.Call) -> List[ast.expr]:
         """

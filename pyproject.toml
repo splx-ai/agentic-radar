@@ -1,11 +1,23 @@
 [project]
 name = "agentic-scanner"
 dynamic = [ "version" ]
-description = ""
+description = "A python library for generating reports for agentic systems."
 license = { file = "LICENSE" }
 readme = "README.md"
-requires-python = "^3.9"
-authors = [ {name = "SplxAI Developers", email = "developers@splx.ai"} ]
+requires-python = ">=3.9"
+
+authors = [ {name = "SplxAI", email = "developers@splx.ai"} ]
+maintainers = [ {name = "SplxAI", email = "developers@splx.ai"} ]
+
+keywords = []
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9"
+]
+
 dependencies = [
     "pydot>=3.0.4",
     "pydantic>=2.10.6",
@@ -13,12 +25,18 @@ dependencies = [
     "jinja2 (>=3.1.5,<4.0.0)",
 ]
 
+
 [tool.poetry]
 version = "0.0.0"
 
 [project.optional-dependencies]
 langgraph = []
 all = []
+
+[project.urls]
+Homepage = "https://github.com/splx-ai/agentic-scanner"
+Source = "https://github.com/splx-ai/agentic-scanner"
+Tracker = "https://github.com/splx-ai/agentic-scanner/issues"
 
 [project.scripts]
 agentic-scanner = "agentic_scanner.cli:app"
@@ -34,10 +52,14 @@ pre-commit = "^4.1.0"
 profile = "black"
 
 [tool.pylint]
-disable = ["E1101", "C0114", "C0115", "C0116"] # dynamic attributes
+disable = ["E1101", "C0114", "C0115", "C0116", "R0903"] 
 
 [tool.mypy]
 disable_error_code = ["import-untyped"] # pydot is untyped
+
+[[tool.mypy.overrides]]
+module = "openai"
+ignore_missing_imports = true
 
 [tool.black]
 check = true
