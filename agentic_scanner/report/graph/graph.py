@@ -13,7 +13,7 @@ class Graph(pydot.Dot):
             overlap="prism",
             mode="sgd",
             outputorder="edgesfirst",
-            sep="+60",
+            sep="+100",
             labelloc="b",
             normalize=True,
         )
