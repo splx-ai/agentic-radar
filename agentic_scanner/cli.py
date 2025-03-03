@@ -69,6 +69,7 @@ def langgraph():
     analyzer = LangGraphAnalyzer()
     graph = analyzer.analyze(args.input_directory)
     pydot_graph = GraphDefinition(
+        framework="LangGraph",
         name = graph.name,
         nodes=[
             NodeDefinition.model_validate(n, from_attributes=True) for n in graph.nodes

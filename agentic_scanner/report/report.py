@@ -28,6 +28,7 @@ class Tool(BaseModel):
 
 class ReportData(BaseModel):
     project_name: str
+    framework: str
     timestamp: str
     graph: str
 
@@ -55,6 +56,7 @@ def generate(graph: GraphDefinition, out_file: str):
 
     template.stream(**ReportData(
         project_name=graph.name,
+        framework=graph.framework,
         timestamp=datetime.datetime.now().strftime("%x %X"),
         graph=svg,
         count={
