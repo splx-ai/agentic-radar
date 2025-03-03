@@ -17,6 +17,9 @@ ADD_NODE_METHOD_NAME = "add_node"
 
 
 class LangGraphAnalyzer(Analyzer):
+    def __init__(self):
+        super().__init__()
+
     def analyze(self, root_directory: str) -> GraphDefinition:
         global_functions, global_variables = build_global_registry(root_directory)
 

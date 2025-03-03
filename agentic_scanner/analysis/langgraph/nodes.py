@@ -1,18 +1,20 @@
-import openai
 import json
 import os
+
+import openai
+
 
 def get_python_files(directory):
     python_files = []
     for root, _, files in os.walk(directory):
         for file in files:
-            if file.endswith('.py'):
+            if file.endswith(".py"):
                 python_files.append(os.path.join(root, file))
     return python_files
 
 
 def parse_gotos(node, graph_file_path, root_directory):
-    
+
     with open(graph_file_path, "r") as f:
         code = f.read()
 
@@ -67,15 +69,13 @@ You must respond with a JSON containing the following fields:
 
 """
 
-    messages= [
-        {"role":"system", "content": system_prompt},
-        {"role": "user", "content": first_user_message}
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": first_user_message},
     ]
 
     response = client.chat.completions.create(
-        model = "gpt-4o",
-        messages= messages,
-        response_format={"type":"json_object"}
+        model="gpt-4o", messages=messages, response_format={"type": "json_object"}
     )
 
     response_json = json.loads(response.choices[0].message.content)
@@ -88,7 +88,7 @@ You must respond with a JSON containing the following fields:
 
             with open(file_path, "r") as f:
                 code = f.read()
-                new_user_message+=f"""
+                new_user_message += f"""
 # Code Beginning
 {code}
 # Code End
@@ -98,20 +98,14 @@ You must respond with a JSON containing the following fields:
 # Code File Path End
 
 """
-        
-        messages.append({
-            "role":"assistant",
-            "content": response.choices[0].message.content
-        })
-        messages.append({
-            "role": "user",
-            "content": new_user_message
-        })
+
+        messages.append(
+            {"role": "assistant", "content": response.choices[0].message.content}
+        )
+        messages.append({"role": "user", "content": new_user_message})
 
         response = client.chat.completions.create(
-            model = "gpt-4o",
-            messages= messages,
-            response_format={"type":"json_object"}
+            model="gpt-4o", messages=messages, response_format={"type": "json_object"}
         )
 
         response_json = json.loads(response.choices[0].message.content)

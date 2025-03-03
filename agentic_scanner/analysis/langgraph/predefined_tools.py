@@ -1,8 +1,9 @@
 import ast
-import os
 import json
-from typing import List, Set, Dict
-import importlib.resources as resources
+import os
+from importlib import resources
+from typing import Dict, List, Set
+
 
 def extract_imports_with_ast(file_content: str) -> List[str]:
     imports = []
@@ -13,14 +14,15 @@ def extract_imports_with_ast(file_content: str) -> List[str]:
             for alias in node.names:
                 full_import = alias.name
                 imports.append(full_import)
-        
+
         elif isinstance(node, ast.ImportFrom):
             module = node.module
             for alias in node.names:
                 full_import = f"{module}.{alias.name}"
                 imports.append(full_import)
-    
+
     return imports
+
 
 def parse_all_imports_from_directory(directory_path: str) -> Set[str]:
     all_imports = set()
@@ -33,10 +35,13 @@ def parse_all_imports_from_directory(directory_path: str) -> Set[str]:
                     imports = extract_imports_with_ast(file_content)
                     for single_import in imports:
                         all_imports.add(single_import)
-    
+
     return all_imports
 
-def get_all_predefined_tools_from_directory(directory_path: str) -> List[Dict[str, Dict[str, str]]]:
+
+def get_all_predefined_tools_from_directory(
+    directory_path: str,
+) -> List[Dict[str, Dict[str, str]]]:
     input_file = resources.files(__package__) / "predefined_tools.json"
     with input_file.open("r") as f:
         predefined_tools = json.loads(f.read())
