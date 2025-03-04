@@ -1,7 +1,7 @@
 <div align="center">
 
 
-  <a href="https://splx.ai"><img src="docs/logo.svg" alt="logo" width="200" height="auto" /></a>
+  <a href="https://splx.ai"><img src="docs/logo.svg" alt="logo" width="300" height="auto" /></a>
   <h1>Agentic Radar</h1>
   
   <p>
