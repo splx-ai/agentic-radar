@@ -1,3 +1,3 @@
-from .version import VERSION
+import importlib.metadata
 
-__version__ = VERSION
+__version__ = importlib.metadata.version("agentic_radar")
