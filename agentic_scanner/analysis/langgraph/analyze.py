@@ -43,15 +43,8 @@ class LangGraphAnalyzer(Analyzer):
 
         for graph in all_graphs:
             for i, node in enumerate(graph["graph_info"]["nodes"]):
-                type = NodeType.BASIC
-                if i % 4 == 0:
-                    type = NodeType.TOOL
-                elif i % 5 == 0:
-                    type = NodeType.CUSTOM_TOOL
-                elif i % 6 == 0:
-                    type = NodeType.AGENT
 
-                nodes.append(Node(type=type, name=node["name"], label=node["name"]))
+                nodes.append(Node(type=NodeType.BASIC, name=node["name"], label=node["name"]))
 
             nodes.append(Node(type=NodeType.BASIC, name="START", label="START"))
 
@@ -71,60 +64,83 @@ class LangGraphAnalyzer(Analyzer):
                     )
                 )
 
-        tools = [
-            Node(
-                name="create_issue",
-                type=NodeType.TOOL,
-                category=ToolType.CODE_INTERPRETER,
-                description="Tool description",
-                vulnerabilities=[
-                    VulnerabilityDefinition(
-                        name="Improper Output Handling",
-                        description="Generated",
-                        security_framework_mapping={
-                            "CVE": "blabla",
-                            "OWASP LLM TOP 10": "blabla",
-                        },
-                        remediation="Remediate placholder",
-                    ),
-                    VulnerabilityDefinition(
-                        name="Improper Output Handling 2",
-                        description="Generated",
-                        security_framework_mapping={
-                            "CVE": "blabla",
-                            "OWASP LLM TOP 10": "blabla",
-                        },
-                        remediation="Placeholder",
-                    ),
-                ],
-            ),
-            Node(
-                name="create_issue 2",
-                type=NodeType.TOOL,
-                category=ToolType.CODE_INTERPRETER,
-                description="Tool description",
-                vulnerabilities=[
-                    VulnerabilityDefinition(
-                        name="Improper Output Handling",
-                        description="Generated",
-                        security_framework_mapping={
-                            "CVE": '<span style="color: black; font-size: 10px; font-family: Inter; font-weight: 400; text-decoration: underline; line-height: 15px; word-wrap: break-word">CVE-2023-44467</span>',
-                            "OWASP LLM TOP 10": "blabla",
-                        },
-                        remediation="Remediate placholder",
-                    ),
-                    VulnerabilityDefinition(
-                        name="Improper Output Handling 2",
-                        description="Generated",
-                        security_framework_mapping={
-                            "CVE": "blabla",
-                            "OWASP LLM TOP 10": "blabla",
-                        },
-                        remediation="Placeholder",
-                    ),
-                ],
-            ),
-        ]
+        tools = []
+
+        for predefined_tool in predefined_tools:
+            tools.append(
+                Node(
+                    name=predefined_tool["name"],
+                    type=NodeType.TOOL,
+                    category=ToolType.DEFAULT,#predefined_tool["category"],
+                    vulnerabilities=[] # TODO Add vulnerability mapping
+                )
+            )
+
+        for custom_tool in custom_tools:
+            tools.append(
+                Node(
+                    name=custom_tool["name"],
+                    type=NodeType.CUSTOM_TOOL,
+                    category=ToolType.DEFAULT,
+                    vulnerabilities=[] # TODO Add vulnerability mapping
+                )
+            )
+
+        # This is for report generation testing
+        # tools = [
+        #     Node(
+        #         name="create_issue",
+        #         type=NodeType.TOOL,
+        #         category=ToolType.CODE_INTERPRETER,
+        #         description="Tool description",
+        #         vulnerabilities=[
+        #             VulnerabilityDefinition(
+        #                 name="Improper Output Handling",
+        #                 description="Generated",
+        #                 security_framework_mapping={
+        #                     "CVE": "blabla",
+        #                     "OWASP LLM TOP 10": "blabla",
+        #                 },
+        #                 remediation="Remediate placholder",
+        #             ),
+        #             VulnerabilityDefinition(
+        #                 name="Improper Output Handling 2",
+        #                 description="Generated",
+        #                 security_framework_mapping={
+        #                     "CVE": "blabla",
+        #                     "OWASP LLM TOP 10": "blabla",
+        #                 },
+        #                 remediation="Placeholder",
+        #             ),
+        #         ],
+        #     ),
+        #     Node(
+        #         name="create_issue 2",
+        #         type=NodeType.TOOL,
+        #         category=ToolType.CODE_INTERPRETER,
+        #         description="Tool description",
+        #         vulnerabilities=[
+        #             VulnerabilityDefinition(
+        #                 name="Improper Output Handling",
+        #                 description="Generated",
+        #                 security_framework_mapping={
+        #                     "CVE": '<span style="color: black; font-size: 10px; font-family: Inter; font-weight: 400; text-decoration: underline; line-height: 15px; word-wrap: break-word">CVE-2023-44467</span>',
+        #                     "OWASP LLM TOP 10": "blabla",
+        #                 },
+        #                 remediation="Remediate placholder",
+        #             ),
+        #             VulnerabilityDefinition(
+        #                 name="Improper Output Handling 2",
+        #                 description="Generated",
+        #                 security_framework_mapping={
+        #                     "CVE": "blabla",
+        #                     "OWASP LLM TOP 10": "blabla",
+        #                 },
+        #                 remediation="Placeholder",
+        #             ),
+        #         ],
+        #     ),
+        # ]
 
         return GraphDefinition(
             name=Path(root_directory).name, nodes=nodes, edges=edges, tools=tools
