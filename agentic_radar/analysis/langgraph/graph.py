@@ -429,17 +429,15 @@ class GraphInstanceTracker(ast.NodeVisitor):
                         elif node.value.value:
                             inner_self.variables[var_name].append(node.value.value)
                     elif isinstance(node.value, ast.Name):
+                        # example var1 = var2
                         if (
-                            var_name not in inner_self.variables
-                            and node.value.value is not None
+                            node.value.id in inner_self.variables
                         ):
+                            inner_self.variables[var_name] = inner_self.variables[node.value.id]
+                        else:
                             inner_self.variables[var_name] = [
                                 inner_self.outer._stringify_ast_node(node.value)
                             ]
-                        elif node.value:
-                            inner_self.variables[var_name].append(
-                                inner_self.outer._stringify_ast_node(node.value)
-                            )
 
         ReturnCollector(self).visit(func_def)
         return returns
@@ -532,17 +530,15 @@ class GraphInstanceTracker(ast.NodeVisitor):
                         elif node.value.value:
                             inner_self.variables[var_name].append(node.value.value)
                     elif isinstance(node.value, ast.Name):
+                        # example var1 = var2
                         if (
-                            var_name not in inner_self.variables
-                            and node.value.value is not None
+                            node.value.id in inner_self.variables
                         ):
+                            inner_self.variables[var_name] = inner_self.variables[node.value.id]
+                        else:
                             inner_self.variables[var_name] = [
                                 inner_self.outer._stringify_ast_node(node.value)
                             ]
-                        elif node.value:
-                            inner_self.variables[var_name].append(
-                                inner_self.outer._stringify_ast_node(node.value)
-                            )
                     elif isinstance(node.value, ast.List):
                         if var_name not in inner_self.variables and node.value:
                             inner_self.variables[var_name] = [
