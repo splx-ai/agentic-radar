@@ -6,9 +6,9 @@ import typer
 from pydantic import BaseModel
 from typing_extensions import Annotated
 
-from . import __version__
-from .analysis import LangGraphAnalyzer
-from .report import (
+from agentic_radar import __version__
+from agentic_radar.analysis import LangGraphAnalyzer
+from agentic_radar.report import (
     EdgeDefinition,
     GraphDefinition,
     NodeDefinition,
