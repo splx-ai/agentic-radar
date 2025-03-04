@@ -11,34 +11,34 @@
   
 <!-- Badges -->
 <p>
-  <a href="https://github.com/splx-ai/agentic-scanner/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/splx-ai/agentic-scanner" alt="contributors" />
+  <a href="https://github.com/splx-ai/agentic-radar/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/splx-ai/agentic-radar" alt="contributors" />
   </a>
   <a href="">
-    <img src="https://img.shields.io/github/last-commit/splx-ai/agentic-scanner" alt="last update" />
+    <img src="https://img.shields.io/github/last-commit/splx-ai/agentic-radar" alt="last update" />
   </a>
-  <a href="https://github.com/splx-ai/agentic-scanner/network/members">
-    <img src="https://img.shields.io/github/forks/splx-ai/agentic-scanner" alt="forks" />
+  <a href="https://github.com/splx-ai/agentic-radar/network/members">
+    <img src="https://img.shields.io/github/forks/splx-ai/agentic-radar" alt="forks" />
   </a>
-  <a href="https://github.com/splx-ai/agentic-scanner/stargazers">
-    <img src="https://img.shields.io/github/stars/splx-ai/agentic-scanner" alt="stars" />
+  <a href="https://github.com/splx-ai/agentic-radar/stargazers">
+    <img src="https://img.shields.io/github/stars/splx-ai/agentic-radar" alt="stars" />
   </a>
-  <a href="https://github.com/splx-ai/agentic-scanner/issues/">
-    <img src="https://img.shields.io/github/issues/splx-ai/agentic-scanner" alt="open issues" />
+  <a href="https://github.com/splx-ai/agentic-radar/issues/">
+    <img src="https://img.shields.io/github/issues/splx-ai/agentic-radar" alt="open issues" />
   </a>
-  <a href="https://github.com/splx-ai/agentic-scanner/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/splx-ai/agentic-scanner.svg" alt="license" />
+  <a href="https://github.com/splx-ai/agentic-radar/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/splx-ai/agentic-radar.svg" alt="license" />
   </a>
 </p>
    
   <h4>
-    <a href="https://github.com/splx-ai/agentic-scanner/">View Demo</a>
+    <a href="https://github.com/splx-ai/agentic-radar/">View Demo</a>
   <span> · </span>
-    <a href="https://github.com/splx-ai/agentic-scanner">Documentation</a>
+    <a href="https://github.com/splx-ai/agentic-radar">Documentation</a>
   <span> · </span>
-    <a href="https://github.com/splx-ai/agentic-scanner/issues/">Report Bug</a>
+    <a href="https://github.com/splx-ai/agentic-radar/issues/">Report Bug</a>
   <span> · </span>
-    <a href="https://github.com/splx-ai/agentic-scanner/issues/">Request Feature</a>
+    <a href="https://github.com/splx-ai/agentic-radar/issues/">Request Feature</a>
   </h4>
 </div>
 
@@ -81,7 +81,7 @@ OVDJE METNI SLIKU REPORTA
 
 ### Prerequisites
 
-Agentic Scanner uses graphviz and cairo for dependency graph visualization.
+Agentic Radar uses graphviz and cairo for dependency graph visualization.
 
 - graphviz
 ```sh
@@ -103,24 +103,24 @@ apt-get install libcairo
 
 ### Installation
 ```sh
-pip install agentic-scanner
+pip install agentic-radar
 
 # Check that it is installed
-agentic-scanner --version
+agentic-radar --version
 ```
 
 ## Usage
 
-Run `agentic-scanner --help` for more info:
+Run `agentic-radar --help` for more info:
 ```
-Usage: agentic-scanner [OPTIONS] COMMAND [ARGS]...
+Usage: agentic-radar [OPTIONS] COMMAND [ARGS]...
 
 Options:
   -i, --input-dir TEXT            Path to the directory where all the code is
-                                  [env var: AGENTIC_SCANNER_INPUT_DIRECTORY;
+                                  [env var: AGENTIC_RADAR_INPUT_DIRECTORY;
                                   default: .]
   -o, --output-file TEXT          Where should the output report be stored
-                                  [env var: AGENTIC_SCANNER_OUTPUT_FILE;
+                                  [env var: AGENTIC_RADAR_OUTPUT_FILE;
                                   default: report_20250226_122829.html]
   --version
   --install-completion [bash|zsh|fish|powershell|pwsh]
@@ -135,7 +135,7 @@ Commands:
 ```
 
 
-## Roadman
+## Roadmap
 
 
 ## Demo
