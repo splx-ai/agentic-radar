@@ -2,19 +2,26 @@
 <head>
 <style>
 .main {
-    width: 55%;
+    width: 60%;
     margin: auto;
+
+    flex-direction: column;
+    display: flex;
 }
 
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
 <div class="main">
-    <div style="width:100%; background: white; flex-direction: column; justify-content: flex-start; gap: 20px; align-items: flex-start; display: flex">
+<div style="width: 100%; height: 160px; text-align: center; justify-content: center; align-self: stretch; position: relative; background: linear-gradient(360deg, #002134 0%, #000407 100%)">
+    {% include 'assets/cover.svg' %}
+</div>
+    <div style="width:100%; background: white; flex-direction: column; justify-content: flex-start; margin-top: 20px; gap: 20px; align-items: flex-start; display: flex">
         <div style="width: 100%; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
             <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
                 <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px">Scan Details</div>

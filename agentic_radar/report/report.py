@@ -6,8 +6,9 @@ from typing import Dict, List, Optional
 import jinja2
 from pydantic import BaseModel, Field
 
-from ..graph import NodeType
+from agentic_radar import __version__
 
+from ..graph import NodeType
 from .graph import (
     GraphDefinition,
     from_definition,
@@ -37,6 +38,7 @@ class ReportData(BaseModel):
     count: Dict[str, int]
 
     tools: List[Tool]
+    scanner_version: str
 
 
 def generate(graph: GraphDefinition, out_file: str):
@@ -72,5 +74,6 @@ def generate(graph: GraphDefinition, out_file: str):
                 ),
             },
             tools=tools,
+            scanner_version=__version__
         ).model_dump()
     ).dump(out_file)
