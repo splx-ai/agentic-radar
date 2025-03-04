@@ -66,10 +66,17 @@
 
 ## Description
 
-Create an AI Security report for Agentic Systems, including:
-- dependency graph of all components in the Agentic System
-- list of custom and third party tools used
-- common security issues found in the Agentic System
+The **Agentic Radar** is designed to analyze and assess agentic systems for security and operational insights. It helps developers, researchers, and security professionals understand how agentic systems function and identify potential vulnerabilities.
+
+It allows users to create a security report for agentic systems, including:
+1. **Workflow Visualization** - a graph of the agentic system's workflow✅
+2. **Tool Identification** - a list of all external and custom tools utilized by the system✅
+3. **Vulnerability Mapping** - a table connecting identified tools to known vulnerabilities, providing a security overview✅
+
+The comprehensive HTML report summarizes all findings and allows for easy reviewing and sharing.
+
+Why Use It? 🔎
+Agentic systems have complex workflows and often interact with multiple tools, making transparency and security assessment challenging. This tool simplifies the process by offering a structured view of workflows, tools, and potential risks.
 
 
 OVDJE METNI SLIKU REPORTA
