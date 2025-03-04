@@ -75,7 +75,8 @@ It allows users to create a security report for agentic systems, including:
 
 The comprehensive HTML report summarizes all findings and allows for easy reviewing and sharing.
 
-Why Use It? 🔎
+**Why Use It?** 🔎
+
 Agentic systems have complex workflows and often interact with multiple tools, making transparency and security assessment challenging. This tool simplifies the process by offering a structured view of workflows, tools, and potential risks.
 
 
