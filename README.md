@@ -61,7 +61,6 @@
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#code-of-conduct">Code Of Conduct</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
 
@@ -139,7 +138,7 @@ Commands:
 
 ## Demo
 
-OVDJE METNI GIF KAKO SE KORISTI I KAKO IZGLEDA REPORT
+<img src="./docs/demo.gif"/>
 
 ## Contributing
 
@@ -151,7 +150,3 @@ OVDJE METNI GIF KAKO SE KORISTI I KAKO IZGLEDA REPORT
 ## License
 
 [LICENSE](LICENSE.md)
-
-## Contact
-
-blabla
