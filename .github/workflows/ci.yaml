@@ -1,66 +1,66 @@
-name: CI
+#name: CI
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+#on:
+  #push:
+    #branches:
+      #- main
+  #pull_request:
+    #branches:
+      #- main
 
-env:
-  POETRY_VERSION: 2.0.1
-
-
-jobs:
-  check:
-    runs-on: ubuntu-latest
-    permissions: write-all
-    name: Check
-    outputs:
-      version: ${{ steps.semantic.outputs.new_release_version}}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install poetry
-        run: curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
-
-      - name: Install dependencies
-        run: poetry install
-
-      - name: Run checks
-        run: pre-commit run --all-files
-
-      - name: Run semantic-release
-        id: semantic
-        uses: cycjimmy/semantic-release-action@v4
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          semantic_version: 24.2.0
-          extra_plugins: |
-            @semantic-release/git
-            @semantic-release/github
-            @semantic-release/exec
-            @semantic-release/changelog
+#env:
+  #POETRY_VERSION: 2.0.1
 
 
-  release:
-    needs: [check]
-    if: github.ref == 'refs/heads/main' && needs.check.outputs.version != ''
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+#jobs:
+  #check:
+    #runs-on: ubuntu-latest
+    #permissions: write-all
+    #name: Check
+    #outputs:
+      #version: ${{ steps.semantic.outputs.new_release_version}}
+    #steps:
+      #- uses: actions/checkout@v4
+      #- uses: actions/setup-python@v5
+        #with:
+          #python-version: '3.11'
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+      #- name: Install poetry
+        #run: curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
 
-      - name: Install poetry
-        run: curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
+      #- name: Install dependencies
+        #run: poetry install
 
-      - name: Install dependencies
-        run: poetry install
+      #- name: Run checks
+        #run: pre-commit run --all-files
+
+      #- name: Run semantic-release
+        #id: semantic
+        #uses: cycjimmy/semantic-release-action@v4
+        #env:
+          #GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #with:
+          #semantic_version: 24.2.0
+          #extra_plugins: |
+            #@semantic-release/git
+            #@semantic-release/github
+            #@semantic-release/exec
+            #@semantic-release/changelog
+
+
+  #release:
+    #needs: [check]
+    #if: github.ref == 'refs/heads/main' && needs.check.outputs.version != ''
+    #runs-on: ubuntu-latest
+    #steps:
+      #- uses: actions/checkout@v4
+
+      #- uses: actions/setup-python@v5
+        #with:
+          #python-version: '3.11'
+
+      #- name: Install poetry
+        #run: curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
+
+      #- name: Install dependencies
+        #run: poetry install

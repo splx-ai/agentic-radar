@@ -805,5 +805,5 @@ langgraph = []
 
 [metadata]
 lock-version = "2.1"
-python-versions = "^3.9"
-content-hash = "23baa694af1e70b25568b192a097c3c2fb777dce6d1d009d24dd2bf6b730759f"
+python-versions = ">=3.9"
+content-hash = "2712212b2176b016e147288c7d008b14cd77927dae0d4ce723d16b22ecb2c691"

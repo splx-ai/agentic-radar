@@ -1,12 +1,12 @@
 import datetime
 import os
 import re
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import jinja2
 from pydantic import BaseModel, Field
 
-from agentic_scanner.graph import NodeType
+from ..graph import NodeType
 
 from .graph import (
     GraphDefinition,
@@ -24,7 +24,7 @@ class Vulnerability(BaseModel):
 class Tool(BaseModel):
     name: str
     category: str
-    description: str
+    description: Optional[str] = None
     vulnerabilities: List[Vulnerability] = Field(default_factory=list)
 
 
