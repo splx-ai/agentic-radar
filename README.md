@@ -46,7 +46,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#features">Features</a>
+      <a href="#description">Description</a>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -65,7 +65,7 @@
   </ol>
 </details>
 
-## Features
+## Description
 
 Create an AI Security report for Agentic Systems, including:
 - dependency graph of all components in the Agentic System
