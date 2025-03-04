@@ -6,10 +6,9 @@ import typer
 from pydantic import BaseModel
 from typing_extensions import Annotated
 
-from agentic_scanner import __version__
-from agentic_scanner.analysis import LangGraphAnalyzer
-from agentic_scanner.graph import NodeType, ToolType, VulnerabilityDefinition
-from agentic_scanner.report import (
+from agentic_radar import __version__
+from agentic_radar.analysis import LangGraphAnalyzer
+from agentic_radar.report import (
     EdgeDefinition,
     GraphDefinition,
     NodeDefinition,
@@ -29,7 +28,7 @@ args: Args
 
 def version_callback(value: bool):
     if value:
-        print(f"SplxAI Agentic Scanner Version: {__version__}")
+        print(f"SplxAI Agentic Radar Version: {__version__}")
         raise typer.Exit()
 
 
@@ -41,7 +40,7 @@ def _main(
             "--input-dir",
             "-i",
             help="Path to the directory where all the code is",
-            envvar="AGENTIC_SCANNER_INPUT_DIRECTORY",
+            envvar="AGENTIC_RADAR_INPUT_DIRECTORY",
         ),
     ] = ".",
     output_file: Annotated[
@@ -50,7 +49,7 @@ def _main(
             "--output-file",
             "-o",
             help="Where should the output report be stored",
-            envvar="AGENTIC_SCANNER_OUTPUT_FILE",
+            envvar="AGENTIC_RADAR_OUTPUT_FILE",
         ),
     ] = f"report_{datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d_%H%M%S')}.html",
     version: Annotated[
@@ -64,7 +63,7 @@ def _main(
     )
 
 
-@app.command("langgraph", help="Run scan for code written with LangGraph")
+@app.command("langgraph", help="Scan code written with LangGraph")
 def langgraph():
     print(f"Analyzing {args.input_directory} for LangGraph graphs")
     analyzer = LangGraphAnalyzer()

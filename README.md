@@ -2,7 +2,7 @@
 
 
   <a href="https://splx.ai"><img src="docs/logo.svg" alt="logo" width="200" height="auto" /></a>
-  <h1>Agentic Scanner</h1>
+  <h1>Agentic Radar</h1>
   
   <p>
     A Security Scanner for your agentic workflows!

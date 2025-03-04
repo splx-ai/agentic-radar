@@ -1,12 +1,10 @@
 from pathlib import Path
 
-from agentic_scanner.analysis.analyze import Analyzer
-from agentic_scanner.graph import GraphDefinition
-
+from ...analysis.analyze import Analyzer
 from ...graph import EdgeDefinition as Edge
 from ...graph import GraphDefinition
 from ...graph import NodeDefinition as Node
-from ...graph import NodeType, ToolType, VulnerabilityDefinition
+from ...graph import NodeType, ToolType
 from .custom_tools import get_all_custom_tools_from_directory
 from .graph import parse_all_graph_instances_in_directory
 from .predefined_tools import get_all_predefined_tools_from_directory
@@ -44,7 +42,9 @@ class LangGraphAnalyzer(Analyzer):
         for graph in all_graphs:
             for i, node in enumerate(graph["graph_info"]["nodes"]):
 
-                nodes.append(Node(type=NodeType.BASIC, name=node["name"], label=node["name"]))
+                nodes.append(
+                    Node(type=NodeType.BASIC, name=node["name"], label=node["name"])
+                )
 
             nodes.append(Node(type=NodeType.BASIC, name="START", label="START"))
 
@@ -82,7 +82,7 @@ class LangGraphAnalyzer(Analyzer):
                     name=custom_tool["name"],
                     type=NodeType.CUSTOM_TOOL,
                     category=ToolType.DEFAULT,
-                    vulnerabilities=[] # TODO Add vulnerability mapping
+                    vulnerabilities=[],  # TODO Add vulnerability mapping
                 )
             )
 
