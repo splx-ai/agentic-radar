@@ -1,7 +1,7 @@
 <div align="center">
 
 
-  <a href="https://splx.ai"><img src="docs/logo.svg" alt="logo" width="300" height="auto" /></a>
+  <a href="https://splx.ai"><img src="docs/logo.png" alt="logo" width="300" height="auto" /></a>
   
   <p>
     A Security Scanner for your agentic workflows!
