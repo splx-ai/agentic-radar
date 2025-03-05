@@ -1,0 +1,42 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - '*'
+
+env:
+  POETRY_VERSION: 2.0.1
+
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    name: Check
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install poetry
+        run: curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
+
+      - name: Install dependencies
+        run: poetry install
+
+      #- name: Run checks
+        #run: pre-commit run --all-files
+        #
+      - name: Build
+        run: poetry build
+
+      - name: Release github
+        uses: actions/upload-artifact@v4
+        with:
+          name: agentic-radar
+          path: dist/
+
+

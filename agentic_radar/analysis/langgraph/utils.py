@@ -1,0 +1,98 @@
+import ast
+import os
+from typing import Dict, Tuple, Union
+
+
+def build_global_registry(
+    root_dir: str,
+) -> Tuple[
+    Dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]],
+    Dict[str, Union[ast.List, ast.Dict]],
+]:
+    """
+    Recursively walk `root_dir`,
+    parse each .py file to find top-level function defs and variable defs
+    (that are lists or dicts).
+
+    We'll store them in global_functions and global_variables with a fully
+    qualified name
+    """
+    global_functions = {}
+    global_variables = {}
+    for dirpath, _, filenames in os.walk(root_dir):
+        for filename in filenames:
+            if filename.endswith(".py"):
+                fullpath = os.path.join(dirpath, filename)
+                module_name = derive_module_name(dirpath, filename, root_dir)
+                local_functions, local_variables = parse_for_top_level_defs(
+                    fullpath, module_name
+                )
+
+                for k, v in local_functions.items():
+                    global_functions[k] = v
+
+                for k, v in local_variables.items():
+                    global_variables[k] = v
+
+    return global_functions, global_variables
+
+
+def derive_module_name(dirpath: str, filename: str, root_dir: str) -> str:
+    """
+    Convert a file path into a dotted module name
+    """
+
+    rel_path = os.path.relpath(dirpath, root_dir)
+    parts = []
+    if rel_path != ".":
+        parts = rel_path.split(os.sep)
+
+    base_name = filename.removesuffix(".py")
+    parts.append(base_name)
+
+    module_name = ".".join(parts)
+    return module_name
+
+
+def parse_for_top_level_defs(filepath: str, module_name: str) -> None:
+    """
+    Parse one file, collecting top-level function definitions and
+    top-level variable definitions (lists/dicts)
+    """
+    local_functions = {}
+    local_variables = {}
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        source = f.read()
+    tree = ast.parse(source, filename=filepath)
+
+    class TopLevelCollector(ast.NodeVisitor):
+        def visit_FunctionDef(self, node: ast.FunctionDef):
+            fq_key = f"{module_name}.{node.name}"
+            local_functions[fq_key] = node
+            self.generic_visit(node)
+
+        def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef):
+            fq_key = f"{module_name}.{node.name}"
+            local_functions[fq_key] = node
+            self.generic_visit(node)
+
+        def visit_Assign(self, node: ast.Assign):
+            if isinstance(node.parent, ast.Module):
+                if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+                    var_name = node.targets[0].id
+                    val = node.value
+                    if isinstance(val, (ast.List, ast.Dict)):
+                        fq_key = f"{module_name}.{var_name}"
+                        local_variables[fq_key] = val
+            self.generic_visit(node)
+
+        def generic_visit(self, node):
+            for child in ast.iter_child_nodes(node):
+                child.parent = node
+                self.visit(child)
+
+    collector = TopLevelCollector()
+    collector.visit(tree)
+
+    return local_functions, local_variables

@@ -1,0 +1,73 @@
+[project]
+name = "agentic-radar"
+dynamic = [ "version" ]
+description = "A python library for generating reports for agentic systems."
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.9"
+
+authors = [ {name = "SplxAI", email = "developers@splx.ai"} ]
+maintainers = [ {name = "SplxAI", email = "developers@splx.ai"} ]
+
+keywords = []
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9"
+]
+
+dependencies = [
+    "pydot>=3.0.4",
+    "pydantic>=2.10.6",
+    "typer-slim>=0.15.1",
+    "jinja2 (>=3.1.5,<4.0.0)",
+]
+
+
+[tool.poetry]
+version = "0.1.0"
+
+[project.optional-dependencies]
+langgraph = []
+all = []
+
+[project.urls]
+Homepage = "https://github.com/splx-ai/agentic-radar"
+Source = "https://github.com/splx-ai/agentic-radar"
+Tracker = "https://github.com/splx-ai/agentic-radar/issues"
+
+[project.scripts]
+agentic-radar = "agentic_radar.cli:app"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+isort = "^6.0.0"
+mypy = "^1.15.0"
+pylint = "^3.3.4"
+pre-commit = "^4.1.0"
+
+[tool.isort]
+profile = "black"
+
+[tool.pylint]
+disable = ["E1101", "C0114", "C0115", "C0116", "R0903"] 
+
+[tool.mypy]
+disable_error_code = ["import-untyped"] # pydot is untyped
+
+[[tool.mypy.overrides]]
+module = "openai"
+ignore_missing_imports = true
+
+[tool.black]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[jinja-lsp]
+templates="./agentic_scanner/report/templates"
+backend = ["./agentic_scanner"]
+lang = "python"
