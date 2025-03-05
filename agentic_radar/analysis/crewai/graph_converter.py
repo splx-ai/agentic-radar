@@ -29,10 +29,10 @@ def convert_graph(crewai_graph: CrewAIGraph) -> GraphDefinition:
             category=category,
         )
 
-        nodes.append(output_node)
+        nodes.append(output_node.model_copy(deep=True))
 
         if node.type == CrewAINodeType.TOOL:
-            tools.append(output_node)
+            tools.append(output_node.model_copy(deep=True))
 
     for edge in crewai_graph.edges:
         edges.append(
