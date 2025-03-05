@@ -246,7 +246,7 @@
                                         <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Vulnerability</div>
                                     </div>
                                     <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{v.name}}</div>
+                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word"><b>{{v.name}}</b></div>
                                     </div>
                                 </div>
                                 <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
@@ -263,7 +263,7 @@
                                     </div>
                                     <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
                                         {% for key, value in v.security_framework_mapping.items() %}
-                                        <div style="text-align: justify"><span style="color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{key}}:<br/></span><span style="color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{value|safe}}</span></div>
+                                        <div style="text-align: justify"><span style="color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word"><b>{{key}}:</b></span></br><span style="color: black; white-space: pre-wrap; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{value|safe}}</span></div>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -272,7 +272,7 @@
                                         <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Remediation Steps</div>
                                     </div>
                                     <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{v.remediation}}</div>
+                                        <div style="flex: 1 1 0; text-align: justify; white-space: pre-wrap; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{v.remediation}}</div>
                                     </div>
                                 </div>
                             </div>
