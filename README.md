@@ -64,7 +64,7 @@
   </ol>
 </details>
 
-## Description
+## Description 📝
 
 The **Agentic Radar** is designed to analyze and assess agentic systems for security and operational insights. It helps developers, researchers, and security professionals understand how agentic systems function and identify potential vulnerabilities.
 
@@ -80,10 +80,14 @@ The comprehensive HTML report summarizes all findings and allows for easy review
 Agentic systems have complex workflows and often interact with multiple tools, making transparency and security assessment challenging. This tool simplifies the process by offering a structured view of workflows, tools, and potential risks.
 
 
-TODO: Put report example here
+**Detailed Report**
 
+<p align="center">
+  <img src="./docs/report_part1.png" width="390" height="650" style="margin-right: 50px;" >  
+  <img src="./docs/report_part2.png" width="390" height="650"/>
+</p>
 
-## Getting Started
+## Getting Started 🚀
 
 ### Prerequisites
 
@@ -141,14 +145,13 @@ Commands:
 ```
 
 
-## Roadmap
+## Roadmap 📈
 
 Planned features (in no particular order)
 
 - [ ] Framework Support
-  - [x] [LangGraph](https://github.com/langchain-ai/langgraph) (beta, node types and tool connections not discoverable)
-  - [-] [CrewAI](https://github.com/crewAIInc/crewAI) (in progress)
-  - [ ] [Langchain](https://github.com/langchain-ai/langchain)
+  - [x] [LangGraph](https://github.com/langchain-ai/langgraph)
+  - [x] [CrewAI](https://github.com/crewAIInc/crewAI) (In development)
   - [ ] [LlamaIndex](https://github.com/run-llama/llama_index)
   - [ ] [Swarm](https://github.com/openai/swarm)
   - [ ] [PydanticAI](https://github.com/pydantic/pydantic-ai)
@@ -158,19 +161,32 @@ Planned features (in no particular order)
   - [ ] Code style checks
   - [ ] Automated releases to PyPi
 - [ ] Improve report design
-  - [ ] Proper svg scaling
-  - [ ] Potentially switch from graphviz to some `js` lib
+  - [ ] Improve SVG scaling
 
-
-## Demo
+## Demo 🎥
 
 <img src="./docs/demo.gif"/>
 
-## Contributing
+<br>
+
+**[Demo Google Colab Notebook](https://colab.research.google.com/drive/1AAN23QAMsm0C7KGRmSSw7G2WFatzIa46?usp=sharing) 📘**
+
+Designed for AI engineers and security researchers, this demo showcases how to integrate **Agentic Radar** into your development workflow. ⚙️ 
+
+It helps you understand agentic system behavior, visualize security risks, and enhance AI transparency in your applications. 🚀
+
+
+## Community 🤝
+
+We welcome contributions from the AI and security community! Join our [Discord community](https://discord.gg/QZQpef5PsD) to connect with other developers, discuss features, get support and contribute to **Agentic Radar** 🚀
+
+If you like what you see, give us a star! It keeps us inspired to improve and innovate and helps others discover the project 🌟
+
+## Contributing 💻 
 
 [CONTRIBUTING](CONTRIBUTING.md)
 
-## Code Of Conduct
+## Code Of Conduct 📜
 [CODE OF CONDUCT](CODE_OF_CONDUCT.md)
 
 ## License
