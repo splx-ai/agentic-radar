@@ -25,7 +25,7 @@
   <a href="https://github.com/splx-ai/agentic-radar/issues/">
     <img src="https://img.shields.io/github/issues/splx-ai/agentic-radar" alt="open issues" />
   </a>
-  <a href="https://github.com/splx-ai/agentic-radar/blob/master/LICENSE">
+  <a href="https://github.com/splx-ai/agentic-radar/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/splx-ai/agentic-radar.svg" alt="license" />
   </a>
 </p>
