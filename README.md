@@ -167,6 +167,15 @@ Planned features (in no particular order)
 
 <img src="./docs/demo.gif"/>
 
+<br>
+
+**[Demo Google Colab Notebook](https://colab.research.google.com/drive/1AAN23QAMsm0C7KGRmSSw7G2WFatzIa46?usp=sharing) 📘**
+
+Designed for AI engineers and security researchers, this demo showcases how to integrate **Agentic Radar** into your development workflow. ⚙️ 
+
+It helps you understand agentic system behavior, visualize security risks, and enhance AI transparency in your applications. 🚀
+
+
 ## Community 🤝
 
 We welcome contributions from the AI and security community! Join our [Discord community](https://discord.gg/QZQpef5PsD) to connect with other developers, discuss features, get support and contribute to **Agentic Radar** 🚀
