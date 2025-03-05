@@ -166,6 +166,8 @@ Planned features (in no particular order)
 
 <img src="./docs/demo.gif"/>
 
+[Demo Colab Notebook](https://colab.research.google.com/drive/1AAN23QAMsm0C7KGRmSSw7G2WFatzIa46?usp=sharing)
+
 ## Contributing
 
 [CONTRIBUTING](CONTRIBUTING.md)
