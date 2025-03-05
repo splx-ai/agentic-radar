@@ -10,10 +10,10 @@ class Graph(pydot.Dot):
             graph_type="digraph",
             fontname="Inter",
             layout="neato",
-            overlap="voronoi",
+            overlap="prism",
             mode="sgd",
             outputorder="nodesfirst",
-            sep="+10000",
+            sep="+50",
             labelloc="b",
             normalize=True,
         )
