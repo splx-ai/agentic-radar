@@ -14,6 +14,7 @@ from agentic_radar.report import (
     NodeDefinition,
     generate,
 )
+from agentic_radar.mapper import map_vulnerabilities
 
 
 class Args(BaseModel):
@@ -68,6 +69,8 @@ def langgraph():
     print(f"Analyzing {args.input_directory} for LangGraph graphs")
     analyzer = LangGraphAnalyzer()
     graph = analyzer.analyze(args.input_directory)
+    print("Mapping vulnerabilities")
+    map_vulnerabilities(graph)
     pydot_graph = GraphDefinition(
         framework="LangGraph",
         name=graph.name,
