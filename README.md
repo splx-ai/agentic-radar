@@ -1,7 +1,7 @@
 <div align="center">
 
 
-  <a href="https://splx.ai"><img src="docs/logo.png" alt="logo" width="300" height="auto" /></a>
+  <a href="https://splx.ai"><img src="docs/logo.png" alt="logo" width="600" height="auto" /></a>
   
   <p>
     A Security Scanner for your agentic workflows!
@@ -74,6 +74,11 @@ It allows users to create a security report for agentic systems, including:
 3. **Vulnerability Mapping** - a table connecting identified tools to known vulnerabilities, providing a security overview✅
 
 The comprehensive HTML report summarizes all findings and allows for easy reviewing and sharing.
+
+**Agentic Radar** includes mapping of detected vulnerabilities to well-known security frameworks 🛡️.
++ [OWASP LLM Top 10](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
+
++ OWASP Agentic AI
 
 **Why Use It?** 🔎
 
@@ -189,6 +194,6 @@ If you like what you see, give us a star! It keeps us inspired to improve and in
 ## Code Of Conduct 📜
 [CODE OF CONDUCT](CODE_OF_CONDUCT.md)
 
-## License
+## License ⚖️
 
 [LICENSE](LICENSE.md)
