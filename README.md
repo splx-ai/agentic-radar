@@ -143,6 +143,24 @@ Commands:
 
 ## Roadmap
 
+Planned features (in no particular order)
+
+- [ ] Framework Support
+  - [x] [LangGraph](https://github.com/langchain-ai/langgraph) (beta, node types and tool connections not discoverable)
+  - [-] [CrewAI](https://github.com/crewAIInc/crewAI) (in progress)
+  - [ ] [Langchain](https://github.com/langchain-ai/langchain)
+  - [ ] [LlamaIndex](https://github.com/run-llama/llama_index)
+  - [ ] [Swarm](https://github.com/openai/swarm)
+  - [ ] [PydanticAI](https://github.com/pydantic/pydantic-ai)
+  - [ ] [AutoGen](https://github.com/microsoft/autogen)
+  - [ ] [Dify](https://github.com/langgenius/dify)
+- [ ] CI
+  - [ ] Code style checks
+  - [ ] Automated releases to PyPi
+- [ ] Improve report design
+  - [ ] Proper svg scaling
+  - [ ] Potentially switch from graphviz to some `js` lib
+
 
 ## Demo
 
