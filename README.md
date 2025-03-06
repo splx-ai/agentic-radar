@@ -78,7 +78,7 @@ The comprehensive HTML report summarizes all findings and allows for easy review
 **Agentic Radar** includes mapping of detected vulnerabilities to well-known security frameworks 🛡️.
 + [OWASP LLM Top 10](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 
-+ OWASP Agentic AI
++ [OWASP Agentic AI – Threats and Mitigations](https://genaisecurityproject.com/resource/agentic-ai-threats-and-mitigations)
 
 **Why Use It?** 🔎
 
