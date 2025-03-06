@@ -10,10 +10,10 @@ env:
 
 
 jobs:
-  check:
+  publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
     name: Check
     steps:
@@ -35,9 +35,8 @@ jobs:
         run: poetry build
 
       - name: Release github
-        uses: actions/upload-artifact@v4
+        uses: sofprops/action-gh-release@v2
         with:
-          name: agentic-radar
-          path: dist/
+          files: dist/**
 
 

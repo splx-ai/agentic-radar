@@ -14,8 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     name: Check
-    outputs:
-      version: ${{ steps.semantic.outputs.new_release_version}}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -30,20 +28,3 @@ jobs:
 
       #- name: Run checks
         #run: pre-commit run --all-files
-
-  release:
-    needs: [check]
-    if: github.ref == 'refs/heads/main' && needs.check.outputs.version != ''
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install poetry
-        run: curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
-
-      - name: Install dependencies
-        run: poetry install
