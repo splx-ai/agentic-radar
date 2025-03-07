@@ -87,9 +87,6 @@ class LangGraphAnalyzer(Analyzer):
                 )
             )
 
-        print(nodes, end="\n\n\n")
-        print(edges, end="\n\n\n")
-        print(tools, end="\n\n\n")
         return GraphDefinition(
             name=Path(root_directory).name, nodes=nodes, edges=edges, tools=tools
         )
