@@ -196,4 +196,4 @@ If you like what you see, give us a star! It keeps us inspired to improve and in
 
 ## License ⚖️
 
-[LICENSE](LICENSE.md)
+[LICENSE](LICENSE)
