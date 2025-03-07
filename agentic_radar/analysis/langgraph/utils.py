@@ -1,6 +1,7 @@
 import ast
 import os
 from typing import Dict, Tuple, Union
+import json
 
 
 def build_global_registry(
@@ -21,7 +22,7 @@ def build_global_registry(
     global_variables = {}
     for dirpath, _, filenames in os.walk(root_dir):
         for filename in filenames:
-            if filename.endswith(".py"):
+            if filename.endswith(".py") or filename.endswith(".ipynb"):
                 fullpath = os.path.join(dirpath, filename)
                 module_name = derive_module_name(dirpath, filename, root_dir)
                 local_functions, local_variables = parse_for_top_level_defs(
@@ -47,7 +48,11 @@ def derive_module_name(dirpath: str, filename: str, root_dir: str) -> str:
     if rel_path != ".":
         parts = rel_path.split(os.sep)
 
-    base_name = filename.removesuffix(".py")
+    base_name = ""
+    if filename.endswith(".py"):
+        base_name = filename.removesuffix(".py")
+    elif filename.endswith(".ipynb"):
+        base_name = filename.removesuffix(".ipynb")
     parts.append(base_name)
 
     module_name = ".".join(parts)
@@ -62,8 +67,18 @@ def parse_for_top_level_defs(filepath: str, module_name: str) -> None:
     local_functions = {}
     local_variables = {}
 
-    with open(filepath, "r", encoding="utf-8") as f:
-        source = f.read()
+    source = ""
+    if filepath.endswith(".py"):
+        with open(filepath, "r", encoding="utf-8") as f:
+            source = f.read()
+    elif filepath.endswith(".ipynb"):
+        with open(filepath, "r", encoding="utf-8") as f:
+            notebook = json.load(f)
+            for cell in notebook["cells"]:
+                if cell["cell_type"] == "code":
+                    for row in cell["source"]:
+                        source += row
+
     tree = ast.parse(source, filename=filepath)
 
     class TopLevelCollector(ast.NodeVisitor):

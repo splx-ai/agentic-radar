@@ -35,6 +35,18 @@ def parse_all_imports_from_directory(directory_path: str) -> Set[str]:
                     imports = extract_imports_with_ast(file_content)
                     for single_import in imports:
                         all_imports.add(single_import)
+            elif file.endswith(".ipynb"):
+                file_path = os.path.join(root, file)
+                with open(file_path, "r", encoding="utf-8") as f:
+                    notebook = json.load(f)
+                    file_content = ""
+                    for cell in notebook["cells"]:
+                        if cell["cell_type"] == "code":
+                            for row in cell["source"]:
+                                file_content += row
+                    imports = extract_imports_with_ast(file_content)
+                    for single_import in imports:
+                        all_imports.add(single_import)
 
     return all_imports
 
