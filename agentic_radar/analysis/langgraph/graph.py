@@ -1,6 +1,7 @@
 import ast
 import os
 from typing import Any, Dict, List, Optional, Union
+import json
 
 
 class GraphInstanceTracker(ast.NodeVisitor):
@@ -581,8 +582,18 @@ def parse_python_file(
       - Instantiations of the Graph class
       - Method calls on those instances
     """
-    with open(filepath, "r", encoding="utf-8") as f:
-        source = f.read()
+
+    source = ""
+    if filepath.endswith(".py"):
+        with open(filepath, "r", encoding="utf-8") as f:
+            source = f.read()
+    elif filepath.endswith(".ipynb"):
+        with open(filepath, "r", encoding="utf-8") as f:
+            notebook = json.load(f)
+            for cell in notebook["cells"]:
+                if cell["cell_type"] == "code":
+                    for row in cell["source"]:
+                        source += row
 
     tree = ast.parse(source, filename=filepath)
 
@@ -617,7 +628,7 @@ def walk_directory_and_parse(
 
     for dirpath, _, filenames in os.walk(root_dir):
         for filename in filenames:
-            if filename.endswith(".py"):
+            if filename.endswith(".py") or filename.endswith(".ipynb"):
                 fullpath = os.path.join(dirpath, filename)
                 file_results = parse_python_file(
                     fullpath,
