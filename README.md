@@ -118,7 +118,7 @@ apt-get install libcairo
 
 ### Installation
 ```sh
-pip install git+ssh://git@github.com/splx-ai/agentic-radar@v0.1.0
+pip install git+https://github.com/splx-ai/agentic-radar.git
 
 # Check that it is installed
 agentic-radar --version
@@ -186,6 +186,11 @@ It helps you understand agentic system behavior, visualize security risks, and e
 We welcome contributions from the AI and security community! Join our [Discord community](https://discord.gg/QZQpef5PsD) to connect with other developers, discuss features, get support and contribute to **Agentic Radar** 🚀
 
 If you like what you see, give us a star! It keeps us inspired to improve and innovate and helps others discover the project 🌟
+
+## Frequently Asked Questions ❓
+
+**Q: Is my source code being shared or is everything running locally?**  
+A: Everything is running locally. Your source code is never uploaded anywhere.
 
 ## Contributing 💻 
 
