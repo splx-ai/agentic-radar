@@ -118,7 +118,7 @@ apt-get install libcairo
 
 ### Installation
 ```sh
-pip install git+ssh://git@github.com/splx-ai/agentic-radar@v0.1.0
+pip install git+https://github.com/splx-ai/agentic-radar.git
 
 # Check that it is installed
 agentic-radar --version
