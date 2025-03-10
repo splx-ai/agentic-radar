@@ -211,18 +211,18 @@
                         <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Tools</div>
                     </div>
                     <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
-                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: justify; line-height: 150%; padding: 6px; gap: 12px">
-                            <th style="border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Name</th>
-                            <th style="border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Category</th>
-                            <th style="border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Description</th>
-                            <th style="border-bottom: 0.50px #D4D4D4 solid;">Number of Vulnerabilities</th>
+                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Name</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Category</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Description</th>
+                            <th style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">Number of Vulnerabilities</th>
                         </tr>
                         {% for tool in tools %}
                         <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
-                            <td style="border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.name}}</td>
-                            <td style="border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.category}}</td>
-                            <td style="border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.description}}</td>
-                            <td style="border-bottom: 0.50px #D4D4D4 solid;">{{tool.vulnerabilities | length}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.name}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.category}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.description}}</td>
+                            <td style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">{{tool.vulnerabilities | length}}</td>
                         </tr>
                         {% endfor %}
                     </table>
