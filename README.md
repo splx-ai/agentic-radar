@@ -189,7 +189,7 @@ If you like what you see, give us a star! It keeps us inspired to improve and in
 
 ## Frequently Asked Questions ❓
 
-**Q: Is my source code being shared or is everything running locally?**
+**Q: Is my source code being shared or is everything running locally?**  
 A: Everything is running locally. Your source code is never uploaded anywhere.
 
 ## Contributing 💻 
