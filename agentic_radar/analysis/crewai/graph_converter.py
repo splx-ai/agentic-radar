@@ -15,6 +15,8 @@ def convert_graph(crewai_graph: CrewAIGraph) -> GraphDefinition:
             node_type = NodeType.TOOL
         elif node.type == CrewAINodeType.CUSTOM_TOOL:
             node_type = NodeType.CUSTOM_TOOL
+        elif node.type == CrewAINodeType.BASIC:
+            node_type = NodeType.BASIC
         else:
             node_type = NodeType.DEFAULT
 

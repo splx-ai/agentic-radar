@@ -1,11 +1,14 @@
 import json
 import logging
+from importlib import resources
+
 from agentic_radar.graph import ToolType
 
-def categorize_tool(tool_name: str, json_path: str = "./agentic_radar/analysis/crewai/tool_categories.json") -> ToolType:
+def categorize_tool(tool_name: str) -> ToolType:
     """
     Load the tool type from the JSON file and return a ToolType.
     """
+    json_path = resources.files(__package__) / "tool_categories.json"
     try:
         with open(json_path, "r") as file:
             tool_mapping = json.load(file)
