@@ -18,6 +18,3 @@ def categorize_tool(tool_name: str) -> ToolType:
     except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
         logging.error(f"Error loading tool categories: {e}")
         return ToolType.DEFAULT
-
-if __name__ == "__main__":
-    print(categorize_tool("DirectoryReadTool"))

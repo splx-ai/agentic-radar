@@ -67,9 +67,3 @@ class CrewAIAnalyzer(Analyzer):
 
         graph = convert_graph(crewai_graph)
         return graph
-
-if __name__ == "__main__":
-    root_directory = "../crewai-examples/crewAI-examples/markdown_validator"
-    analyzer = CrewAIAnalyzer()
-    graph_definition = analyzer.analyze(root_directory)
-    print(graph_definition)
