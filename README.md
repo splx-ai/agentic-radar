@@ -187,6 +187,11 @@ We welcome contributions from the AI and security community! Join our [Discord c
 
 If you like what you see, give us a star! It keeps us inspired to improve and innovate and helps others discover the project 🌟
 
+## Frequently Asked Questions ❓
+
+**Q: Is my source code being shared or is everything running locally?**
+A: Everything is running locally. Your source code is never uploaded anywhere.
+
 ## Contributing 💻 
 
 [CONTRIBUTING](CONTRIBUTING.md)
