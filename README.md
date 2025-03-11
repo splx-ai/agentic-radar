@@ -1,7 +1,9 @@
 <div align="center">
 
 
-  <a href="https://splx.ai"><img src="docs/logo.png" alt="logo" width="600" height="auto" /></a>
+  <a href="https://splx.ai">
+    <img src="https://github.com/splx-ai/agentic-radar/raw/main/docs/logo.png" alt="logo" width="600" height="auto" />
+  </a>
   
   <p>
     A Security Scanner for your agentic workflows!
@@ -88,8 +90,8 @@ Agentic systems have complex workflows and often interact with multiple tools, m
 **Detailed Report**
 
 <p align="center">
-  <img src="./docs/report_part1.png" width="390" height="650" style="margin-right: 50px;" >  
-  <img src="./docs/report_part2.png" width="390" height="650"/>
+  <img src="https://github.com/splx-ai/agentic-radar/raw/main/docs/report_part1.png" width="390" height="650" style="margin-right: 50px;" >  
+  <img src="https://github.com/splx-ai/agentic-radar/raw/main/docs/report_part2.png" width="390" height="650"/>
 </p>
 
 ## Getting Started 🚀
@@ -170,7 +172,7 @@ Planned features (in no particular order)
 
 ## Demo 🎥
 
-<img src="./docs/demo.gif"/>
+<img src="https://github.com/splx-ai/agentic-radar/raw/main/docs/demo.gif"/>
 
 <br>
 
