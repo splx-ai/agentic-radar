@@ -138,7 +138,7 @@ Options:
                                   default: .]
   -o, --output-file TEXT          Where should the output report be stored
                                   [env var: AGENTIC_RADAR_OUTPUT_FILE;
-                                  default: report_20250226_122829.html]
+                                  default: report_20250311_122338.html]
   --version
   --install-completion [bash|zsh|fish|powershell|pwsh]
                                   Install completion for the specified shell.
@@ -148,7 +148,8 @@ Options:
   --help                          Show this message and exit.
 
 Commands:
-  langgraph  Run scan for code written with LangGraph
+  langgraph  Scan code written with LangGraph
+  crewai     Scan code written with CrewAI
 ```
 
 
@@ -158,7 +159,7 @@ Planned features (in no particular order)
 
 - [ ] Framework Support
   - [x] [LangGraph](https://github.com/langchain-ai/langgraph)
-  - [x] [CrewAI](https://github.com/crewAIInc/crewAI) (In development)
+  - [x] [CrewAI](https://github.com/crewAIInc/crewAI)
   - [ ] [LlamaIndex](https://github.com/run-llama/llama_index)
   - [ ] [Swarm](https://github.com/openai/swarm)
   - [ ] [PydanticAI](https://github.com/pydantic/pydantic-ai)
