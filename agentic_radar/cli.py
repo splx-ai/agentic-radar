@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from typing_extensions import Annotated
 
 from agentic_radar import __version__
-from agentic_radar.analysis import LangGraphAnalyzer
+from agentic_radar.analysis import Analyzer, CrewAIAnalyzer, LangGraphAnalyzer
 from agentic_radar.report import (
     EdgeDefinition,
     GraphDefinition,
@@ -63,16 +63,13 @@ def _main(
         input_directory=input_directory, output_file=output_file, version=version
     )
 
-
-@app.command("langgraph", help="Scan code written with LangGraph")
-def langgraph():
-    print(f"Analyzing {args.input_directory} for LangGraph graphs")
-    analyzer = LangGraphAnalyzer()
+def analyze_and_generate_report(framework: str, analyzer: Analyzer):
+    print(f"Analyzing {args.input_directory} for {framework} graphs")
     graph = analyzer.analyze(args.input_directory)
     print("Mapping vulnerabilities")
     map_vulnerabilities(graph)
     pydot_graph = GraphDefinition(
-        framework="LangGraph",
+        framework=framework,
         name=graph.name,
         nodes=[
             NodeDefinition.model_validate(n, from_attributes=True) for n in graph.nodes
@@ -87,6 +84,14 @@ def langgraph():
     print("Generating report")
     generate(pydot_graph, args.output_file)
     print(f"Report {args.output_file} generated")
+
+@app.command("langgraph", help="Scan code written with LangGraph")
+def langgraph():
+    analyze_and_generate_report("LangGraph", LangGraphAnalyzer())
+
+@app.command("crewai", help="Scan code written with CrewAI")
+def crewai():
+    analyze_and_generate_report("CrewAI", CrewAIAnalyzer())
 
 
 if __name__ == "__main__":
