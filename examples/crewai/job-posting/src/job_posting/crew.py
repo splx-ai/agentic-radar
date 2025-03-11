@@ -32,7 +32,7 @@ class JobPostingCrew:
             tools=[web_search_tool, seper_dev_tool],
             verbose=True
         )
-
+    
     @agent
     def writer_agent(self) -> Agent:
         return Agent(
@@ -40,7 +40,7 @@ class JobPostingCrew:
             tools=[web_search_tool, seper_dev_tool, file_read_tool],
             verbose=True
         )
-
+    
     @agent
     def review_agent(self) -> Agent:
         return Agent(
@@ -48,7 +48,7 @@ class JobPostingCrew:
             tools=[web_search_tool, seper_dev_tool, file_read_tool],
             verbose=True
         )
-
+    
     @task
     def research_company_culture_task(self) -> Task:
         return Task(
