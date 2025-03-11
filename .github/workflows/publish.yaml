@@ -12,10 +12,13 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/agentic-radar
     permissions:
       contents: write
       id-token: write
-    name: Check
+    name: Publish
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -33,6 +36,9 @@ jobs:
         #
       - name: Build
         run: poetry build
+
+      - name: Publish pypi
+        uses: pypa/gh-action/pypi-publish@release/v1
 
       - name: Release github
         uses: softprops/action-gh-release@v2
