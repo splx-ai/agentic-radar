@@ -38,7 +38,7 @@ jobs:
         run: poetry build
 
       - name: Publish pypi
-        uses: pypa/gh-action/pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@release/v1
 
       - name: Release github
         uses: softprops/action-gh-release@v2
