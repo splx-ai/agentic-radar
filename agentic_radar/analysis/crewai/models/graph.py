@@ -16,6 +16,7 @@ class CrewAINodeType(str, Enum):
 class CrewAINode(BaseModel):
     name: str = Field(..., description="Name of the node")
     type: CrewAINodeType = Field(..., description="Type of the node")
+    description: Optional[str] = Field(default=None, description="Short description of the node, used mainly for tool descriptions")
 
     class Config:
         frozen = True  # Makes it hashable and immutable
@@ -51,7 +52,8 @@ class CrewAIGraph(BaseModel):
         for tool in tools:
             tool_name = tool.name
             tool_type = CrewAINodeType.CUSTOM_TOOL if tool.custom else CrewAINodeType.TOOL
-            self.nodes.add(CrewAINode(name=tool_name, type=tool_type))
+            description = tool.description
+            self.nodes.add(CrewAINode(name=tool_name, type=tool_type, description=description))
 
 
     def connect_agent_to_tools(self, agent: str, tools: list[CrewAITool]):
