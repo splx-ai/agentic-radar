@@ -29,7 +29,15 @@ jobs:
         run: curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
 
       - name: Install dependencies
-        run: poetry install
+        run: | 
+          poetry install
+          sudo apt-get install -y graphviz
+
+      - name: Run tests
+        run: |
+          eval $(poetry env activate)
+          mkdir testresults
+          python -m pytest -v -s
 
       #- name: Run checks
         #run: pre-commit run --all-files
