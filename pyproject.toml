@@ -47,6 +47,7 @@ isort = "^6.0.0"
 mypy = "^1.15.0"
 pylint = "^3.3.4"
 pre-commit = "^4.1.0"
+pytest = "^8.3.5"
 
 [tool.isort]
 profile = "black"
