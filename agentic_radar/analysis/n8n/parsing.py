@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from models import (
+from .models import (
     N8nNode,
     N8nConnection
 )
@@ -12,7 +12,7 @@ def parse_n8n_nodes(nodes_list: List[Dict]) -> List[N8nNode]:
             N8nNode(
                 id = node["id"],
                 name = node["name"],
-                type = node["type"]
+                type = node["type"].lower()
             )
         )
 
