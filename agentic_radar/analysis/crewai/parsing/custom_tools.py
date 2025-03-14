@@ -1,13 +1,15 @@
 import ast
 import os
 
+from ..models.tool import CrewAITool
+
 
 class CustomToolsCollector(ast.NodeVisitor):
     CREWAI_CUSTOM_TOOL_DECORATOR = "tool"
     CREWAI_CUSTOM_TOOL_BASE_CLASS = "BaseTool"
 
     def __init__(self):
-        self.custom_tool_names = set()
+        self.custom_tools = {}
 
     def visit_FunctionDef(self, node):
         """Track functions that define custom tools by using the 'tools(...)' decorator."""
@@ -16,7 +18,10 @@ class CustomToolsCollector(ast.NodeVisitor):
                 isinstance(decorator, ast.Call)
                 and decorator.func.id == self.CREWAI_CUSTOM_TOOL_DECORATOR
             ):
-                self.custom_tool_names.add(node.name)
+                tool_description = ast.get_docstring(node) or ""
+                self.custom_tools[node.name] = CrewAITool(
+                    name=node.name, custom=True, description=tool_description
+                )
 
         self.generic_visit(node)
 
@@ -29,7 +34,10 @@ class CustomToolsCollector(ast.NodeVisitor):
                 or isinstance(base, ast.Attribute)
                 and base.attr == self.CREWAI_CUSTOM_TOOL_BASE_CLASS
             ):
-                self.custom_tool_names.add(node.name)
+                tool_description = ast.get_docstring(node) or ""
+                self.custom_tools[node.name] = CrewAITool(
+                    name=node.name, custom=True, description=tool_description
+                )
 
         self.generic_visit(node)
 
@@ -40,7 +48,7 @@ class CustomToolsCollector(ast.NodeVisitor):
             root_dir (str): Path to the codebase directory
 
         Returns:
-            set[str]: Set of custom tool names
+            dict[str, CrewAITool]: Dictionary mapping custom tool name to corresponding CrewAITool instance
         """
 
         for root, _, files in os.walk(root_dir):
@@ -50,4 +58,4 @@ class CustomToolsCollector(ast.NodeVisitor):
                         tree = ast.parse(f.read())
                         self.visit(tree)
 
-        return self.custom_tool_names
+        return self.custom_tools
