@@ -1,17 +1,17 @@
 from pathlib import Path
 
-from agentic_radar.graph import GraphDefinition
 from agentic_radar.analysis.analyze import Analyzer
-from agentic_radar.analysis.crewai.graph_converter import convert_graph
 from agentic_radar.analysis.crewai.crew_process import infer_agent_connections
+from agentic_radar.analysis.crewai.graph_converter import convert_graph
 from agentic_radar.analysis.crewai.models import CrewAIGraph, CrewAITool
 from agentic_radar.analysis.crewai.parsing import (
-    PredefinedToolsCollector,
-    CustomToolsCollector,
     AgentsCollector,
-    TasksCollector,
     CrewsCollector,
+    CustomToolsCollector,
+    PredefinedToolsCollector,
+    TasksCollector,
 )
+from agentic_radar.graph import GraphDefinition
 
 
 class CrewAIAnalyzer(Analyzer):
@@ -44,7 +44,7 @@ class CrewAIAnalyzer(Analyzer):
         agent_connections, start_agents, end_agents = infer_agent_connections(
             task_agent_mapping, crew_task_mapping, crew_process_mapping
         )
-        return agent_connections, start_agents, end_agents 
+        return agent_connections, start_agents, end_agents
 
     def analyze(self, root_directory: str) -> GraphDefinition:
         """Analyze the CrewAI codebase and return the graph."""

@@ -1,7 +1,7 @@
 import ast
+import json
 import os
 from typing import Dict, Tuple, Union
-import json
 
 
 def build_global_registry(

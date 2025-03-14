@@ -63,7 +63,6 @@ def get_all_predefined_tools_from_directory(
     possible_predefined_tools = []
 
     for name, values in predefined_tools.items():
-
         if any(single_import in all_imports for single_import in values["import_list"]):
             new_possible_tool = {"name": name}
             for value_name, value_content in values.items():

@@ -1,5 +1,5 @@
 from .analyze import Analyzer
-from .langgraph import LangGraphAnalyzer
 from .crewai import CrewAIAnalyzer
+from .langgraph import LangGraphAnalyzer
 
 __all__ = ["Analyzer", "LangGraphAnalyzer", "CrewAIAnalyzer"]

@@ -1,7 +1,7 @@
 import ast
+import json
 import os
 from typing import Any, Dict, List, Optional, Union
-import json
 
 
 class GraphInstanceTracker(ast.NodeVisitor):
@@ -661,7 +661,6 @@ def parse_all_graph_instances_in_directory(
     global_functions,
     global_variables,
 ):
-
     results = walk_directory_and_parse(
         root_directory,
         graph_class_fqcn,
