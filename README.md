@@ -43,6 +43,8 @@
   </h4>
 </div>
 
+<img src="./docs/overview_image.png"/>
+
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
