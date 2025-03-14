@@ -87,62 +87,6 @@ class LangGraphAnalyzer(Analyzer):
                 )
             )
 
-        # This is for report generation testing
-        # tools = [
-        #     Node(
-        #         name="create_issue",
-        #         type=NodeType.TOOL,
-        #         category=ToolType.CODE_INTERPRETER,
-        #         description="Tool description",
-        #         vulnerabilities=[
-        #             VulnerabilityDefinition(
-        #                 name="Improper Output Handling",
-        #                 description="Generated",
-        #                 security_framework_mapping={
-        #                     "CVE": "blabla",
-        #                     "OWASP LLM TOP 10": "blabla",
-        #                 },
-        #                 remediation="Remediate placholder",
-        #             ),
-        #             VulnerabilityDefinition(
-        #                 name="Improper Output Handling 2",
-        #                 description="Generated",
-        #                 security_framework_mapping={
-        #                     "CVE": "blabla",
-        #                     "OWASP LLM TOP 10": "blabla",
-        #                 },
-        #                 remediation="Placeholder",
-        #             ),
-        #         ],
-        #     ),
-        #     Node(
-        #         name="create_issue 2",
-        #         type=NodeType.TOOL,
-        #         category=ToolType.CODE_INTERPRETER,
-        #         description="Tool description",
-        #         vulnerabilities=[
-        #             VulnerabilityDefinition(
-        #                 name="Improper Output Handling",
-        #                 description="Generated",
-        #                 security_framework_mapping={
-        #                     "CVE": '<span style="color: black; font-size: 10px; font-family: Inter; font-weight: 400; text-decoration: underline; line-height: 15px; word-wrap: break-word">CVE-2023-44467</span>',
-        #                     "OWASP LLM TOP 10": "blabla",
-        #                 },
-        #                 remediation="Remediate placholder",
-        #             ),
-        #             VulnerabilityDefinition(
-        #                 name="Improper Output Handling 2",
-        #                 description="Generated",
-        #                 security_framework_mapping={
-        #                     "CVE": "blabla",
-        #                     "OWASP LLM TOP 10": "blabla",
-        #                 },
-        #                 remediation="Placeholder",
-        #             ),
-        #         ],
-        #     ),
-        # ]
-
         return GraphDefinition(
             name=Path(root_directory).name, nodes=nodes, edges=edges, tools=tools
         )
