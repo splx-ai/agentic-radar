@@ -34,7 +34,7 @@ def convert_graph(crewai_graph: CrewAIGraph) -> GraphDefinition:
             category = ToolType.DEFAULT
 
         output_node = NodeDefinition(
-            node_type=node_type,
+            type=node_type,
             name=node.name,
             label=node.name,
             category=category,

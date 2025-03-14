@@ -14,10 +14,10 @@ class CrewsCollector(ast.NodeVisitor):
 
     def __init__(self, tasks: set[str]):
         self.tasks = tasks  # For validation purposes
-        self.decorated_tasks = []
-        self.crew_task_mapping = {}
-        self.crew_process_mapping = {}
-        self.decorated_class_name = None
+        self.decorated_tasks: list[str]  = []
+        self.crew_task_mapping: dict[str, list[str]] = {}
+        self.crew_process_mapping: dict[str, CrewProcessType] = {}
+        self.decorated_class_name: Optional[str] = None
 
     def _find_crew_return(self, node: ast.AST) -> Optional[ast.Call]:
         """

@@ -9,11 +9,10 @@ def categorize_tool(tool_name: str) -> ToolType:
     """
     Load the tool type from the JSON file and return a ToolType.
     """
-    json_path = resources.files(__package__) / "tool_categories.json"
     try:
-        with open(json_path, "r") as file:
-            tool_mapping = json.load(file)
-
+        # Use resources.files().joinpath() to get the path, then use .read_text() to read the file
+        json_text = resources.files(__package__).joinpath("tool_categories.json").read_text()
+        tool_mapping = json.loads(json_text)
         category = tool_mapping.get(tool_name, "DEFAULT")
         return ToolType[category]
     except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
