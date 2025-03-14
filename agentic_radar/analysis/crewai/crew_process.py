@@ -27,9 +27,9 @@ def infer_agent_connections(
         - List of start agents (first agents in sequential processes and all agents in hierarchical)
         - List of end agents (last agents in sequential processes and all agents in hierarchical)
     """
-    agent_connections = defaultdict(list)
-    start_agents = set()
-    end_agents = set()
+    agent_connections: dict[str, list[str]] = defaultdict(list)
+    start_agents: set[str] = set()
+    end_agents: set[str] = set()
 
     for crew, tasks in crew_task_mapping.items():
         if crew not in crew_process_mapping:
@@ -57,7 +57,7 @@ def infer_agent_connections(
 def _handle_sequential_process(
     tasks: list[str],
     task_agent_mapping: dict[str, str],
-    agent_connections: defaultdict[str, list[str]],
+    agent_connections: dict[str, list[str]],
     start_agents: set,
     end_agents: set,
 ) -> None:
@@ -105,7 +105,7 @@ def _handle_sequential_process(
 def _handle_hierarchical_process(
     tasks: list[str],
     task_agent_mapping: dict[str, str],
-    agent_connections: defaultdict[str, list[str]],
+    agent_connections: dict[str, list[str]],
     start_agents: set,
     end_agents: set,
 ) -> None:

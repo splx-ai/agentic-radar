@@ -3,7 +3,7 @@ import importlib.util
 import logging
 import os
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import Optional
 
 
 def is_package_installed(package_name: str) -> bool:
@@ -20,7 +20,7 @@ def is_package_installed(package_name: str) -> bool:
     return spec is not None
 
 
-def parse_init_imports(init_path: str) -> List[Tuple[str, str]]:
+def parse_init_imports(init_path: str) -> list[tuple[str, str]]:
     """
     Parse the import statements from __init__.py to extract tool classes and their module paths.
 
@@ -45,6 +45,9 @@ def parse_init_imports(init_path: str) -> List[Tuple[str, str]]:
                 # Get the module path (e.g., '.ai_mind_tool.ai_mind_tool')
                 module_path = node.module
 
+                if not module_path:
+                    continue
+                
                 # Get the imports (e.g., 'AIMindTool')
                 for name in node.names:
                     imports.append((name.name, module_path))
@@ -137,7 +140,7 @@ def extract_description_from_readme(readme_content: str) -> Optional[str]:
     return None
 
 
-def get_crewai_tools_descriptions() -> Dict[str, str]:
+def get_crewai_tools_descriptions() -> dict[str, str]:
     """
     Extract tool descriptions from README.md files in the tool directories.
 

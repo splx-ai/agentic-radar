@@ -11,7 +11,7 @@ class TasksCollector(ast.NodeVisitor):
 
     def __init__(self, agents: set[str]):
         self.agents = agents
-        self.task_agent_mapping = {}
+        self.task_agent_mapping: dict[str, str] = {}
 
     def _find_task_return(self, node: ast.AST) -> Optional[ast.Call]:
         """

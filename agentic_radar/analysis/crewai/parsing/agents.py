@@ -21,7 +21,7 @@ class AgentsCollector(ast.NodeVisitor):
         self.predefined_tool_vars = predefined_tool_vars
         self.custom_tools = custom_tools
         self.crewai_tool_descriptions = get_crewai_tools_descriptions()
-        self.agent_tool_mapping = {}
+        self.agent_tool_mapping: dict[str, list[CrewAITool]] = {}
 
     def _find_agent_return(self, node: ast.AST) -> Optional[ast.Call]:
         """

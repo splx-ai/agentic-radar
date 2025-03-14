@@ -54,8 +54,8 @@ class PredefinedToolsCollector(ast.NodeVisitor):
             for file in files:
                 if file.endswith(".py"):
                     file_path = os.path.join(root, file)
-                    with open(file_path, "r") as file:
-                        code = file.read()
+                    with open(file_path, "r") as file_handle:
+                        code = file_handle.read()
                         tree = ast.parse(code)
                         self.visit(tree)
 
