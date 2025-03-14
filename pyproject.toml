@@ -42,18 +42,17 @@ Tracker = "https://github.com/splx-ai/agentic-radar/issues"
 agentic-radar = "agentic_radar.cli:app"
 
 [tool.poetry.group.dev.dependencies]
-black = "^25.1.0"
-isort = "^6.0.0"
-mypy = "^1.15.0"
-pylint = "^3.3.4"
 pre-commit = "^4.1.0"
 pytest = "^8.3.5"
+ruff = "^0.10.0"
+mypy = "^1.15.0"
 
-[tool.isort]
-profile = "black"
+[tool.ruff]
+extend-exclude= ["tests", "examples"]
 
-[tool.pylint]
-disable = ["E1101", "C0114", "C0115", "C0116", "R0903"] 
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]
 
 [tool.mypy]
 disable_error_code = ["import-untyped"] # pydot is untyped
@@ -61,8 +60,6 @@ disable_error_code = ["import-untyped"] # pydot is untyped
 [[tool.mypy.overrides]]
 module = "openai"
 ignore_missing_imports = true
-
-[tool.black]
 
 [build-system]
 requires = ["poetry-core"]

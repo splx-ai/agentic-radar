@@ -59,7 +59,7 @@ class PredefinedToolsCollector(ast.NodeVisitor):
                         tree = ast.parse(code)
                         self.visit(tree)
 
-        # Add descriptions and wrap tools inside CrewAITool instances 
+        # Add descriptions and wrap tools inside CrewAITool instances
         tools_descriptions = get_crewai_tools_descriptions()
         predefined_tool_vars = {
             var_name: CrewAITool(

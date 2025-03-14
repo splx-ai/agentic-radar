@@ -1,10 +1,10 @@
 import ast
-import os
 import logging
+import os
 from typing import Optional
 
-from .utils import find_return_of_function_call, is_function_call
 from ..crew_process import CrewProcessType
+from .utils import find_return_of_function_call, is_function_call
 
 
 class CrewsCollector(ast.NodeVisitor):
@@ -129,10 +129,13 @@ class CrewsCollector(ast.NodeVisitor):
     def visit_ClassDef(self, node):
         """Tracks class definitions decorated with CrewBase decorator. Stores class name as a name that is to be used for the crew belonging to that class."""
         for decorator in node.decorator_list:
-            if isinstance(decorator, ast.Name) and decorator.id == self.CREWAI_CREW_BASE_CLASS_DECORATOR:
+            if (
+                isinstance(decorator, ast.Name)
+                and decorator.id == self.CREWAI_CREW_BASE_CLASS_DECORATOR
+            ):
                 self.decorated_class_name = node.name
                 break
-        
+
         self.generic_visit(node)
         self.decorated_class_name = None
 
@@ -156,11 +159,12 @@ class CrewsCollector(ast.NodeVisitor):
         if not crew_node:
             return
 
-        
         if self.decorated_class_name:
-            crew_name = self.decorated_class_name # Take class name as crew name (we are inside subclass of CrewBase)
+            crew_name = (
+                self.decorated_class_name
+            )  # Take class name as crew name (we are inside subclass of CrewBase)
         else:
-            crew_name = node.name # Take function name as crew name
+            crew_name = node.name  # Take function name as crew name
 
         crew_tasks = self._extract_crew_tasks(crew_node)
         self.crew_task_mapping[crew_name] = crew_tasks

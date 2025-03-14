@@ -1,7 +1,7 @@
 import ast
+import json
 import os
 from typing import Dict, List
-import json
 
 
 def extract_custom_tools_with_ast(
@@ -23,7 +23,13 @@ def extract_custom_tools_with_ast(
                         decorator_names.append(decorator.func.attr)
 
             if "tool" in decorator_names:
-                custom_tools.append({"name": node.name, "filepath": file_path, "description": ast.get_docstring(node)})
+                custom_tools.append(
+                    {
+                        "name": node.name,
+                        "filepath": file_path,
+                        "description": ast.get_docstring(node),
+                    }
+                )
 
     return custom_tools
 

@@ -4,6 +4,7 @@ from importlib import resources
 
 from agentic_radar.graph import ToolType
 
+
 def categorize_tool(tool_name: str) -> ToolType:
     """
     Load the tool type from the JSON file and return a ToolType.
