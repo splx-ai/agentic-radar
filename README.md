@@ -43,7 +43,7 @@
   </h4>
 </div>
 
-<img src="./docs/overview_image.png"/>
+<img src="https://github.com/splx-ai/agentic-radar/raw/main/docs/overview_image.png"/>
 
 <!-- TABLE OF CONTENTS -->
 <details>
