@@ -36,12 +36,15 @@ class N8nAnalyzer(Analyzer):
             for file in files:
                 if file.endswith(".json"):
                     file_path = os.path.join(root, file)
-                    with open(file_path, "r") as file:
-                        config = json.load(file)
-                        if config.get("nodes", False) and config.get("connections", False) and config.get("name", False):
+                    with open(file_path, "r", encoding = "utf-8") as f:
+                        config = json.load(f)
+                        if config.get("nodes", False) and config.get("connections", False):
                             n8n_nodes.extend(parse_n8n_nodes(config.get("nodes")))
                             n8n_connections.extend(parse_n8n_connections(config.get("connections")))
-                            workflow_name = config.get("name")
+                            if config.get("name", False):
+                                workflow_name = config.get("name")
+                            else:
+                                workflow_name = file.strip(".json")
 
         return n8n_nodes, n8n_connections, workflow_name
 
