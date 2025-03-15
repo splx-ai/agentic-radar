@@ -1,0 +1,1841 @@
+{
+    "n8n-nodes-base.actionnetwork": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.activecampaign": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.activecampaigntrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.acuityschedulingtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.adalo": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.affinity": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.affinitytrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.agilecrm": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.airtable": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.airtabletrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.aitransform": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.amqp": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "n8n-nodes-base.amqptrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.apitemplateio": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.asana": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.asanatrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.automizy": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.autopilot": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.autopilottrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.awslambda": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.awssns": {
+        "node_type": "tool",
+        "tool_type": "code_interpreter"
+    },
+    "n8n-nodes-base.awssnstrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.awscertificatemanager": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.awscomprehend": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.awsdynamodb": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.awselb": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.awsrekognition": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.awss3": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.awsses": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.awssqs": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.awstextract": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.awstranscribe": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.bamboohr": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.bannerbear": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.baserow": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.beeminder": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.bitbuckettrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.bitly": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.bitwarden": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.box": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.boxtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.brandfetch": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.brevo": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.brevotrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.bubble": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.caltrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.calendlytrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.chargebee": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.chargebeetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.circleci": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.ciscowebex": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.ciscowebextrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.clearbit": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.clickup": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "n8n-nodes-base.clickuptrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.clockify": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.clockifytrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.cloudflare": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.cockpit": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.coda": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.code": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.coingecko": {
+        "node_type": "tool",
+        "tool_type": "code_interpreter"
+    },
+    "n8n-nodes-base.comparedatasets": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.compression": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.contentful": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.convertkit": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.convertkittrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.copper": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.coppertrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.cortex": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.cratedb": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.cron": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.crowddev": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.crowddevtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.crypto": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.customerio": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.customeriotrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.datetime": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.debughelper": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.deepl": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.demio": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.dhl": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.discord": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.discourse": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.disqus": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.drift": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.dropbox": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.dropcontact": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.e2etest": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.editimage": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.egoi": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.elasticsearch": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.elasticsecurity": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "n8n-nodes-base.emailreadimap": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.emailsend": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.emelia": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.emeliatrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.erpnext": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.errortrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.eventbritetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.executecommand": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.executeworkflow": {
+        "node_type": "tool",
+        "tool_type": "code_interpreter"
+    },
+    "n8n-nodes-base.executeworkflowtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.executiondata": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.facebookgraphapi": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.facebooktrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.facebookleadadstrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.figmatrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.filemaker": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "n8n-nodes-base.converttofile": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.extractfromfile": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.readwritefile": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.filter": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.flow": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.flowtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.form": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.formtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.formiotrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.formstacktrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.freshdesk": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.freshservice": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.freshworkscrm": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.ftp": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.function": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.functionitem": {
+        "node_type": "tool",
+        "tool_type": "code_interpreter"
+    },
+    "n8n-nodes-base.getresponse": {
+        "node_type": "tool",
+        "tool_type": "code_interpreter"
+    },
+    "n8n-nodes-base.getresponsetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.ghost": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "n8n-nodes-base.git": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.github": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.githubtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.gitlab": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.gitlabtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.gong": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.googleads": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.googleanalytics": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.googlebigquery": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.googlebooks": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "n8n-nodes-base.googlebusinessprofile": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "n8n-nodes-base.googlebusinessprofiletrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.googlecalendar": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.googlecalendartrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.googlechat": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "n8n-nodes-base.googlecloudnaturallanguage": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.googlecloudstorage": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "n8n-nodes-base.googlecontacts": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.googledocs": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.googledrive": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.googledrivetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.googlefirebasecloudfirestore": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.googlefirebaserealtimedatabase": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.gmail": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.gmailtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.gsuiteadmin": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.googleperspective": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.googlesheets": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.googlesheetstrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.googleslides": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.googletasks": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.googletranslate": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.youtube": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.gotify": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.gotowebinar": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.grafana": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.graphql": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.grist": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.gumroadtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.hackernews": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.halopsa": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "n8n-nodes-base.harvest": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.helpscout": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.helpscouttrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.highlevel": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.homeassistant": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.html": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.htmlextract": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.httprequest": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.hubspot": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "n8n-nodes-base.hubspottrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.humanticai": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.hunter": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.ical": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.if": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.intercom": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.interval": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.invoiceninja": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.invoiceninjatrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.itemlists": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.iterable": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.jenkins": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.jira": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.jiratrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.jotformtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.jwt": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.kafka": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.kafkatrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.keap": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.keaptrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.kitemaker": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.kobotoolbox": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.kobotoolboxtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.ldap": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.lemlist": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.lemlisttrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.line": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.linear": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.lineartrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.lingvanex": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.linkedin": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.localfiletrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.lonescale": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.lonescaletrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.magento2": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mailcheck": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mailchimp": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mailchimptrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.mailerlite": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mailerlitetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.mailgun": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mailjet": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mailjettrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.mandrill": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.manualtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.markdown": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.marketstack": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.matrix": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mattermost": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mautic": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mautictrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.medium": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.merge": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.messagebird": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.metabase": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.microsoftdynamicscrm": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.microsoftentra": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.microsoftexcel": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.microsoftgraphsecurity": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.microsoftonedrive": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.microsoftonedrivetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.microsoftoutlook": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.microsoftoutlooktrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.microsoftsql": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.azurestorage": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.microsoftteams": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.microsofttodo": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mindee": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.misp": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mocean": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mondaycom": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mongodb": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.monicacrm": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.movebinarydata": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mqtt": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.mqtttrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.msg91": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.mysql": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.n8n": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.n8ntrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.nasa": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.netlify": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.netlifytrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.netscaleradc": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.nextcloud": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.nocodb": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.noop": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.notion": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.notiontrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.npm": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.odoo": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.okta": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.onesimpleapi": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.onfleet": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "n8n-nodes-base.onfleettrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.openai": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.openthesaurus": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "n8n-nodes-base.openweathermap": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.orbit": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.oura": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.paddle": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.pagerduty": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.paypal": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.paypaltrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.peekalink": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.phantombuster": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "n8n-nodes-base.philipshue": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.pipedrive": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.pipedrivetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.plivo": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.postbin": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.postgres": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.postgrestrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.posthog": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.postmarktrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.profitwell": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.pushbullet": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.pushcut": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.pushcuttrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.pushover": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.questdb": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.quickbase": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.quickbooks": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.quickchart": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.rabbitmq": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.rabbitmqtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.raindrop": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.readbinaryfile": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.readbinaryfiles": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.readpdf": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.reddit": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.redis": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.redistrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.renamekeys": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.respondtowebhook": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.rocketchat": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.rssfeedread": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.rssfeedreadtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.rundeck": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.s3": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.salesforce": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.salesforcetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.salesmate": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.scheduletrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.seatable": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.seatabletrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.securityscorecard": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.segment": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.sendgrid": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.sendy": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.sentryio": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.servicenow": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.set": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.shopify": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.shopifytrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.signl4": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.simulate": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.simulatetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.slack": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.slacktrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.sms77": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.snowflake": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.splitinbatches": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.splunk": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.spontit": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.spotify": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.spreadsheetfile": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.ssetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.ssh": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.stackby": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.start": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.stopanderror": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.storyblok": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.strapi": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.strava": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.stravatrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.stripe": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.stripetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.supabase": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.surveymonkeytrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.switch": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.syncromsp": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.taiga": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.taigatrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.tapfiliate": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.telegram": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.telegramtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.thehive": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.thehivetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.thehiveproject": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.thehiveprojecttrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.timescaledb": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.todoist": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.toggltrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.totp": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.aggregate": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.limit": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.removeduplicates": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.sort": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.splitout": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.summarize": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.travisci": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.trello": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.trellotrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.twake": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.twilio": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.twiliotrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.twist": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.twitter": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.typeformtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.unleashedsoftware": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.uplead": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.uproc": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.uptimerobot": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.urlscanio": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.venafitlsprotectdatacenter": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.venafitlsprotectcloud": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.venafitlsprotectcloudtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.vero": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.vonage": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.wait": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.webflow": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.webflowtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.webhook": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.wekan": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "n8n-nodes-base.whatsapp": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.whatsapptrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.wise": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.wisetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.woocommerce": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.woocommercetrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.wordpress": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.workabletrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.workflowtrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.writebinaryfile": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.wufootrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.xero": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.xml": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.yourls": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "n8n-nodes-base.zammad": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.zendesk": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.zendesktrigger": {
+        "node_type": "basic"
+    },
+    "n8n-nodes-base.zohocrm": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.zoom": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "n8n-nodes-base.zulip": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.agent": {
+        "node_type": "agent"
+    },
+    "@n8n/n8n-nodes-langchain.openaiassistant": {
+        "node_type": "agent"
+    },
+    "@n8n/n8n-nodes-langchain.chainllm": {
+        "node_type": "basic"
+    },
+    "@n8n/n8n-nodes-langchain.chainretrievalqa": {
+        "node_type": "basic"
+    },
+    "@n8n/n8n-nodes-langchain.chainsummarization": {
+        "node_type": "basic"
+    },
+    "@n8n/n8n-nodes-langchain.information-extractor": {
+        "node_type": "basic"
+    },
+    "@n8n/n8n-nodes-langchain.sentimentanalysis": {
+        "node_type": "basic"
+    },
+    "@n8n/n8n-nodes-langchain.text-classifier": {
+        "node_type": "basic"
+    },
+    "@n8n/n8n-nodes-langchain.code": {
+        "node_type": "custom_tool",
+        "tool_type": "code_interpreter"
+    },
+    "@n8n/n8n-nodes-langchain.documentdefaultdataloader": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "@n8n/n8n-nodes-langchain.documentgithubloader": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "@n8n/n8n-nodes-langchain.embeddingsawsbedrock": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.embeddingsazureopenai": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.embeddingscohere": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.embeddingsgooglegemini": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.embeddingshuggingfaceinference": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.embeddingsmistralcloud": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.embeddingsollama": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.embeddingsopenai": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.lmchatanthropic": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmchatawsbedrock": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmchatazureopenai": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmchatdeepseek": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmchatgooglegemini": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmchatgooglevertex": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmchatgroq": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmchatmistralcloud": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmchatollama": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmchatopenai": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmchatopenrouter": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmcohere": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmollama": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmopenai": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.lmopenhuggingfaceinference": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.memorybufferwindow": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.memorymanager": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.memorymotorhead": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.memorypostgreschat": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.memoryredischat": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.memoryxata": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.memoryzep": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.outputparserautofixing": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.outputparseritemlist": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.outputparserstructured": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.retrievercontextualcompression": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "@n8n/n8n-nodes-langchain.retrievermultiquery": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "@n8n/n8n-nodes-langchain.retrievervectorstore": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "@n8n/n8n-nodes-langchain.retrieverworkflow": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "@n8n/n8n-nodes-langchain.textsplittercharactertextsplitter": {
+        "node_type": "basic"
+    },
+    "@n8n/n8n-nodes-langchain.textsplitterrecursivecharactertextsplitter": {
+        "node_type": "basic"
+    },
+    "@n8n/n8n-nodes-langchain.textsplittertokensplitter": {
+        "node_type": "basic"
+    },
+    "@n8n/n8n-nodes-langchain.toolcode": {
+        "node_type": "tool",
+        "tool_type": "code_interpreter"
+    },
+    "@n8n/n8n-nodes-langchain.toolhttprequest": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "@n8n/n8n-nodes-langchain.toolserpapi": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "@n8n/n8n-nodes-langchain.toolvectorstore": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "@n8n/n8n-nodes-langchain.toolwikipedia": {
+        "node_type": "tool",
+        "tool_type": "web_search"
+    },
+    "@n8n/n8n-nodes-langchain.toolwolframalpha": {
+        "node_type": "tool",
+        "tool_type": "llm"
+    },
+    "@n8n/n8n-nodes-langchain.toolworkflow": {
+        "node_type": "tool",
+        "tool_type": "default"
+    },
+    "@n8n/n8n-nodes-langchain.chattrigger": {
+        "node_type": "basic"
+    },
+    "@n8n/n8n-nodes-langchain.vectorstoreinmemory": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "@n8n/n8n-nodes-langchain.vectorstorepgvector": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "@n8n/n8n-nodes-langchain.vectorstorepinecone": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "@n8n/n8n-nodes-langchain.vectorstoreqdrant": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "@n8n/n8n-nodes-langchain.vectorstoresupabase": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    },
+    "@n8n/n8n-nodes-langchain.vectorstorezep": {
+        "node_type": "tool",
+        "tool_type": "document_loader"
+    }
+}
