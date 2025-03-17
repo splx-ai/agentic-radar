@@ -53,7 +53,7 @@ def parse_all_imports_from_directory(directory_path: str) -> Set[str]:
 
 def get_all_predefined_tools_from_directory(
     directory_path: str,
-) -> List[Dict[str, Dict[str, str]]]:
+) -> List[Dict[str, str]]:
     input_file = resources.files(__package__) / "predefined_tools.json"
     with input_file.open("r") as f:
         predefined_tools = json.loads(f.read())
