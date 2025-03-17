@@ -5,15 +5,17 @@ from typing import Optional
 
 from agentic_radar.analysis.crewai.models.tool import CrewAITool
 from .utils import find_return_of_function_call, is_function_call
-
+from ..models.tool import CrewAITool
+from ..tool_descriptions import get_crewai_tools_descriptions
 
 class AgentsCollector(ast.NodeVisitor):
     CREWAI_AGENT_CLASS = "Agent"
 
-    def __init__(self, known_tool_aliases: set[str], predefined_tool_vars: dict[str, str], custom_tool_names: set[str]):
+    def __init__(self, known_tool_aliases: set[str], predefined_tool_vars: dict[str, CrewAITool], custom_tools: dict[str, CrewAITool]):
         self.known_tool_aliases = known_tool_aliases
         self.predefined_tool_vars = predefined_tool_vars
-        self.custom_tool_names = custom_tool_names
+        self.custom_tools = custom_tools
+        self.crewai_tool_descriptions = get_crewai_tools_descriptions()
         self.agent_tool_mapping = {}
 
     def _find_agent_return(self, node: ast.AST) -> Optional[ast.Call]:
@@ -74,24 +76,26 @@ class AgentsCollector(ast.NodeVisitor):
         """
         # Handle direct references like MyTools.some_tool
         if isinstance(node, ast.Attribute):
-            if node.attr in self.custom_tool_names:
-                return CrewAITool(name=node.attr, custom=True)
+            if node.attr in self.custom_tools:
+                return self.custom_tools[node.attr]
             elif node.attr in self.predefined_tool_vars:
-                return CrewAITool(name=self.predefined_tool_vars[node.attr], custom=False)
+                return self.predefined_tool_vars[node.attr]
         # Handle simple names like some_tool
         elif isinstance(node, ast.Name):
-            if node.id in self.custom_tool_names:
-                return CrewAITool(name=node.id, custom=True)
+            if node.id in self.custom_tools:
+                return self.custom_tools[node.id]
             elif node.id in self.predefined_tool_vars:
-                return CrewAITool(name=self.predefined_tool_vars[node.id], custom=False)
+                return self.predefined_tool_vars[node.id]
         # Handle constructor calls of predefined tools like FileReadTool() or crewai_tools.FileReadTool()
         elif isinstance(node, ast.Call):
             if isinstance(node.func, ast.Name):
                 if node.func.id in self.known_tool_aliases:
-                    return CrewAITool(name=node.func.id, custom=False)
+                    description = self.crewai_tool_descriptions.get(node.func.id, "")
+                    return CrewAITool(name=node.func.id, custom=False, description=description)
             elif isinstance(node.func, ast.Attribute):
                 if node.func.attr in self.known_tool_aliases:
-                    return CrewAITool(name=node.func.attr, custom=False)
+                    description = self.crewai_tool_descriptions.get(node.func.attr, "")
+                    return CrewAITool(name=node.func.attr, custom=False, description=description)
                 
         return None
         
@@ -120,14 +124,14 @@ class AgentsCollector(ast.NodeVisitor):
                 self.agent_tool_mapping[target.id] = agent_tools
         
 
-    def collect(self, root_dir: str) -> dict[str, list[str]]:
+    def collect(self, root_dir: str) -> dict[str, list[CrewAITool]]:
         """Parses all Python modules in the given directory and collects agents together with their tools.
 
         Args:
             root_dir (str): Path to the codebase directory
 
         Returns:
-            dict[str, list[str]]: A dictionary mapping agent names to their tool names
+            dict[str, list[CrewAITool]]: A dictionary mapping agent names to their tools
         """
 
         for root, _, files in os.walk(root_dir):

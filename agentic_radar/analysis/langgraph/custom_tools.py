@@ -1,6 +1,7 @@
 import ast
 import os
 from typing import Dict, List
+import json
 
 
 def extract_custom_tools_with_ast(
@@ -35,6 +36,20 @@ def get_all_custom_tools_from_directory(directory_path: str) -> List[Dict[str, s
                 file_path = os.path.join(root, file)
                 with open(file_path, "r", encoding="utf-8") as f:
                     file_content = f.read()
+                    custom_tools = extract_custom_tools_with_ast(
+                        file_content, file_path
+                    )
+                    for single_custom_tool in custom_tools:
+                        all_custom_tools.append(single_custom_tool)
+            elif file.endswith(".ipynb"):
+                file_path = os.path.join(root, file)
+                with open(file_path, "r", encoding="utf-8") as f:
+                    notebook = json.load(f)
+                    file_content = ""
+                    for cell in notebook["cells"]:
+                        if cell["cell_type"] == "code":
+                            for row in cell["source"]:
+                                file_content += row
                     custom_tools = extract_custom_tools_with_ast(
                         file_content, file_path
                     )

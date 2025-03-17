@@ -33,7 +33,7 @@
   "QdrantVectorSearchTool": "DOCUMENT_LOADER",
   "RagTool": "LLM",
   "ScrapeElementFromWebsiteTool": "DEFAULT",
-  "ScrapeWebsiteTool": "DEFAULT",
+  "ScrapeWebsiteTool": "DOCUMENT_LOADER",
   "ScrapegraphScrapeTool": "DEFAULT",
   "ScrapegraphScrapeToolSchema": "DEFAULT",
   "ScrapflyScrapeWebsiteTool": "DEFAULT",
