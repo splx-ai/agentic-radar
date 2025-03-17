@@ -195,7 +195,9 @@ class GraphInstanceTracker(ast.NodeVisitor):
             call_record["node_definition_argument_info"] = info
             call_record["gotos"] = gotos
 
-    def _analyze_argument(self, node: ast.AST) -> Tuple[Dict[str, Optional[str]], Set[str]]:
+    def _analyze_argument(
+        self, node: ast.AST
+    ) -> Tuple[Dict[str, Optional[str]], Set[str]]:
         """
         Return a dictionary describing the argument:
         - "original": how it appears in the code

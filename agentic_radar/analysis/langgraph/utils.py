@@ -5,7 +5,12 @@ import os
 from typing import Dict, Tuple, Union
 
 
-def build_global_registry(root_dir: str) -> Tuple[Dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]], Dict[str, Union[ast.List, ast.Dict]]]:
+def build_global_registry(
+    root_dir: str,
+) -> Tuple[
+    Dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]],
+    Dict[str, Union[ast.List, ast.Dict]],
+]:
     """
     Recursively walk `root_dir`,
     parse each .py file to find top-level function defs and variable defs
@@ -55,7 +60,12 @@ def derive_module_name(dirpath: str, filename: str, root_dir: str) -> str:
     return module_name
 
 
-def parse_for_top_level_defs(filepath: str, module_name: str) -> Tuple[Dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]], Dict[str, Union[ast.List, ast.Dict]]]:
+def parse_for_top_level_defs(
+    filepath: str, module_name: str
+) -> Tuple[
+    Dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]],
+    Dict[str, Union[ast.List, ast.Dict]],
+]:
     """
     Parse one file, collecting top-level function definitions and
     top-level variable definitions (lists/dicts)
