@@ -1,7 +1,7 @@
 import ast
 import json
 import os
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 
 def extract_custom_tools_with_ast(
@@ -27,7 +27,7 @@ def extract_custom_tools_with_ast(
                     {
                         "name": node.name,
                         "filepath": file_path,
-                        "description": ast.get_docstring(node),
+                        "description": ast.get_docstring(node) or "",
                     }
                 )
 
