@@ -14,7 +14,7 @@ class CrewsCollector(ast.NodeVisitor):
 
     def __init__(self, tasks: set[str]):
         self.tasks = tasks  # For validation purposes
-        self.decorated_tasks: list[str]  = []
+        self.decorated_tasks: list[str] = []
         self.crew_task_mapping: dict[str, list[str]] = {}
         self.crew_process_mapping: dict[str, CrewProcessType] = {}
         self.decorated_class_name: Optional[str] = None

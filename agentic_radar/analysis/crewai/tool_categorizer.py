@@ -11,7 +11,9 @@ def categorize_tool(tool_name: str) -> ToolType:
     """
     try:
         # Use resources.files().joinpath() to get the path, then use .read_text() to read the file
-        json_text = resources.files(__package__).joinpath("tool_categories.json").read_text()
+        json_text = (
+            resources.files(__package__).joinpath("tool_categories.json").read_text()
+        )
         tool_mapping = json.loads(json_text)
         category = tool_mapping.get(tool_name, "DEFAULT")
         return ToolType[category]
