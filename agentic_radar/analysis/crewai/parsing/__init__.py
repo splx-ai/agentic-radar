@@ -1,8 +1,8 @@
 from .agents import AgentsCollector
-from .tasks import TasksCollector
-from .predefined_tools import PredefinedToolsCollector
+from .crews import CrewProcessType, CrewsCollector
 from .custom_tools import CustomToolsCollector
-from .crews import CrewsCollector, CrewProcessType
+from .predefined_tools import PredefinedToolsCollector
+from .tasks import TasksCollector
 
 __all__ = [
     "AgentsCollector",

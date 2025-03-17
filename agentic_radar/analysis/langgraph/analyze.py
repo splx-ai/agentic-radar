@@ -2,9 +2,8 @@ from pathlib import Path
 
 from ...analysis.analyze import Analyzer
 from ...graph import EdgeDefinition as Edge
-from ...graph import GraphDefinition
+from ...graph import GraphDefinition, NodeType, ToolType
 from ...graph import NodeDefinition as Node
-from ...graph import NodeType, ToolType
 from .custom_tools import get_all_custom_tools_from_directory
 from .graph import parse_all_graph_instances_in_directory
 from .predefined_tools import get_all_predefined_tools_from_directory
@@ -41,7 +40,6 @@ class LangGraphAnalyzer(Analyzer):
 
         for graph in all_graphs:
             for i, node in enumerate(graph["graph_info"]["nodes"]):
-
                 nodes.append(
                     Node(type=NodeType.BASIC, name=node["name"], label=node["name"])
                 )
@@ -71,7 +69,7 @@ class LangGraphAnalyzer(Analyzer):
                 Node(
                     name=predefined_tool["name"],
                     type=NodeType.TOOL,
-                    category=predefined_tool["category"],
+                    category=ToolType(predefined_tool["category"]),
                     vulnerabilities=[],  # TODO Add vulnerability mapping
                 )
             )

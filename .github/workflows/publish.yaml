@@ -35,13 +35,13 @@ jobs:
 
       - name: Run tests
         run: |
-          eval $(poetry env activate)
-          mkdir testresults
-          python -m pytest -v -s
+          poetry run python -m pytest -v -s
 
-      #- name: Run checks
-        #run: pre-commit run --all-files
-        #
+      - name: Run checks
+        run: | 
+          poetry run ruff check
+          poetry run mypy agentic_radar
+        
       - name: Build
         run: poetry build
 

@@ -1,7 +1,7 @@
 import ast
-import os
-from typing import Any, Dict, List, Optional, Union
 import json
+import os
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 
 class GraphInstanceTracker(ast.NodeVisitor):
@@ -194,7 +194,9 @@ class GraphInstanceTracker(ast.NodeVisitor):
             call_record["node_definition_argument_info"] = info
             call_record["gotos"] = gotos
 
-    def _analyze_argument(self, node: ast.AST) -> Dict[str, Optional[str]]:
+    def _analyze_argument(
+        self, node: ast.AST
+    ) -> Tuple[Dict[str, Optional[str]], Set[str]]:
         """
         Return a dictionary describing the argument:
         - "original": how it appears in the code
@@ -206,7 +208,7 @@ class GraphInstanceTracker(ast.NodeVisitor):
             "fq_name": None,
         }
 
-        gotos = []
+        gotos = set()
 
         # 1) If it's a bare name (like "some_func")
         if isinstance(node, ast.Name):
@@ -321,7 +323,7 @@ class GraphInstanceTracker(ast.NodeVisitor):
         fq_name = self._resolve_fq_name(call_node.func)
         return fq_name == self.graph_class_fqcn
 
-    def _resolve_fq_name(self, node: Union[ast.Name, ast.Attribute]) -> str:
+    def _resolve_fq_name(self, node) -> str:
         """
         Attempt to resolve a node to a fully qualified name
         """
@@ -336,7 +338,7 @@ class GraphInstanceTracker(ast.NodeVisitor):
             return node.attr
         return ""
 
-    def _stringify_ast_node(self, node: ast.AST) -> str:
+    def _stringify_ast_node(self, node) -> str:
         """
         Convert an AST node into a string
         """
@@ -381,7 +383,7 @@ class GraphInstanceTracker(ast.NodeVisitor):
         Traverse the body of a function definition and collect all returns
         """
 
-        returns = []
+        returns: List[str] = []
 
         class ReturnCollector(ast.NodeVisitor):
             """
@@ -392,7 +394,7 @@ class GraphInstanceTracker(ast.NodeVisitor):
             def __init__(inner_self, outer_self):
                 super().__init__()
                 inner_self.outer = outer_self
-                inner_self.variables: Dict[str, str] = {}
+                inner_self.variables: Dict[str, List[str]] = {}
 
             def visit_Return(inner_self, return_node: ast.Return):
                 if return_node.value is not None and isinstance(
@@ -449,7 +451,7 @@ class GraphInstanceTracker(ast.NodeVisitor):
 
     def _get_goto_arguments_of_returned_command_objects(
         self, func_def: Union[ast.FunctionDef, ast.AsyncFunctionDef]
-    ) -> List[str]:
+    ) -> Set[str]:
         """
         Traverse the body of a function definition and collect all possible values of the "goto" argument of a returned Command object
         """
@@ -465,7 +467,7 @@ class GraphInstanceTracker(ast.NodeVisitor):
             def __init__(inner_self, outer_self):
                 super().__init__()
                 inner_self.outer = outer_self
-                inner_self.variables: Dict[str, str] = {}
+                inner_self.variables: Dict[str, List[str]] = {}
 
             def visit_Return(inner_self, return_node: ast.Return):
                 if return_node.value is not None and isinstance(
@@ -647,7 +649,6 @@ def walk_directory_and_parse(
                         if method_name not in combined_results[instance_name]:
                             combined_results[instance_name][method_name] = []
                         combined_results[instance_name][method_name].extend(calls)
-                        combined_results[instance_name]["filepath"] = fullpath
 
     return combined_results
 
@@ -661,7 +662,6 @@ def parse_all_graph_instances_in_directory(
     global_functions,
     global_variables,
 ):
-
     results = walk_directory_and_parse(
         root_directory,
         graph_class_fqcn,
@@ -792,7 +792,6 @@ def parse_all_graph_instances_in_directory(
         graphs.append(
             {
                 "graph_name": graph,
-                "graph_file_path": call_records["filepath"],
                 "graph_info": {
                     "nodes": nodes,
                     "basic_edges": basic_edges,

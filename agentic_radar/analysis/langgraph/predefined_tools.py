@@ -53,7 +53,7 @@ def parse_all_imports_from_directory(directory_path: str) -> Set[str]:
 
 def get_all_predefined_tools_from_directory(
     directory_path: str,
-) -> List[Dict[str, Dict[str, str]]]:
+) -> List[Dict[str, str]]:
     input_file = resources.files(__package__) / "predefined_tools.json"
     with input_file.open("r") as f:
         predefined_tools = json.loads(f.read())
@@ -63,7 +63,6 @@ def get_all_predefined_tools_from_directory(
     possible_predefined_tools = []
 
     for name, values in predefined_tools.items():
-
         if any(single_import in all_imports for single_import in values["import_list"]):
             new_possible_tool = {"name": name}
             for value_name, value_content in values.items():
