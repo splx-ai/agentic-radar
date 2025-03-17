@@ -1,15 +1,8 @@
 import ast
 import json
 import os
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-    Union,
-    Tuple,
-    Set
-)
+
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 
 class GraphInstanceTracker(ast.NodeVisitor):
