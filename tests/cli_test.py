@@ -16,6 +16,7 @@ def test_help():
 
 BASE_DIR_LANGGRAPH = "examples/langgraph"
 BASE_DIR_CREWAI = "examples/crewai"
+BASED_DIR_N8N = "examples/n8n"
 
 
 @pytest.fixture()
@@ -50,5 +51,20 @@ def test_langgraph(params):
 def test_crewai(params):
     i, o = params
     result = runner.invoke(app, ["-i", i, "-o", o, "crewai"])
+    assert result.exit_code == 0
+    assert o in result.stdout
+
+
+@pytest.mark.parametrize(
+    "params",
+    [
+        (os.path.join(BASED_DIR_N8N, dir), "report.html")
+        for dir in os.listdir(BASED_DIR_N8N)
+    ],
+    indirect=True,
+)
+def test_n8n(params):
+    i, o = params
+    result = runner.invoke(app, ["-i", i, "-o", o, "n8n"])
     assert result.exit_code == 0
     assert o in result.stdout

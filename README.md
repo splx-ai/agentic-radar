@@ -162,6 +162,7 @@ Planned features (in no particular order)
 - [ ] Framework Support
   - [x] [LangGraph](https://github.com/langchain-ai/langgraph)
   - [x] [CrewAI](https://github.com/crewAIInc/crewAI)
+  - [x] [n8n](https://github.com/n8n-io/n8n)
   - [ ] [LlamaIndex](https://github.com/run-llama/llama_index)
   - [ ] [Swarm](https://github.com/openai/swarm)
   - [ ] [PydanticAI](https://github.com/pydantic/pydantic-ai)

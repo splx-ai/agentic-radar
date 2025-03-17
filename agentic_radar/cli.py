@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from typing_extensions import Annotated
 
 from agentic_radar import __version__
-from agentic_radar.analysis import Analyzer, CrewAIAnalyzer, LangGraphAnalyzer
+from agentic_radar.analysis import Analyzer, CrewAIAnalyzer, LangGraphAnalyzer, N8nAnalyzer
 from agentic_radar.report import (
     EdgeDefinition,
     GraphDefinition,
@@ -92,6 +92,10 @@ def langgraph():
 @app.command("crewai", help="Scan code written with CrewAI")
 def crewai():
     analyze_and_generate_report("CrewAI", CrewAIAnalyzer())
+
+@app.command("n8n", help="Scan a n8n workflow configuration JSON")
+def n8n():
+    analyze_and_generate_report("n8n", N8nAnalyzer())
 
 
 if __name__ == "__main__":
