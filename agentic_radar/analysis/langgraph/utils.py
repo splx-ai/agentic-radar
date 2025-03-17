@@ -1,7 +1,11 @@
 import ast
 import json
 import os
-from typing import Dict, Tuple, Union, Union
+from typing import (
+    Dict,
+    Tuple,
+    Union
+)
 
 
 def build_global_registry(root_dir: str) -> Tuple[Dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]], Dict[str, Union[ast.List, ast.Dict]]]:

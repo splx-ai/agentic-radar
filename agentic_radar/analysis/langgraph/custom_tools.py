@@ -1,7 +1,7 @@
 import ast
 import json
 import os
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 
 def extract_custom_tools_with_ast(
