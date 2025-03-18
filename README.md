@@ -50,21 +50,24 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#description">Description</a>
+      <a href="#description-📝">Description</a>
     </li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#getting-started-🚀">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#demo">Demo</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#code-of-conduct">Code Of Conduct</a></li>
-    <li><a href="#license">License</a></li>
+    <li><a href="#roadmap-📈">Roadmap</a></li>
+    <li><a href="#demo-🎥">Demo</a></li>
+    <li><a href="#blog-tutorials-💡">Blog Tutorials</a></li>
+    <li><a href="#community-🤝">Community</a></li>
+    <li><a href="#frequently-asked-questions-❓">Frequently Asked Questions</a></li>
+    <li><a href="#contributing-💻">Contributing</a></li>
+    <li><a href="#code-of-conduct-📜">Code Of Conduct</a></li>
+    <li><a href="#license-⚖️">License</a></li>
   </ol>
 </details>
 
@@ -163,6 +166,7 @@ Planned features (in no particular order)
   - [x] [LangGraph](https://github.com/langchain-ai/langgraph)
   - [x] [CrewAI](https://github.com/crewAIInc/crewAI)
   - [x] [n8n](https://github.com/n8n-io/n8n)
+  - [ ] [OpenAI Agents](https://github.com/openai/openai-agents-python)
   - [ ] [LlamaIndex](https://github.com/run-llama/llama_index)
   - [ ] [Swarm](https://github.com/openai/swarm)
   - [ ] [PydanticAI](https://github.com/pydantic/pydantic-ai)
@@ -170,7 +174,7 @@ Planned features (in no particular order)
   - [ ] [Dify](https://github.com/langgenius/dify)
 - [ ] CI
   - [ ] Code style checks
-  - [ ] Automated releases to PyPi
+  - [x] Automated releases to PyPi
 - [ ] Improve report design
   - [ ] Improve SVG scaling
 
@@ -186,6 +190,9 @@ Designed for AI engineers and security researchers, this demo showcases how to i
 
 It helps you understand agentic system behavior, visualize security risks, and enhance AI transparency in your applications. 🚀
 
+## Blog Tutorials 💡
+
+- [CrewAI](https://splx.ai/blog/enhancing-ai-transparency-scanning-crewai-workflows-with-agentic-radar)
 
 ## Community 🤝
 
