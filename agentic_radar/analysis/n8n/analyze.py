@@ -28,10 +28,10 @@ class N8nAnalyzer(Analyzer):
     def __init__(self):
         super().__init__()
 
-    def parse_n8n_configs(self, root_directory: str) -> Tuple[List[N8nNode], List[N8nConnection]]:
+    def parse_n8n_configs(self, root_directory: str) -> Tuple[List[N8nNode], List[N8nConnection], str]:
         n8n_nodes = []
         n8n_connections = []
-        workflow_name = None
+        workflow_name = ""
         for root, _, files in os.walk(root_directory):
             for file in files:
                 if file.endswith(".json"):
