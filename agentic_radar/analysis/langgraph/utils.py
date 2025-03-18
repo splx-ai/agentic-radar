@@ -84,18 +84,6 @@ def parse_for_top_level_defs(
                     for row in cell["source"]:
                         source += row
 
-    source = ""
-    if filepath.endswith(".py"):
-        with open(filepath, "r", encoding="utf-8") as f:
-            source = f.read()
-    elif filepath.endswith(".ipynb"):
-        with open(filepath, "r", encoding="utf-8") as f:
-            notebook = json.load(f)
-            for cell in notebook["cells"]:
-                if cell["cell_type"] == "code":
-                    for row in cell["source"]:
-                        source += row
-
     tree = ast.parse(source, filename=filepath)
 
     class TopLevelCollector(ast.NodeVisitor):
