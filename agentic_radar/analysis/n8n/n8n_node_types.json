@@ -1720,7 +1720,7 @@
     },
     "@n8n/n8n-nodes-langchain.memorybufferwindow": {
         "node_type": "tool",
-        "tool_type": "default"
+        "tool_type": "document_loader"
     },
     "@n8n/n8n-nodes-langchain.memorymanager": {
         "node_type": "tool",
