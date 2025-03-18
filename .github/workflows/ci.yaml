@@ -30,7 +30,6 @@ jobs:
       - name: Run tests
         run: |
           poetry run python -m pytest -v -s
-          poetry run python -m pytest -v -s
 
       - name: Run checks
         run: | 
