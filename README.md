@@ -174,7 +174,7 @@ Planned features (in no particular order)
   - [ ] [Dify](https://github.com/langgenius/dify)
 - [ ] CI
   - [ ] Code style checks
-  - [ ] Automated releases to PyPi
+  - [x] Automated releases to PyPi
 - [ ] Improve report design
   - [ ] Improve SVG scaling
 
