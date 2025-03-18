@@ -21,12 +21,12 @@ You will need the following things for developing the Agentic Scanner:
 1. For the Agentic Scanner repository to your personal Github account
 2. Clone the forked repository:
 ```sh
-git clone git@github.com:YOUR-USERNAME/agentic-scanner.git
+git clone git@github.com:YOUR-USERNAME/agentic-radar.git
 ```
 3. Add the upstream remote for rebasing:
 ```sh
-cd agentic-scanner
-git remote add upstream git@github.com:splx-ai/agentic-scanner.git
+cd agentic-radar
+git remote add upstream git@github.com:splx-ai/agentic-radar.git
 ```
 
 ### Development
@@ -41,7 +41,7 @@ source .venv/bin/activate # We recommend to configure poetry so it stores the vi
 
 You can run the current development version with:
 ```sh
-python agentic_scanner/cli.py --help
+python agentic_radar/cli.py --help
 ```
 
 When writing the code, please use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary). This enables automated versioning and utilizes a common practice for writing commit messages.
