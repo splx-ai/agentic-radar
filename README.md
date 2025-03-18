@@ -31,10 +31,17 @@
     <img src="https://img.shields.io/github/license/splx-ai/agentic-radar.svg" alt="license" />
   </a>
   <a href="https://pypi.org/project/agentic-radar">
-    <img src="https://img.shields.io/pypi/v/agentic-radar" alt="PyPI - Version">
+    <img src="https://img.shields.io/pypi/v/agentic-radar" alt="PyPI - Version" />
   </a>
   <a href="https://pypi.org/project/agentic-radar">
-    <img src="https://static.pepy.tech/badge/agentic-radar" alt="PyPI - Downloads">
+    <img src="https://static.pepy.tech/badge/agentic-radar" alt="PyPI - Downloads" />
+  </a>
+  <br />
+  <a href="https://discord.gg/tR2d54utZc">
+    <img src="https://img.shields.io/discord/1346578514177949767?style=for-the-badge&logo=discord&logoColor=white&label=Discord&labelColor=5865F2&color=555555" alt="Discord" />
+  </a>
+  <a href="https://join.slack.com/t/splxaicommunity/shared_invite/zt-31b3hc3mt-A0v78qztTIMSNBg6y~WOAA">
+    <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white" alt="Slack" />
   </a>
 </p>
    
