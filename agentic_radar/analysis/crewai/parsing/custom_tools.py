@@ -8,8 +8,8 @@ class CustomToolsCollector(ast.NodeVisitor):
     CREWAI_CUSTOM_TOOL_DECORATOR = "tool"
     CREWAI_CUSTOM_TOOL_BASE_CLASS = "BaseTool"
 
-    def __init__(self):
-        self.custom_tools = {}
+    def __init__(self) -> None:
+        self.custom_tools: dict[str, CrewAITool] = {}
 
     def visit_FunctionDef(self, node):
         """Track functions that define custom tools by using the 'tools(...)' decorator."""
@@ -41,7 +41,7 @@ class CustomToolsCollector(ast.NodeVisitor):
 
         self.generic_visit(node)
 
-    def collect(self, root_dir: str) -> set[str]:
+    def collect(self, root_dir: str) -> dict[str, CrewAITool]:
         """Parses all Python modules in the given directory and collects custom tools.
 
         Args:

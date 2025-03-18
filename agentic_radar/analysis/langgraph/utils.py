@@ -1,7 +1,7 @@
 import ast
+import json
 import os
 from typing import Dict, Tuple, Union
-import json
 
 
 def build_global_registry(
@@ -18,8 +18,8 @@ def build_global_registry(
     We'll store them in global_functions and global_variables with a fully
     qualified name
     """
-    global_functions = {}
-    global_variables = {}
+    global_functions: Dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]] = {}
+    global_variables: Dict[str, Union[ast.List, ast.Dict]] = {}
     for dirpath, _, filenames in os.walk(root_dir):
         for filename in filenames:
             if filename.endswith(".py") or filename.endswith(".ipynb"):
@@ -29,11 +29,11 @@ def build_global_registry(
                     fullpath, module_name
                 )
 
-                for k, v in local_functions.items():
-                    global_functions[k] = v
+                for function_name, function_def in local_functions.items():
+                    global_functions[function_name] = function_def
 
-                for k, v in local_variables.items():
-                    global_variables[k] = v
+                for variable_name, variable_def in local_variables.items():
+                    global_variables[variable_name] = variable_def
 
     return global_functions, global_variables
 
@@ -59,13 +59,18 @@ def derive_module_name(dirpath: str, filename: str, root_dir: str) -> str:
     return module_name
 
 
-def parse_for_top_level_defs(filepath: str, module_name: str) -> None:
+def parse_for_top_level_defs(
+    filepath: str, module_name: str
+) -> Tuple[
+    Dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]],
+    Dict[str, Union[ast.List, ast.Dict]],
+]:
     """
     Parse one file, collecting top-level function definitions and
     top-level variable definitions (lists/dicts)
     """
-    local_functions = {}
-    local_variables = {}
+    local_functions: Dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]] = {}
+    local_variables: Dict[str, Union[ast.List, ast.Dict]] = {}
 
     source = ""
     if filepath.endswith(".py"):
@@ -93,7 +98,7 @@ def parse_for_top_level_defs(filepath: str, module_name: str) -> None:
             self.generic_visit(node)
 
         def visit_Assign(self, node: ast.Assign):
-            if isinstance(node.parent, ast.Module):
+            if hasattr(node, "parent") and isinstance(node.parent, ast.Module):
                 if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
                     var_name = node.targets[0].id
                     val = node.value

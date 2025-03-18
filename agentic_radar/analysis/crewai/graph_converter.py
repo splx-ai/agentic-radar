@@ -1,6 +1,13 @@
-from agentic_radar.graph import GraphDefinition, NodeDefinition, EdgeDefinition, NodeType, ToolType
 from agentic_radar.analysis.crewai.models import CrewAIGraph, CrewAINodeType
 from agentic_radar.analysis.crewai.tool_categorizer import categorize_tool
+from agentic_radar.graph import (
+    EdgeDefinition,
+    GraphDefinition,
+    NodeDefinition,
+    NodeType,
+    ToolType,
+)
+
 
 def convert_graph(crewai_graph: CrewAIGraph) -> GraphDefinition:
     """Convert CrewAI Graph to GraphDefinition."""
@@ -27,11 +34,11 @@ def convert_graph(crewai_graph: CrewAIGraph) -> GraphDefinition:
             category = ToolType.DEFAULT
 
         output_node = NodeDefinition(
-            node_type=node_type,
+            type=node_type,
             name=node.name,
             label=node.name,
             category=category,
-            description=node.description
+            description=node.description,
         )
 
         nodes.append(output_node.model_copy(deep=True))
@@ -48,4 +55,6 @@ def convert_graph(crewai_graph: CrewAIGraph) -> GraphDefinition:
             )
         )
 
-    return GraphDefinition(name=crewai_graph.name, nodes=nodes, edges=edges, tools=tools)
+    return GraphDefinition(
+        name=crewai_graph.name, nodes=nodes, edges=edges, tools=tools
+    )

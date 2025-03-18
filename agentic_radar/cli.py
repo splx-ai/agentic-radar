@@ -7,14 +7,19 @@ from pydantic import BaseModel
 from typing_extensions import Annotated
 
 from agentic_radar import __version__
-from agentic_radar.analysis import Analyzer, CrewAIAnalyzer, LangGraphAnalyzer, N8nAnalyzer
+from agentic_radar.analysis import (
+    Analyzer,
+    CrewAIAnalyzer,
+    LangGraphAnalyzer,
+    N8nAnalyzer,
+)
+from agentic_radar.mapper import map_vulnerabilities
 from agentic_radar.report import (
     EdgeDefinition,
     GraphDefinition,
     NodeDefinition,
     generate,
 )
-from agentic_radar.mapper import map_vulnerabilities
 
 
 class Args(BaseModel):
@@ -63,6 +68,7 @@ def _main(
         input_directory=input_directory, output_file=output_file, version=version
     )
 
+
 def analyze_and_generate_report(framework: str, analyzer: Analyzer):
     print(f"Analyzing {args.input_directory} for {framework} graphs")
     graph = analyzer.analyze(args.input_directory)
@@ -85,9 +91,11 @@ def analyze_and_generate_report(framework: str, analyzer: Analyzer):
     generate(pydot_graph, args.output_file)
     print(f"Report {args.output_file} generated")
 
+
 @app.command("langgraph", help="Scan code written with LangGraph")
 def langgraph():
     analyze_and_generate_report("LangGraph", LangGraphAnalyzer())
+
 
 @app.command("crewai", help="Scan code written with CrewAI")
 def crewai():

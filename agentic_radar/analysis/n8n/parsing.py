@@ -1,9 +1,7 @@
 from typing import Dict, List
 
-from .models import (
-    N8nNode,
-    N8nConnection
-)
+from .models import N8nConnection, N8nNode
+
 
 def parse_n8n_nodes(nodes_list: List[Dict]) -> List[N8nNode]:
     n8n_nodes = []

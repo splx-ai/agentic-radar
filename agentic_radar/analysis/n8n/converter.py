@@ -1,24 +1,20 @@
-from typing import List, Tuple
-from importlib import resources
 import json
-
-from .models import (
-    N8nNode,
-    N8nConnection
-)
+from importlib import resources
+from typing import List, Tuple
 
 from ...graph import (
     EdgeDefinition,
     NodeDefinition,
     NodeType,
-    ToolType
 )
+from .models import N8nConnection, N8nNode
 
-def convert_nodes(n8n_nodes: List[N8nNode]) -> Tuple[List[N8nNode], List[N8nNode]]:
+
+def convert_nodes(n8n_nodes: List[N8nNode]) -> Tuple[List[NodeDefinition], List[NodeDefinition]]:
     nodes = []
     tools = []
     n8n_node_types_file = resources.files(__package__) / "n8n_node_types.json"
-    with open(n8n_node_types_file, "r") as f:
+    with n8n_node_types_file.open("r") as f:
         n8n_node_types_dict = json.load(f)
 
     for n8n_node in n8n_nodes:
@@ -32,7 +28,7 @@ def convert_nodes(n8n_nodes: List[N8nNode]) -> Tuple[List[N8nNode], List[N8nNode
             if type.get("tool_type", False):
                 nodes.append(
                     NodeDefinition(
-                        type = "tool",
+                        type = NodeType.TOOL,
                         name = n8n_node.name,
                         label = n8n_node.name,
                         category = type.get("tool_type")
@@ -41,7 +37,7 @@ def convert_nodes(n8n_nodes: List[N8nNode]) -> Tuple[List[N8nNode], List[N8nNode
 
                 tools.append(
                     NodeDefinition(
-                        type = "tool",
+                        type = NodeType.TOOL,
                         name = n8n_node.name,
                         label = n8n_node.name,
                         category = type.get("tool_type")

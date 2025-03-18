@@ -14,7 +14,6 @@ def get_python_files(directory):
 
 
 def parse_gotos(node, graph_file_path, root_directory):
-
     with open(graph_file_path, "r") as f:
         code = f.read()
 
@@ -85,7 +84,6 @@ You must respond with a JSON containing the following fields:
     while need_more_information:
         new_user_message = ""
         for file_path in response_json["file_paths"]:
-
             with open(file_path, "r") as f:
                 code = f.read()
                 new_user_message += f"""
