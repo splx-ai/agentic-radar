@@ -1,0 +1,20 @@
+name: "Documentation Issue 📖"
+description: "Report missing, outdated, or unclear documentation."
+title: "[Docs] "
+labels: ["documentation"]
+body:
+  - type: textarea
+    id: issue
+    attributes:
+      label: "What needs improvement?"
+      description: "Describe the documentation issue."
+      placeholder: "Describe what’s unclear or missing."
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: "Where is the issue?"
+      description: "Provide a link or file path to the documentation needing improvement."
+      placeholder: "File path or URL..."
