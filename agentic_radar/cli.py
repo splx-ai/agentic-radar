@@ -7,14 +7,20 @@ from pydantic import BaseModel
 from typing_extensions import Annotated
 
 from agentic_radar import __version__
-from agentic_radar.analysis import Analyzer, CrewAIAnalyzer, LangGraphAnalyzer, N8nAnalyzer
+from agentic_radar.analysis import (
+    Analyzer,
+    CrewAIAnalyzer,
+    LangGraphAnalyzer,
+    N8nAnalyzer,
+)
+from agentic_radar.mapper import map_vulnerabilities
 from agentic_radar.report import (
     EdgeDefinition,
     GraphDefinition,
     NodeDefinition,
     generate,
 )
-from agentic_radar.mapper import map_vulnerabilities
+
 
 class Args(BaseModel):
     input_directory: str

@@ -1,7 +1,7 @@
-from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel, Field
+
 
 class N8nNode(BaseModel):
     type: str = Field(..., description="Type of the node")

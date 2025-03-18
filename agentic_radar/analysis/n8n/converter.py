@@ -1,17 +1,14 @@
-from typing import List, Tuple
-from importlib import resources
 import json
-
-from .models import (
-    N8nNode,
-    N8nConnection
-)
+from importlib import resources
+from typing import List, Tuple
 
 from ...graph import (
     EdgeDefinition,
     NodeDefinition,
     NodeType,
 )
+from .models import N8nConnection, N8nNode
+
 
 def convert_nodes(n8n_nodes: List[N8nNode]) -> Tuple[List[NodeDefinition], List[NodeDefinition]]:
     nodes = []

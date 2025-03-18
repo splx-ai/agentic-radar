@@ -1,27 +1,12 @@
-from pathlib import Path
-import os
 import json
-from typing import Tuple, List
+import os
+from typing import List, Tuple
 
 from ...analysis.analyze import Analyzer
-from ...graph import EdgeDefinition as Edge
 from ...graph import GraphDefinition
-from ...graph import NodeDefinition as Node
-from ...graph import NodeType, ToolType
-
-from .converter import (
-    convert_nodes,
-    convert_connections
-)
-
-from .parsing import (
-    parse_n8n_nodes,
-    parse_n8n_connections
-)
-from .models import (
-    N8nNode,
-    N8nConnection
-)
+from .converter import convert_connections, convert_nodes
+from .models import N8nConnection, N8nNode
+from .parsing import parse_n8n_connections, parse_n8n_nodes
 
 
 class N8nAnalyzer(Analyzer):
