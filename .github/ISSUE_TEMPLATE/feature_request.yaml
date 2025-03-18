@@ -1,0 +1,32 @@
+name: "Feature Request ✨"
+description: "Suggest a new feature or enhancement."
+title: "[Feature] "
+labels: ["enhancement"]
+type: "Feature"
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for the same feature request?
+      description: Please check if a request for that feature already exists.
+      options:
+      - label: I have checked the existing issues.
+        required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe the feature request"
+      description: "What problem does this solve? How would it improve the project?"
+      placeholder: "Feature details..."
+    validations:
+      required: true
+      
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "Do you have any ideas for the technical implementation?"
+      description: "How would you approach the problem?"
+      placeholder: "Technical solution ideas..."
+    validations:
+      required: false
+  

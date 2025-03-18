@@ -1,0 +1,68 @@
+name: "Bug Report 🐞"
+description: "Report a reproducible issue in the project."
+title: "[Bug] "
+labels: ["bug"]
+type: "Bug"
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for the same bug?
+      description: Please check if an issue already exists for the bug you encountered.
+      options:
+      - label: I have checked the existing issues.
+        required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe the bug"
+      description: "A clear and concise description of what the bug is."
+      placeholder: "Bug details..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Steps to reproduce the behavior."
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: "Expected behavior"
+      description: "What should happen instead?"
+      placeholder: "Expected behavior details..."
+    validations:
+      required: true
+
+  - type: input
+    id: agentic_radar_version
+    attributes:
+      label: Agentic Radar Version
+      description: What version of Agentic Radar are you using?
+      placeholder: ex. 0.3.0, main, etc.
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - MacOS
+        - Linux
+        - Windows
+        - WSL on Windows
+      default: 0
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Screenshots/Logs (if applicable)"
+      description: "Paste error logs or screenshots here."
+      placeholder: "Logs or error messages..."
