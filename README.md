@@ -50,24 +50,24 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#description-📝">Description</a>
+      <a href="#description-">Description</a>
     </li>
     <li>
-      <a href="#getting-started-🚀">Getting Started</a>
+      <a href="#getting-started-">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap-📈">Roadmap</a></li>
-    <li><a href="#demo-🎥">Demo</a></li>
-    <li><a href="#blog-tutorials-💡">Blog Tutorials</a></li>
-    <li><a href="#community-🤝">Community</a></li>
-    <li><a href="#frequently-asked-questions-❓">Frequently Asked Questions</a></li>
-    <li><a href="#contributing-💻">Contributing</a></li>
-    <li><a href="#code-of-conduct-📜">Code Of Conduct</a></li>
-    <li><a href="#license-⚖️">License</a></li>
+    <li><a href="#roadmap-">Roadmap</a></li>
+    <li><a href="#demo-">Demo</a></li>
+    <li><a href="#blog-tutorials-">Blog Tutorials</a></li>
+    <li><a href="#community-">Community</a></li>
+    <li><a href="#frequently-asked-questions-">Frequently Asked Questions</a></li>
+    <li><a href="#contributing-">Contributing</a></li>
+    <li><a href="#code-of-conduct-">Code Of Conduct</a></li>
+    <li><a href="#license-">License</a></li>
   </ol>
 </details>
 
