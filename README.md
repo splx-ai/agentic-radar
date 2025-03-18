@@ -30,6 +30,12 @@
   <a href="https://github.com/splx-ai/agentic-radar/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/splx-ai/agentic-radar.svg" alt="license" />
   </a>
+  <a href="https://pypi.org/project/agentic-radar">
+    <img src="https://img.shields.io/pypi/v/agentic-radar" alt="PyPI - Version">
+  </a>
+  <a href="https://pypi.org/project/agentic-radar">
+    <img src="https://static.pepy.tech/badge/agentic-radar" alt="PyPI - Downloads">
+  </a>
 </p>
    
   <h4>
