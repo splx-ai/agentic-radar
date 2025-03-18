@@ -186,6 +186,9 @@ Designed for AI engineers and security researchers, this demo showcases how to i
 
 It helps you understand agentic system behavior, visualize security risks, and enhance AI transparency in your applications. 🚀
 
+## Blog Tutorials 💡
+
+- [CrewAI](https://splx.ai/blog/enhancing-ai-transparency-scanning-crewai-workflows-with-agentic-radar)
 
 ## Community 🤝
 
