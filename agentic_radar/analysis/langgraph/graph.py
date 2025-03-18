@@ -623,7 +623,7 @@ def walk_directory_and_parse(
     global_variables,
 ) -> Dict[str, Dict[str, List[Dict[str, Any]]]]:
     """
-    Recursively walk a directory (root_dir), parse each .py file,
+    Recursively walk a directory (root_dir), parse each .py and .ipynb file,
     and merge results for the target Graph class
     """
     combined_results: Dict[str, Dict[str, List[Dict[str, Any]]]] = {}
