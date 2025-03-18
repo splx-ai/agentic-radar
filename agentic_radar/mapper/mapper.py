@@ -35,6 +35,7 @@ def map_vulnerabilities(graph: GraphDefinition):
                     node.vulnerabilities.extend(vulnerability.vulnerabilities)
                 elif (
                     vulnerability.match == "category"
+                    and node.category
                     and vulnerability.value == node.category.value
                 ):
                     node.vulnerabilities.extend(vulnerability.vulnerabilities)
@@ -47,6 +48,7 @@ def map_vulnerabilities(graph: GraphDefinition):
                     tool.vulnerabilities.extend(vulnerability.vulnerabilities)
                 elif (
                     vulnerability.match == "category"
+                    and tool.category
                     and vulnerability.value == tool.category.value
                 ):
                     tool.vulnerabilities.extend(vulnerability.vulnerabilities)

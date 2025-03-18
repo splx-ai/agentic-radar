@@ -47,7 +47,7 @@ def parse_init_imports(init_path: str) -> list[tuple[str, str]]:
 
                 if not module_path:
                     continue
-                
+
                 # Get the imports (e.g., 'AIMindTool')
                 for name in node.names:
                     imports.append((name.name, module_path))

@@ -5,5 +5,14 @@ repos:
     - id: ruff
       args: [ --fix ]
     - id: ruff-format
+  - repo: local
+    hooks:
+    - id: mypy
+      name: mypy
+      language: system
+      entry: "mypy"
+      types: [python]
+      require_serial: true
+
 
 files: ^agentic_radar/

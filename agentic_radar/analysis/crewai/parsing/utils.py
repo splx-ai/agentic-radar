@@ -20,13 +20,13 @@ def find_return_of_function_call(
             if result:
                 return result
         return None
-    
+
     # Check if this is a return statement
     if isinstance(node, ast.Return):
         if node.value and is_function_call(node.value, function_name):
             return cast(ast.Call, node.value)  # Return the function call node
         return None
-    
+
     # For compound statements, check their bodies
     elif isinstance(node, ast.If):
         # Check the if body - body is a list of statements
@@ -64,8 +64,9 @@ def find_return_of_function_call(
         if node.finalbody:
             return find_return_of_function_call(node.finalbody, function_name)
         return None
-    
+
     return None
+
 
 def is_function_call(node: ast.AST, function_name: str) -> bool:
     """
