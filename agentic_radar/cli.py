@@ -1,4 +1,6 @@
 import datetime
+import logging
+import os
 import time
 from typing import Optional
 
@@ -21,6 +23,11 @@ from agentic_radar.report import (
     generate,
 )
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 class Args(BaseModel):
     input_directory: str
@@ -64,6 +71,11 @@ def _main(
     ] = None,
 ):
     global args
+
+    if not os.path.isdir(input_directory):
+        logging.error(f"Input directory '{input_directory}' does not exist.")
+        raise typer.Exit(code=1)
+    
     args = Args(
         input_directory=input_directory, output_file=output_file, version=version
     )
@@ -72,6 +84,11 @@ def _main(
 def analyze_and_generate_report(framework: str, analyzer: Analyzer):
     print(f"Analyzing {args.input_directory} for {framework} graphs")
     graph = analyzer.analyze(args.input_directory)
+
+    if len(graph.nodes) <= 2: # Only start and end nodes are present
+        logging.error(f"Agentic Radar didn't find any agentic workflow in input directory: {args.input_directory}")
+        raise typer.Exit(code=1)
+    
     print("Mapping vulnerabilities")
     map_vulnerabilities(graph)
     pydot_graph = GraphDefinition(
