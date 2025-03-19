@@ -209,7 +209,7 @@ It helps you understand agentic system behavior, visualize security risks, and e
 
 ## Community 🤝
 
-We welcome contributions from the AI and security community! Join our [Discord community](https://discord.gg/QZQpef5PsD) to connect with other developers, discuss features, get support and contribute to **Agentic Radar** 🚀
+We welcome contributions from the AI and security community! Join our [Discord community](https://discord.gg/QZQpef5PsD) or [Slack community](https://join.slack.com/t/splxaicommunity/shared_invite/zt-31b3hc3mt-A0v78qztTIMSNBg6y~WOAA) to connect with other developers, discuss features, get support and contribute to **Agentic Radar** 🚀
 
 If you like what you see, give us a star! It keeps us inspired to improve and innovate and helps others discover the project 🌟
 
