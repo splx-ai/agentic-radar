@@ -1,7 +1,9 @@
 import ast
 import json
-import os
+import logging
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
+
+from agentic_radar.analysis.utils import walk_python_files_and_notebooks
 
 
 class GraphInstanceTracker(ast.NodeVisitor):
@@ -597,7 +599,10 @@ def parse_python_file(
                     for row in cell["source"]:
                         source += row
 
-    tree = ast.parse(source, filename=filepath)
+    try:
+        tree = ast.parse(source, filename=filepath)
+    except Exception as e:
+        logging.warning(f"Cannot parse Python module: {filepath}. Error: {e}")
 
     tracker = GraphInstanceTracker(
         target_class,
@@ -628,27 +633,24 @@ def walk_directory_and_parse(
     """
     combined_results: Dict[str, Dict[str, List[Dict[str, Any]]]] = {}
 
-    for dirpath, _, filenames in os.walk(root_dir):
-        for filename in filenames:
-            if filename.endswith(".py") or filename.endswith(".ipynb"):
-                fullpath = os.path.join(dirpath, filename)
-                file_results = parse_python_file(
-                    fullpath,
-                    target_class,
-                    command_class_fqn,
-                    add_conditional_edges_method_name,
-                    add_node_method_name,
-                    global_functions,
-                    global_variables,
-                )
+    for file_path in walk_python_files_and_notebooks(root_dir):
+        file_results = parse_python_file(
+            file_path,
+            target_class,
+            command_class_fqn,
+            add_conditional_edges_method_name,
+            add_node_method_name,
+            global_functions,
+            global_variables,
+        )
 
-                for instance_name, methods_dict in file_results.items():
-                    if instance_name not in combined_results:
-                        combined_results[instance_name] = {}
-                    for method_name, calls in methods_dict.items():
-                        if method_name not in combined_results[instance_name]:
-                            combined_results[instance_name][method_name] = []
-                        combined_results[instance_name][method_name].extend(calls)
+        for instance_name, methods_dict in file_results.items():
+            if instance_name not in combined_results:
+                combined_results[instance_name] = {}
+            for method_name, calls in methods_dict.items():
+                if method_name not in combined_results[instance_name]:
+                    combined_results[instance_name][method_name] = []
+                combined_results[instance_name][method_name].extend(calls)
 
     return combined_results
 
