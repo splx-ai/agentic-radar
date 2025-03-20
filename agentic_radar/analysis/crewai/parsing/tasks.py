@@ -1,9 +1,11 @@
 import ast
-import logging
-import os
 from typing import Optional
 
-from .utils import find_return_of_function_call, is_function_call
+from agentic_radar.analysis.crewai.parsing.utils import (
+    find_return_of_function_call,
+    is_function_call,
+)
+from agentic_radar.analysis.utils import walk_python_files
 
 
 class TasksCollector(ast.NodeVisitor):
@@ -59,7 +61,7 @@ class TasksCollector(ast.NodeVisitor):
                 agent_name = get_agent_name(agent_node)
                 if agent_name and agent_name in self.agents:
                     return agent_name
-                logging.warning(
+                print(
                     f"Unknown or unexpected agent {agent_node} for task {task_node}"
                 )
                 return None
@@ -74,7 +76,7 @@ class TasksCollector(ast.NodeVisitor):
 
         agent = self._extract_task_agent(task_node)
         if not agent:
-            logging.warning(f"Task {node.name} does not specify an agent")
+            print(f"Task {node.name} does not specify an agent")
             return
 
         self.task_agent_mapping[node.name] = agent
@@ -92,7 +94,7 @@ class TasksCollector(ast.NodeVisitor):
             if isinstance(target, ast.Name):
                 agent = self._extract_task_agent(node.value)
                 if not agent:
-                    logging.warning(f"Task {target.id} does not specify an agent")
+                    print(f"Task {target.id} does not specify an agent")
                     return
                 self.task_agent_mapping[target.id] = agent
 
@@ -106,11 +108,13 @@ class TasksCollector(ast.NodeVisitor):
             dict[str, str]: A dictionary mapping task names to agent names
         """
 
-        for root, _, files in os.walk(root_dir):
-            for file in files:
-                if file.endswith(".py"):
-                    with open(os.path.join(root, file), "r") as f:
-                        tree = ast.parse(f.read())
-                        self.visit(tree)
+        for file in walk_python_files(root_dir):
+            with open(file, "r") as f:
+                try:
+                    tree = ast.parse(f.read())
+                except Exception as e:
+                    print(f"Cannot parse Python module: {file}. Error: {e}")
+                    continue
+                self.visit(tree)
 
         return self.task_agent_mapping

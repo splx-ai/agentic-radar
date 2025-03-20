@@ -83,8 +83,10 @@ def parse_for_top_level_defs(
                 if cell["cell_type"] == "code":
                     for row in cell["source"]:
                         source += row
-
-    tree = ast.parse(source, filename=filepath)
+    try:
+        tree = ast.parse(source, filename=filepath)
+    except Exception as e:
+        print(f"Cannot parse Python module: {filepath}. Error: {e}")
 
     class TopLevelCollector(ast.NodeVisitor):
         def visit_FunctionDef(self, node: ast.FunctionDef):

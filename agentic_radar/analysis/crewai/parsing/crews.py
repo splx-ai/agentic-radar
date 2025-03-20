@@ -1,10 +1,12 @@
 import ast
-import logging
-import os
 from typing import Optional
 
-from ..crew_process import CrewProcessType
-from .utils import find_return_of_function_call, is_function_call
+from agentic_radar.analysis.crewai.crew_process import CrewProcessType
+from agentic_radar.analysis.crewai.parsing.utils import (
+    find_return_of_function_call,
+    is_function_call,
+)
+from agentic_radar.analysis.utils import walk_python_files
 
 
 class CrewsCollector(ast.NodeVisitor):
@@ -59,7 +61,7 @@ class CrewsCollector(ast.NodeVisitor):
                         task_name = self._extract_task_name(task_node)
                         if task_name:
                             if task_name not in self.tasks:
-                                logging.warning(
+                                print(
                                     f"Unrecognized task {task_name} for crew node {crew_node}"
                                 )
                                 continue
@@ -75,7 +77,7 @@ class CrewsCollector(ast.NodeVisitor):
                     self.decorated_tasks.clear()
                     return decorated_tasks
                 else:
-                    logging.warning(f"Unrecognized tasks parameter: {task_list}")
+                    print(f"Unrecognized tasks parameter: {task_list}")
                     break
 
         return tasks
@@ -87,7 +89,7 @@ class CrewsCollector(ast.NodeVisitor):
             if keyword.arg == "process":
                 process_node = keyword.value
                 if not isinstance(process_node, (ast.Name, ast.Attribute)):
-                    logging.warning(
+                    print(
                         f"Unrecognized type of process keyword argument: {process_node}. Falling back to SEQUENTIAL process."
                     )
                     break
@@ -103,7 +105,7 @@ class CrewsCollector(ast.NodeVisitor):
                 elif process_name == "hierarchical":
                     crew_process = CrewProcessType.HIERARCHICAL
                 else:
-                    logging.warning(f"Unrecognized crew process name: {process_name}")
+                    print(f"Unrecognized crew process name: {process_name}")
                     break
 
         return crew_process
@@ -201,11 +203,13 @@ class CrewsCollector(ast.NodeVisitor):
             tuple[dict[str, list[str]], dict[str, CrewProcessType]]: Tuple consisting of two elements: 1. crew-tasks mapping, 2. crew-process mapping
         """
 
-        for root, _, files in os.walk(root_dir):
-            for file in files:
-                if file.endswith(".py"):
-                    with open(os.path.join(root, file), "r") as f:
-                        tree = ast.parse(f.read())
-                        self.visit(tree)
+        for file in walk_python_files(root_dir):
+            with open(file, "r") as f:
+                try:
+                    tree = ast.parse(f.read())
+                except Exception as e:
+                    print(f"Cannot parse Python module: {file}. Error: {e}")
+                    continue
+                self.visit(tree)
 
         return self.crew_task_mapping, self.crew_process_mapping

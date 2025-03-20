@@ -1,8 +1,10 @@
 import ast
-import os
 
-from ..models.tool import CrewAITool
-from ..tool_descriptions import get_crewai_tools_descriptions
+from agentic_radar.analysis.crewai.models.tool import CrewAITool
+from agentic_radar.analysis.crewai.tool_descriptions import (
+    get_crewai_tools_descriptions,
+)
+from agentic_radar.analysis.utils import walk_python_files
 
 
 class PredefinedToolsCollector(ast.NodeVisitor):
@@ -50,14 +52,14 @@ class PredefinedToolsCollector(ast.NodeVisitor):
             tuple[set[str], dict[str, CrewAITool]]: A tuple containing a set of known tool aliases and a dictionary of predefined tool variables
         """
 
-        for root, _, files in os.walk(root_dir):
-            for file in files:
-                if file.endswith(".py"):
-                    file_path = os.path.join(root, file)
-                    with open(file_path, "r") as file_handle:
-                        code = file_handle.read()
-                        tree = ast.parse(code)
-                        self.visit(tree)
+        for file in walk_python_files(root_dir):
+            with open(file, "r") as f:
+                try:
+                    tree = ast.parse(f.read())
+                except Exception as e:
+                    print(f"Cannot parse Python module: {file}. Error: {e}")
+                    continue
+                self.visit(tree)
 
         # Add descriptions and wrap tools inside CrewAITool instances
         tools_descriptions = get_crewai_tools_descriptions()

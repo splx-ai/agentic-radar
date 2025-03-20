@@ -1,11 +1,15 @@
 import ast
-import logging
-import os
 from typing import Optional
 
-from ..models.tool import CrewAITool
-from ..tool_descriptions import get_crewai_tools_descriptions
-from .utils import find_return_of_function_call, is_function_call
+from agentic_radar.analysis.crewai.models.tool import CrewAITool
+from agentic_radar.analysis.crewai.parsing.utils import (
+    find_return_of_function_call,
+    is_function_call,
+)
+from agentic_radar.analysis.crewai.tool_descriptions import (
+    get_crewai_tools_descriptions,
+)
+from agentic_radar.analysis.utils import walk_python_files
 
 
 class AgentsCollector(ast.NodeVisitor):
@@ -58,7 +62,7 @@ class AgentsCollector(ast.NodeVisitor):
                 tool_list = keyword.value
 
                 if not isinstance(tool_list, ast.List):
-                    logging.warning(f"Agent tools parameter is not a list: {tool_list}")
+                    print(f"Agent tools parameter is not a list: {tool_list}")
                     break
 
                 # Handle tools=[tool1, tool2, ...] format
@@ -142,11 +146,13 @@ class AgentsCollector(ast.NodeVisitor):
             dict[str, list[CrewAITool]]: A dictionary mapping agent names to their tools
         """
 
-        for root, _, files in os.walk(root_dir):
-            for file in files:
-                if file.endswith(".py"):
-                    with open(os.path.join(root, file), "r") as f:
-                        tree = ast.parse(f.read())
-                        self.visit(tree)
+        for file in walk_python_files(root_dir):
+            with open(file, "r") as f:
+                try:
+                    tree = ast.parse(f.read())
+                except Exception as e:
+                    print(f"Cannot parse Python module: {file}. Error: {e}")
+                    continue
+                self.visit(tree)
 
         return self.agent_tool_mapping

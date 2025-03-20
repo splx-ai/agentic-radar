@@ -1,13 +1,18 @@
 import ast
 import json
-import os
 from importlib import resources
 from typing import Dict, List, Set
 
+from agentic_radar.analysis.utils import walk_python_files_and_notebooks
 
-def extract_imports_with_ast(file_content: str) -> List[str]:
+
+def extract_imports_with_ast(file_content: str , file_path: str) -> List[str]:
     imports = []
-    tree = ast.parse(file_content)
+
+    try:
+        tree = ast.parse(file_content)
+    except Exception as e:
+        print(f"Cannot parse Python module: {file_path}. Error: {e}")
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -26,27 +31,24 @@ def extract_imports_with_ast(file_content: str) -> List[str]:
 
 def parse_all_imports_from_directory(directory_path: str) -> Set[str]:
     all_imports = set()
-    for root, _, files in os.walk(directory_path):
-        for file in files:
-            if file.endswith(".py"):
-                file_path = os.path.join(root, file)
-                with open(file_path, "r", encoding="utf-8") as f:
-                    file_content = f.read()
-                    imports = extract_imports_with_ast(file_content)
-                    for single_import in imports:
-                        all_imports.add(single_import)
-            elif file.endswith(".ipynb"):
-                file_path = os.path.join(root, file)
-                with open(file_path, "r", encoding="utf-8") as f:
-                    notebook = json.load(f)
-                    file_content = ""
-                    for cell in notebook["cells"]:
-                        if cell["cell_type"] == "code":
-                            for row in cell["source"]:
-                                file_content += row
-                    imports = extract_imports_with_ast(file_content)
-                    for single_import in imports:
-                        all_imports.add(single_import)
+    for file_path in walk_python_files_and_notebooks(directory_path):
+        if file_path.endswith(".py"):
+            with open(file_path, "r", encoding="utf-8") as f:
+                file_content = f.read()
+                imports = extract_imports_with_ast(file_content, file_path)
+                for single_import in imports:
+                    all_imports.add(single_import)
+        elif file_path.endswith(".ipynb"):
+            with open(file_path, "r", encoding="utf-8") as f:
+                notebook = json.load(f)
+                file_content = ""
+                for cell in notebook["cells"]:
+                    if cell["cell_type"] == "code":
+                        for row in cell["source"]:
+                            file_content += row
+                imports = extract_imports_with_ast(file_content, file_path)
+                for single_import in imports:
+                    all_imports.add(single_import)
 
     return all_imports
 

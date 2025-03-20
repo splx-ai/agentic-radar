@@ -1,7 +1,7 @@
 import ast
-import os
 
-from ..models.tool import CrewAITool
+from agentic_radar.analysis.crewai.models.tool import CrewAITool
+from agentic_radar.analysis.utils import walk_python_files
 
 
 class CustomToolsCollector(ast.NodeVisitor):
@@ -51,11 +51,13 @@ class CustomToolsCollector(ast.NodeVisitor):
             dict[str, CrewAITool]: Dictionary mapping custom tool name to corresponding CrewAITool instance
         """
 
-        for root, _, files in os.walk(root_dir):
-            for file in files:
-                if file.endswith(".py"):
-                    with open(os.path.join(root, file), "r") as f:
-                        tree = ast.parse(f.read())
-                        self.visit(tree)
+        for file in walk_python_files(root_dir):
+            with open(file, "r") as f:
+                try:
+                    tree = ast.parse(f.read())
+                except Exception as e:
+                    print(f"Cannot parse Python module: {file}. Error: {e}")
+                    continue
+                self.visit(tree)
 
         return self.custom_tools

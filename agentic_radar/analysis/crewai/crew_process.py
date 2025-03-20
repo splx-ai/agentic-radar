@@ -1,4 +1,3 @@
-import logging
 from collections import defaultdict
 from enum import Enum
 
@@ -33,7 +32,7 @@ def infer_agent_connections(
 
     for crew, tasks in crew_task_mapping.items():
         if crew not in crew_process_mapping:
-            logging.warning(f"Crew {crew} missing in crew_process_mapping")
+            print(f"Crew {crew} missing in crew_process_mapping")
             continue
 
         process_type = crew_process_mapping[crew]
@@ -47,7 +46,7 @@ def infer_agent_connections(
                 tasks, task_agent_mapping, agent_connections, start_agents, end_agents
             )
         else:
-            logging.warning(
+            print(
                 f"Unknown process type: {process_type}. Skipping crew {crew}..."
             )
 
@@ -77,10 +76,10 @@ def _handle_sequential_process(
             valid_tasks.append(task)
             valid_agents.append(task_agent_mapping[task])
         else:
-            logging.warning(f"Task {task} is missing an agent assignment. Skipping...")
+            print(f"Task {task} is missing an agent assignment. Skipping...")
 
     if not valid_tasks:
-        logging.warning("No valid tasks found for sequential process.")
+        print("No valid tasks found for sequential process.")
         return
 
     # The first agent in a sequential process is a start agent
@@ -122,10 +121,10 @@ def _handle_hierarchical_process(
         if task in task_agent_mapping:
             valid_agents.append(task_agent_mapping[task])
         else:
-            logging.warning(f"Task {task} is missing an agent assignment. Skipping...")
+            print(f"Task {task} is missing an agent assignment. Skipping...")
 
     if len(valid_agents) < 2:
-        logging.warning(
+        print(
             "Not enough valid agents for hierarchical process (need at least 2)."
         )
         return
