@@ -1,6 +1,5 @@
 import ast
 import json
-import logging
 from importlib import resources
 from typing import Dict, List, Set
 
@@ -13,7 +12,7 @@ def extract_imports_with_ast(file_content: str , file_path: str) -> List[str]:
     try:
         tree = ast.parse(file_content)
     except Exception as e:
-        logging.warning(f"Cannot parse Python module: {file_path}. Error: {e}")
+        print(f"Cannot parse Python module: {file_path}. Error: {e}")
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):

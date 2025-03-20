@@ -1,5 +1,4 @@
 import ast
-import logging
 from typing import Optional
 
 from agentic_radar.analysis.crewai.parsing.utils import (
@@ -62,7 +61,7 @@ class TasksCollector(ast.NodeVisitor):
                 agent_name = get_agent_name(agent_node)
                 if agent_name and agent_name in self.agents:
                     return agent_name
-                logging.warning(
+                print(
                     f"Unknown or unexpected agent {agent_node} for task {task_node}"
                 )
                 return None
@@ -77,7 +76,7 @@ class TasksCollector(ast.NodeVisitor):
 
         agent = self._extract_task_agent(task_node)
         if not agent:
-            logging.warning(f"Task {node.name} does not specify an agent")
+            print(f"Task {node.name} does not specify an agent")
             return
 
         self.task_agent_mapping[node.name] = agent
@@ -95,7 +94,7 @@ class TasksCollector(ast.NodeVisitor):
             if isinstance(target, ast.Name):
                 agent = self._extract_task_agent(node.value)
                 if not agent:
-                    logging.warning(f"Task {target.id} does not specify an agent")
+                    print(f"Task {target.id} does not specify an agent")
                     return
                 self.task_agent_mapping[target.id] = agent
 
@@ -114,7 +113,7 @@ class TasksCollector(ast.NodeVisitor):
                 try:
                     tree = ast.parse(f.read())
                 except Exception as e:
-                    logging.warning(f"Cannot parse Python module: {file}. Error: {e}")
+                    print(f"Cannot parse Python module: {file}. Error: {e}")
                     continue
                 self.visit(tree)
 

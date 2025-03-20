@@ -1,5 +1,4 @@
 import ast
-import logging
 from typing import Optional
 
 from agentic_radar.analysis.crewai.crew_process import CrewProcessType
@@ -62,7 +61,7 @@ class CrewsCollector(ast.NodeVisitor):
                         task_name = self._extract_task_name(task_node)
                         if task_name:
                             if task_name not in self.tasks:
-                                logging.warning(
+                                print(
                                     f"Unrecognized task {task_name} for crew node {crew_node}"
                                 )
                                 continue
@@ -78,7 +77,7 @@ class CrewsCollector(ast.NodeVisitor):
                     self.decorated_tasks.clear()
                     return decorated_tasks
                 else:
-                    logging.warning(f"Unrecognized tasks parameter: {task_list}")
+                    print(f"Unrecognized tasks parameter: {task_list}")
                     break
 
         return tasks
@@ -90,7 +89,7 @@ class CrewsCollector(ast.NodeVisitor):
             if keyword.arg == "process":
                 process_node = keyword.value
                 if not isinstance(process_node, (ast.Name, ast.Attribute)):
-                    logging.warning(
+                    print(
                         f"Unrecognized type of process keyword argument: {process_node}. Falling back to SEQUENTIAL process."
                     )
                     break
@@ -106,7 +105,7 @@ class CrewsCollector(ast.NodeVisitor):
                 elif process_name == "hierarchical":
                     crew_process = CrewProcessType.HIERARCHICAL
                 else:
-                    logging.warning(f"Unrecognized crew process name: {process_name}")
+                    print(f"Unrecognized crew process name: {process_name}")
                     break
 
         return crew_process
@@ -209,7 +208,7 @@ class CrewsCollector(ast.NodeVisitor):
                 try:
                     tree = ast.parse(f.read())
                 except Exception as e:
-                    logging.warning(f"Cannot parse Python module: {file}. Error: {e}")
+                    print(f"Cannot parse Python module: {file}. Error: {e}")
                     continue
                 self.visit(tree)
 

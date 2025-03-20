@@ -1,5 +1,4 @@
 import ast
-import logging
 from typing import Optional
 
 from agentic_radar.analysis.crewai.models.tool import CrewAITool
@@ -63,7 +62,7 @@ class AgentsCollector(ast.NodeVisitor):
                 tool_list = keyword.value
 
                 if not isinstance(tool_list, ast.List):
-                    logging.warning(f"Agent tools parameter is not a list: {tool_list}")
+                    print(f"Agent tools parameter is not a list: {tool_list}")
                     break
 
                 # Handle tools=[tool1, tool2, ...] format
@@ -152,7 +151,7 @@ class AgentsCollector(ast.NodeVisitor):
                 try:
                     tree = ast.parse(f.read())
                 except Exception as e:
-                    logging.warning(f"Cannot parse Python module: {file}. Error: {e}")
+                    print(f"Cannot parse Python module: {file}. Error: {e}")
                     continue
                 self.visit(tree)
 

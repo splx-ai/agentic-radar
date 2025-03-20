@@ -1,5 +1,4 @@
 import json
-import logging
 from importlib import resources
 
 from agentic_radar.graph import ToolType
@@ -18,5 +17,5 @@ def categorize_tool(tool_name: str) -> ToolType:
         category = tool_mapping.get(tool_name, "DEFAULT")
         return ToolType[category]
     except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
-        logging.error(f"Error loading tool categories: {e}")
+        print(f"Error loading tool categories: {e}")
         return ToolType.DEFAULT

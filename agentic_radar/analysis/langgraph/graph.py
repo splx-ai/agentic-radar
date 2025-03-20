@@ -1,6 +1,5 @@
 import ast
 import json
-import logging
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 from agentic_radar.analysis.utils import walk_python_files_and_notebooks
@@ -602,7 +601,7 @@ def parse_python_file(
     try:
         tree = ast.parse(source, filename=filepath)
     except Exception as e:
-        logging.warning(f"Cannot parse Python module: {filepath}. Error: {e}")
+        print(f"Cannot parse Python module: {filepath}. Error: {e}")
 
     tracker = GraphInstanceTracker(
         target_class,

@@ -1,6 +1,5 @@
 import ast
 import importlib.util
-import logging
 import os
 import re
 from typing import Optional
@@ -55,7 +54,7 @@ def parse_init_imports(init_path: str) -> list[tuple[str, str]]:
         return imports
 
     except Exception as e:
-        logging.warning(f"Error parsing imports from {init_path}: {e}")
+        print(f"Error parsing imports from {init_path}: {e}")
         return []
 
 
@@ -103,7 +102,7 @@ def extract_readme_content(readme_path: str) -> Optional[str]:
                 return file.read()
         return None
     except Exception as e:
-        logging.warning(f"Error reading README file at {readme_path}: {e}")
+        print(f"Error reading README file at {readme_path}: {e}")
         return None
 
 
@@ -149,7 +148,7 @@ def get_crewai_tools_descriptions() -> dict[str, str]:
     """
     # First check if crewai_tools is installed
     if not is_package_installed("crewai_tools"):
-        logging.warning("crewai_tools is not installed in the current environment.")
+        print("crewai_tools is not installed in the current environment.")
         return {}
 
     # Find the package location
@@ -162,7 +161,7 @@ def get_crewai_tools_descriptions() -> dict[str, str]:
     init_file = os.path.join(tools_dir, "__init__.py")
 
     if not os.path.exists(init_file):
-        logging.warning(f"__init__.py not found at {init_file}")
+        print(f"__init__.py not found at {init_file}")
         return {}
 
     # Parse imports from __init__.py

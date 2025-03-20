@@ -1,4 +1,3 @@
-import logging
 from enum import Enum
 from typing import Optional
 
@@ -75,7 +74,7 @@ class CrewAIGraph(BaseModel):
     def connect_agents(self, agent_connections: dict[str, list[str]]):
         for src_agent, dest_agents in agent_connections.items():
             if not self.is_agent_in_graph(src_agent):
-                logging.warning(
+                print(
                     f"Source agent node {src_agent} is missing in graph, cannot create an edge with it..."
                 )
                 continue
@@ -83,7 +82,7 @@ class CrewAIGraph(BaseModel):
             condition = "hierarchical_delegation" if len(dest_agents) > 1 else None
             for dest_agent in dest_agents:
                 if not self.is_agent_in_graph(src_agent):
-                    logging.warning(
+                    print(
                         f"Destination agent node {dest_agent} is missing in graph, cannot create an edge with it..."
                     )
                     continue

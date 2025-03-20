@@ -1,6 +1,5 @@
 import ast
 import json
-import logging
 from typing import Dict, List
 
 from agentic_radar.analysis.utils import walk_python_files_and_notebooks
@@ -14,7 +13,7 @@ def extract_custom_tools_with_ast(
     try:
         tree = ast.parse(file_content)
     except Exception as e:
-        logging.warning(f"Cannot parse Python module: {file_path}. Error: {e}")
+        print(f"Cannot parse Python module: {file_path}. Error: {e}")
 
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef):

@@ -1,5 +1,4 @@
 import ast
-import logging
 
 from agentic_radar.analysis.crewai.models.tool import CrewAITool
 from agentic_radar.analysis.crewai.tool_descriptions import (
@@ -58,7 +57,7 @@ class PredefinedToolsCollector(ast.NodeVisitor):
                 try:
                     tree = ast.parse(f.read())
                 except Exception as e:
-                    logging.warning(f"Cannot parse Python module: {file}. Error: {e}")
+                    print(f"Cannot parse Python module: {file}. Error: {e}")
                     continue
                 self.visit(tree)
 

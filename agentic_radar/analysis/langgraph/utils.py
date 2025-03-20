@@ -1,6 +1,5 @@
 import ast
 import json
-import logging
 import os
 from typing import Dict, Tuple, Union
 
@@ -87,7 +86,7 @@ def parse_for_top_level_defs(
     try:
         tree = ast.parse(source, filename=filepath)
     except Exception as e:
-        logging.warning(f"Cannot parse Python module: {filepath}. Error: {e}")
+        print(f"Cannot parse Python module: {filepath}. Error: {e}")
 
     class TopLevelCollector(ast.NodeVisitor):
         def visit_FunctionDef(self, node: ast.FunctionDef):
