@@ -5,11 +5,11 @@ from agentic_radar.analysis.crewai.crew_process import infer_agent_connections
 from agentic_radar.analysis.crewai.graph_converter import convert_graph
 from agentic_radar.analysis.crewai.models import CrewAIGraph, CrewAITool
 from agentic_radar.analysis.crewai.parsing import (
-    AgentsCollector,
-    CrewsCollector,
-    CustomToolsCollector,
-    PredefinedToolsCollector,
-    TasksCollector,
+    collect_agents,
+    collect_crews,
+    collect_custom_tools,
+    collect_predefined_tools,
+    collect_tasks,
 )
 from agentic_radar.graph import GraphDefinition
 
@@ -22,25 +22,21 @@ class CrewAIAnalyzer(Analyzer):
         self, root_directory: str
     ) -> dict[str, list[CrewAITool]]:
         """Parse agents and their tools from the CrewAI codebase."""
-        known_tool_aliases, predefined_tool_vars = PredefinedToolsCollector().collect(
-            root_directory
+        known_tool_aliases, predefined_tools = collect_predefined_tools(root_directory)
+        custom_tools = collect_custom_tools(root_directory)
+        agent_tool_mapping = collect_agents(
+            root_dir=root_directory,
+            known_tool_aliases=known_tool_aliases,
+            predefined_tools=predefined_tools,
+            custom_tools=custom_tools,
         )
-        custom_tool_names = CustomToolsCollector().collect(root_directory)
-        agents_collector = AgentsCollector(
-            known_tool_aliases, predefined_tool_vars, custom_tool_names
-        )
-        agent_tool_mapping = agents_collector.collect(root_directory)
         return agent_tool_mapping
 
     def _parse_agent_connections(self, root_directory: str, agents: set[str]):
-        tasks_collector = TasksCollector(agents)
-        task_agent_mapping = tasks_collector.collect(root_directory)
-
-        crews_collector = CrewsCollector(set(task_agent_mapping.keys()))
-        crew_task_mapping, crew_process_mapping = crews_collector.collect(
-            root_directory
+        task_agent_mapping = collect_tasks(root_dir=root_directory, agents=agents)
+        crew_task_mapping, crew_process_mapping = collect_crews(
+            root_dir=root_directory, tasks=set(task_agent_mapping.keys())
         )
-
         agent_connections, start_agents, end_agents = infer_agent_connections(
             task_agent_mapping, crew_task_mapping, crew_process_mapping
         )

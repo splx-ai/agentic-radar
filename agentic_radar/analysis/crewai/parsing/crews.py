@@ -9,7 +9,7 @@ from agentic_radar.analysis.crewai.parsing.utils import (
 from agentic_radar.analysis.utils import walk_python_files
 
 
-class CrewsCollector(ast.NodeVisitor):
+class CrewsVisitor(ast.NodeVisitor):
     CREWAI_CREW_CLASS = "Crew"
     CREWAI_CREW_BASE_CLASS_DECORATOR = "CrewBase"
     CREWAI_TASK_DECORATOR = "task"
@@ -191,25 +191,32 @@ class CrewsCollector(ast.NodeVisitor):
                 crew_process = self._extract_crew_process(node.value)
                 self.crew_process_mapping[target.id] = crew_process
 
-    def collect(
-        self, root_dir: str
-    ) -> tuple[dict[str, list[str]], dict[str, CrewProcessType]]:
-        """Parses all Python modules in the given directory and collects crews together with corresponding tasks.
 
-        Args:
-            root_dir (str): Path to the codebase directory
+def collect_crews(
+    root_dir: str, tasks: set[str]
+) -> tuple[dict[str, list[str]], dict[str, CrewProcessType]]:
+    """Parses all Python modules in the given directory and collects crews together with corresponding tasks.
 
-        Returns:
-            tuple[dict[str, list[str]], dict[str, CrewProcessType]]: Tuple consisting of two elements: 1. crew-tasks mapping, 2. crew-process mapping
-        """
+    Args:
+        root_dir (str): Path to the codebase directory
+        tasks: (set[str]): Set of all task names
 
-        for file in walk_python_files(root_dir):
-            with open(file, "r") as f:
-                try:
-                    tree = ast.parse(f.read())
-                except Exception as e:
-                    print(f"Cannot parse Python module: {file}. Error: {e}")
-                    continue
-                self.visit(tree)
+    Returns:
+        tuple[dict[str, list[str]], dict[str, CrewProcessType]]: Tuple consisting of two elements: 1. crew-tasks mapping, 2. crew-process mapping
+    """
+    crew_task_mapping: dict[str, list[str]] = {}
+    crew_process_mapping: dict[str, CrewProcessType] = {}
 
-        return self.crew_task_mapping, self.crew_process_mapping
+    for file in walk_python_files(root_dir):
+        with open(file, "r") as f:
+            try:
+                tree = ast.parse(f.read())
+            except Exception as e:
+                print(f"Cannot parse Python module: {file}. Error: {e}")
+                continue
+            crews_visitor = CrewsVisitor(tasks)
+            crews_visitor.visit(tree)
+            crew_task_mapping |= crews_visitor.crew_task_mapping
+            crew_process_mapping |= crews_visitor.crew_process_mapping
+
+    return crew_task_mapping, crew_process_mapping

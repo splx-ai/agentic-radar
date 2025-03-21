@@ -12,19 +12,22 @@ from agentic_radar.analysis.crewai.tool_descriptions import (
 from agentic_radar.analysis.utils import walk_python_files
 
 
-class AgentsCollector(ast.NodeVisitor):
+class AgentsVisitor(ast.NodeVisitor):
     CREWAI_AGENT_CLASS = "Agent"
 
     def __init__(
         self,
         known_tool_aliases: set[str],
-        predefined_tool_vars: dict[str, CrewAITool],
+        predefined_tools: dict[str, CrewAITool],
         custom_tools: dict[str, CrewAITool],
     ):
         self.known_tool_aliases = known_tool_aliases
-        self.predefined_tool_vars = predefined_tool_vars
+        self.predefined_tools = predefined_tools
         self.custom_tools = custom_tools
+
         self.crewai_tool_descriptions = get_crewai_tools_descriptions()
+
+        self.yaml_config_paths: list[str] = []
         self.agent_tool_mapping: dict[str, list[CrewAITool]] = {}
 
     def _find_agent_return(self, node: ast.AST) -> Optional[ast.Call]:
@@ -87,14 +90,14 @@ class AgentsCollector(ast.NodeVisitor):
         if isinstance(node, ast.Attribute):
             if node.attr in self.custom_tools:
                 return self.custom_tools[node.attr]
-            elif node.attr in self.predefined_tool_vars:
-                return self.predefined_tool_vars[node.attr]
+            elif node.attr in self.predefined_tools:
+                return self.predefined_tools[node.attr]
         # Handle simple names like some_tool
         elif isinstance(node, ast.Name):
             if node.id in self.custom_tools:
                 return self.custom_tools[node.id]
-            elif node.id in self.predefined_tool_vars:
-                return self.predefined_tool_vars[node.id]
+            elif node.id in self.predefined_tools:
+                return self.predefined_tools[node.id]
         # Handle constructor calls of predefined tools like FileReadTool() or crewai_tools.FileReadTool()
         elif isinstance(node, ast.Call):
             if isinstance(node.func, ast.Name):
@@ -111,6 +114,12 @@ class AgentsCollector(ast.NodeVisitor):
                     )
 
         return None
+
+    def _handle_string_node(self, s: str) -> None:
+        if not s.endswith(".yaml") and not s.endswith(".yml"):
+            return
+
+        self.yaml_config_paths.append(s)
 
     def visit_FunctionDef(self, node):
         """Track functions that return an Agent instance."""
@@ -136,23 +145,48 @@ class AgentsCollector(ast.NodeVisitor):
                 agent_tools = self._extract_agent_tools(node.value)
                 self.agent_tool_mapping[target.id] = agent_tools
 
-    def collect(self, root_dir: str) -> dict[str, list[CrewAITool]]:
-        """Parses all Python modules in the given directory and collects agents together with their tools.
+    def visit_Constant(self, node):  # To visit strings in Python >= 3.8
+        """Tracks strings that represent path to yaml configuration files."""
+        if isinstance(node.value, str):
+            self._handle_string_node(node.value)
 
-        Args:
-            root_dir (str): Path to the codebase directory
+    def visit_Str(self, node):  # To visit strings in Python < 3.8
+        """Tracks strings that represent path to yaml configuration files."""
+        self._handle_string_node(node.s)
 
-        Returns:
-            dict[str, list[CrewAITool]]: A dictionary mapping agent names to their tools
-        """
 
-        for file in walk_python_files(root_dir):
-            with open(file, "r") as f:
-                try:
-                    tree = ast.parse(f.read())
-                except Exception as e:
-                    print(f"Cannot parse Python module: {file}. Error: {e}")
-                    continue
-                self.visit(tree)
+def collect_agents(
+    root_dir: str,
+    known_tool_aliases: set[str],
+    predefined_tools: dict[str, CrewAITool],
+    custom_tools: dict[str, CrewAITool],
+) -> dict[str, list[CrewAITool]]:
+    """Parses all Python modules in the given directory and collects agents together with their tools.
 
-        return self.agent_tool_mapping
+    Args:
+        root_dir (str): Path to the codebase directory
+        known_tool_aliases (set[str]): Set of predefined tool aliases parsed from import statements
+        predefined_tools (dict[str, CrewAITool]): Dictionary mapping variable name to predefined tool
+        custom_tools (dict[str, CrewAITool]): Dictionary mapping variable name to custom tool
+
+    Returns:
+        dict[str, list[CrewAITool]]: A dictionary mapping agent names to their tools
+    """
+    agent_tool_mapping: dict[str, list[CrewAITool]] = {}
+
+    for file in walk_python_files(root_dir):
+        with open(file, "r") as f:
+            try:
+                tree = ast.parse(f.read())
+            except Exception as e:
+                print(f"Cannot parse Python module: {file}. Error: {e}")
+                continue
+            agents_visitor = AgentsVisitor(
+                known_tool_aliases=known_tool_aliases,
+                predefined_tools=predefined_tools,
+                custom_tools=custom_tools,
+            )
+            agents_visitor.visit(tree)
+            agent_tool_mapping |= agents_visitor.agent_tool_mapping
+
+    return agent_tool_mapping

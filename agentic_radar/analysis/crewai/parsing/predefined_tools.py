@@ -7,12 +7,12 @@ from agentic_radar.analysis.crewai.tool_descriptions import (
 from agentic_radar.analysis.utils import walk_python_files
 
 
-class PredefinedToolsCollector(ast.NodeVisitor):
+class PredefinedToolsVisitor(ast.NodeVisitor):
     CREWAI_TOOLS_MODULE = "crewai_tools"
 
     def __init__(self):
-        self.known_tool_aliases = set()
-        self.predefined_tool_vars = {}
+        self.known_tool_aliases: set[str] = set()
+        self.predefined_tools: dict[str, str] = {}
 
     def visit_ImportFrom(self, node):
         """Track imports like 'from crewai_tools import FileReadTool'."""
@@ -34,42 +34,48 @@ class PredefinedToolsCollector(ast.NodeVisitor):
                 isinstance(node.value.func, ast.Name)
                 and node.value.func.id in self.known_tool_aliases
             ):
-                self.predefined_tool_vars[target.id] = node.value.func.id
+                self.predefined_tools[target.id] = node.value.func.id
             elif isinstance(node.value, ast.Attribute):
                 if (
                     self.CREWAI_TOOLS_MODULE in node.value
                     and node.value.attr in self.known_tool_aliases
                 ):
-                    self.predefined_tool_vars[target.id] = node.value.attr
+                    self.predefined_tools[target.id] = node.value.attr
 
-    def collect(self, root_dir: str) -> tuple[set, dict]:
-        """Parses all Python modules in the given directory and collects predefined tools.
 
-        Args:
-            root_dir (str): Path to the codebase directory
+def collect_predefined_tools(root_dir: str) -> tuple[set, dict]:
+    """Parses all Python modules in the given directory and collects predefined tools.
 
-        Returns:
-            tuple[set[str], dict[str, CrewAITool]]: A tuple containing a set of known tool aliases and a dictionary of predefined tool variables
-        """
+    Args:
+        root_dir (str): Path to the codebase directory
 
-        for file in walk_python_files(root_dir):
-            with open(file, "r") as f:
-                try:
-                    tree = ast.parse(f.read())
-                except Exception as e:
-                    print(f"Cannot parse Python module: {file}. Error: {e}")
-                    continue
-                self.visit(tree)
+    Returns:
+        tuple[set[str], dict[str, CrewAITool]]: A tuple containing a set of known tool aliases and a dictionary of predefined tool variables
+    """
+    known_tool_aliases: set[str] = set()
+    predefined_tools: dict[str, str] = {}
 
-        # Add descriptions and wrap tools inside CrewAITool instances
-        tools_descriptions = get_crewai_tools_descriptions()
-        predefined_tool_vars = {
-            var_name: CrewAITool(
-                name=tool_name,
-                custom=False,
-                description=tools_descriptions.get(tool_name, ""),
-            )
-            for var_name, tool_name in self.predefined_tool_vars.items()
-        }
+    for file in walk_python_files(root_dir):
+        with open(file, "r") as f:
+            try:
+                tree = ast.parse(f.read())
+            except Exception as e:
+                print(f"Cannot parse Python module: {file}. Error: {e}")
+                continue
+            predefined_tools_visitor = PredefinedToolsVisitor()
+            predefined_tools_visitor.visit(tree)
+            known_tool_aliases |= predefined_tools_visitor.known_tool_aliases
+            predefined_tools |= predefined_tools_visitor.predefined_tools
 
-        return self.known_tool_aliases, predefined_tool_vars
+    # Add descriptions and wrap tools inside CrewAITool instances
+    tools_descriptions = get_crewai_tools_descriptions()
+    predefined_tools_with_descriptions = {
+        var_name: CrewAITool(
+            name=tool_name,
+            custom=False,
+            description=tools_descriptions.get(tool_name, ""),
+        )
+        for var_name, tool_name in predefined_tools.items()
+    }
+
+    return known_tool_aliases, predefined_tools_with_descriptions

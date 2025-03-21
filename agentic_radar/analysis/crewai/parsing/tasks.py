@@ -8,7 +8,7 @@ from agentic_radar.analysis.crewai.parsing.utils import (
 from agentic_radar.analysis.utils import walk_python_files
 
 
-class TasksCollector(ast.NodeVisitor):
+class TasksVisitor(ast.NodeVisitor):
     CREWAI_TASK_CLASS = "Task"
 
     def __init__(self, agents: set[str]):
@@ -61,9 +61,7 @@ class TasksCollector(ast.NodeVisitor):
                 agent_name = get_agent_name(agent_node)
                 if agent_name and agent_name in self.agents:
                     return agent_name
-                print(
-                    f"Unknown or unexpected agent {agent_node} for task {task_node}"
-                )
+                print(f"Unknown or unexpected agent {agent_node} for task {task_node}")
                 return None
         return None
 
@@ -98,23 +96,28 @@ class TasksCollector(ast.NodeVisitor):
                     return
                 self.task_agent_mapping[target.id] = agent
 
-    def collect(self, root_dir: str) -> dict[str, str]:
-        """Parses all Python modules in the given directory and collects task-agent mappings.
 
-        Args:
-            root_dir (str): Path to the codebase directory
+def collect_tasks(root_dir: str, agents: set[str]) -> dict[str, str]:
+    """Parses all Python modules in the given directory and collects task-agent mappings.
 
-        Returns:
-            dict[str, str]: A dictionary mapping task names to agent names
-        """
+    Args:
+        root_dir (str): Path to the codebase directory
+        agents (set[str]): Set of all known agent names
 
-        for file in walk_python_files(root_dir):
-            with open(file, "r") as f:
-                try:
-                    tree = ast.parse(f.read())
-                except Exception as e:
-                    print(f"Cannot parse Python module: {file}. Error: {e}")
-                    continue
-                self.visit(tree)
+    Returns:
+        dict[str, str]: A dictionary mapping task names to agent names
+    """
+    task_agent_mapping: dict[str, str] = {}
 
-        return self.task_agent_mapping
+    for file in walk_python_files(root_dir):
+        with open(file, "r") as f:
+            try:
+                tree = ast.parse(f.read())
+            except Exception as e:
+                print(f"Cannot parse Python module: {file}. Error: {e}")
+                continue
+            tasks_visitor = TasksVisitor(agents=agents)
+            tasks_visitor.visit(tree)
+            task_agent_mapping |= tasks_visitor.task_agent_mapping
+
+    return task_agent_mapping

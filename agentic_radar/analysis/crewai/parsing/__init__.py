@@ -1,14 +1,14 @@
-from .agents import AgentsCollector
-from .crews import CrewProcessType, CrewsCollector
-from .custom_tools import CustomToolsCollector
-from .predefined_tools import PredefinedToolsCollector
-from .tasks import TasksCollector
+from .agents import collect_agents
+from .crews import CrewProcessType, collect_crews
+from .custom_tools import collect_custom_tools
+from .predefined_tools import collect_predefined_tools
+from .tasks import collect_tasks
 
 __all__ = [
-    "AgentsCollector",
-    "TasksCollector",
-    "PredefinedToolsCollector",
-    "CustomToolsCollector",
-    "CrewsCollector",
+    "collect_agents",
+    "collect_tasks",
+    "collect_predefined_tools",
+    "collect_custom_tools",
+    "collect_crews",
     "CrewProcessType",
 ]
