@@ -16,7 +16,7 @@ class VulnerabilityMapDefinition(BaseModel):
 
 def load_vulnerabilities() -> List[VulnerabilityMapDefinition]:
     input_file = resources.files(__package__) / "vulnerabilities.json"
-    with input_file.open("r") as f:
+    with input_file.open("r", encoding="utf-8") as f:
         data = json.load(f)
 
     return [VulnerabilityMapDefinition.model_validate(v) for v in data]
