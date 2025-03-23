@@ -6,6 +6,9 @@ from agentic_radar.analysis.crewai.parsing.utils import (
     find_return_of_function_call,
     is_function_call,
 )
+from agentic_radar.analysis.crewai.parsing.yaml_config import (
+    collect_agent_tools_from_config,
+)
 from agentic_radar.analysis.crewai.tool_descriptions import (
     get_crewai_tools_descriptions,
 )
@@ -126,17 +129,22 @@ class AgentsVisitor(ast.NodeVisitor):
 
         agent_node = self._find_agent_return(node.body)
         if not agent_node:
+            self.generic_visit(node)
             return
 
         agent_tools = self._extract_agent_tools(agent_node)
         self.agent_tool_mapping[node.name] = agent_tools
 
+        self.generic_visit(node)
+
     def visit_Assign(self, node):
         """Track assignments that return an Agent instance."""
         if not isinstance(node.value, ast.Call):
+            self.generic_visit(node)
             return
 
         if not self._is_agent_constructor(node.value):
+            self.generic_visit(node)
             return
 
         # Handles cases like agent = Agent(...)
@@ -144,6 +152,8 @@ class AgentsVisitor(ast.NodeVisitor):
             if isinstance(target, ast.Name):
                 agent_tools = self._extract_agent_tools(node.value)
                 self.agent_tool_mapping[target.id] = agent_tools
+
+        self.generic_visit(node)
 
     def visit_Constant(self, node):  # To visit strings in Python >= 3.8
         """Tracks strings that represent path to yaml configuration files."""
@@ -174,6 +184,8 @@ def collect_agents(
     """
     agent_tool_mapping: dict[str, list[CrewAITool]] = {}
 
+    yaml_file_to_agent_tool_mapping = collect_agent_tools_from_config(root_dir)
+
     for file in walk_python_files(root_dir):
         with open(file, "r") as f:
             try:
@@ -188,5 +200,21 @@ def collect_agents(
             )
             agents_visitor.visit(tree)
             agent_tool_mapping |= agents_visitor.agent_tool_mapping
+
+            # Add agent-tool mapping from YAML config files
+            for found_config_path in agents_visitor.yaml_config_paths:
+                for (
+                    config_path,
+                    yaml_agent_tool_mapping,
+                ) in yaml_file_to_agent_tool_mapping.items():
+                    if found_config_path not in config_path:
+                        continue
+                    for yaml_agent, yaml_tools in yaml_agent_tool_mapping.items():
+                        if (
+                            yaml_tools
+                            and yaml_agent in agent_tool_mapping
+                            and not agent_tool_mapping[yaml_agent]
+                        ):
+                            agent_tool_mapping[yaml_agent] = yaml_tools
 
     return agent_tool_mapping
