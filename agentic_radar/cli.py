@@ -21,6 +21,7 @@ from agentic_radar.report import (
     NodeDefinition,
     generate,
 )
+from utils import sanitize_graph
 
 
 class Args(BaseModel):
@@ -82,6 +83,8 @@ def analyze_and_generate_report(framework: str, analyzer: Analyzer):
     if len(graph.nodes) <= 2: # Only start and end nodes are present
         print(f"Agentic Radar didn't find any agentic workflow in input directory: {args.input_directory}")
         raise typer.Exit(code=1)
+    
+    sanitize_graph(graph)
     
     print("Mapping vulnerabilities")
     map_vulnerabilities(graph)
