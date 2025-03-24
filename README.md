@@ -168,6 +168,7 @@ Options:
 Commands:
   langgraph  Scan code written with LangGraph
   crewai     Scan code written with CrewAI
+  n8n        Scan a n8n workflow configuration JSON
 ```
 
 
