@@ -21,7 +21,8 @@ from agentic_radar.report import (
     NodeDefinition,
     generate,
 )
-from utils import sanitize_graph
+
+from .utils import sanitize_graph
 
 
 class Args(BaseModel):

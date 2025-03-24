@@ -1,5 +1,7 @@
-from graph import GraphDefinition
 import html
+
+from .graph import GraphDefinition
+
 
 def sanitize_text(text: str) -> str:
     return html.escape(text)
