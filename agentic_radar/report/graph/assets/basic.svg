@@ -1,11 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg viewBox="-5 -5 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-<!--<g id="tabler:loader" clip-path="url(#clip0_4850_35483)">-->
-<path id="Vector" d="M11.2635 6.87863L12.3241 5.81797M12.1473 8.99995L13.6676 8.99995M11.2635 11.1213L12.3241 12.1819M9.14214 12.0052V13.5254M7.02082 11.1213L5.96016 12.1819M6.13693 8.99995L4.61665 8.99995M7.02082 6.87863L5.96016 5.81797M9.14214 5.99474V4.47446" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
-<!--</g>-->
-<!--<defs>-->
-<!--<clipPath id="clip0_4850_35483">-->
-<!--<rect width="12" height="12" fill="white" transform="translate(9.14214 0.514648) rotate(45)"/>-->
-<!--</clipPath>-->
-<!--</defs>-->
+<svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_4850_35446)">
+<rect x="14.1421" width="20" height="20" rx="4" transform="rotate(45 14.1421 0)" fill="#009C92"/>
+<g clip-path="url(#clip1_4850_35446)">
+<path d="M16.2635 12.0207L17.3241 10.9601M17.1473 14.142L18.6676 14.142M16.2635 16.2634L17.3241 17.324M14.1421 17.1472V18.6675M12.0208 16.2634L10.9602 17.324M11.1369 14.142L9.61665 14.142M12.0208 12.0207L10.9602 10.9601M14.1421 11.1368V9.61655" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_4850_35446">
+<rect x="14.1421" width="20" height="20" rx="4" transform="rotate(45 14.1421 0)" fill="white"/>
+</clipPath>
+<clipPath id="clip1_4850_35446">
+<rect width="12" height="12" fill="white" transform="translate(14.1421 5.65674) rotate(45)"/>
+</clipPath>
+</defs>
 </svg>

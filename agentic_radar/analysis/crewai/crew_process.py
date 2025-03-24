@@ -46,9 +46,7 @@ def infer_agent_connections(
                 tasks, task_agent_mapping, agent_connections, start_agents, end_agents
             )
         else:
-            print(
-                f"Unknown process type: {process_type}. Skipping crew {crew}..."
-            )
+            print(f"Unknown process type: {process_type}. Skipping crew {crew}...")
 
     return agent_connections, list(start_agents), list(end_agents)
 
@@ -124,9 +122,7 @@ def _handle_hierarchical_process(
             print(f"Task {task} is missing an agent assignment. Skipping...")
 
     if len(valid_agents) < 2:
-        print(
-            "Not enough valid agents for hierarchical process (need at least 2)."
-        )
+        print("Not enough valid agents for hierarchical process (need at least 2).")
         return
 
     # In hierarchical process, all agents are both start and end agents

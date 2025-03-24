@@ -1,21 +1,21 @@
 from typing import List
 
-import pydot
 from pydantic import BaseModel, Field
 
 from ... import graph
-from .edge import ConditionalEdge, Edge
+from .edge import ConditionalEdge, DefaultEdge, Edge
 from .graph import Graph
 from .node import (
     AgentNode,
     BasicNode,
     CustomToolNode,
+    Node,
     ToolNode,
 )
 
 
 class NodeDefinition(graph.NodeDefinition):
-    def to_pydot(self) -> pydot.Node:
+    def parse(self) -> Node:
         if self.node_type == graph.NodeType.AGENT:
             return AgentNode(self.name, self.label or self.name)
         if self.node_type == graph.NodeType.BASIC:
@@ -28,10 +28,10 @@ class NodeDefinition(graph.NodeDefinition):
 
 
 class EdgeDefinition(graph.EdgeDefinition):
-    def to_pydot(self) -> pydot.Edge:
+    def parse(self) -> Edge:
         if self.condition is not None:
             return ConditionalEdge(self.start, self.end, self.condition)
-        return Edge(self.start, self.end)
+        return DefaultEdge(self.start, self.end)
 
 
 class GraphDefinition(BaseModel):
@@ -46,8 +46,8 @@ class GraphDefinition(BaseModel):
 
 def from_definition(definition: GraphDefinition) -> Graph:
     g = Graph(
-        nodes=[node.to_pydot() for node in definition.nodes],
-        edges=[edge.to_pydot() for edge in definition.edges],
+        nodes=[node.parse() for node in definition.nodes],
+        edges=[edge.parse() for edge in definition.edges],
     )
     return g
 

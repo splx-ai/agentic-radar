@@ -1,14 +1,16 @@
-import pydot
+from pydantic import BaseModel
 
 
-class Edge(pydot.Edge):
+class Edge(BaseModel):
+    source: str
+    target: str
+
+
+class DefaultEdge(Edge):
     def __init__(self, src: str, dst: str, vulnerable: bool = False):
-        super().__init__(src, dst, color="#E20E14" if vulnerable else "#1ED044")
+        super().__init__(source=src, target=dst)
 
 
-class ConditionalEdge(pydot.Edge):
+class ConditionalEdge(Edge):
     def __init__(self, src: str, dst: str, condition: str, vulnerable: bool = False):
-        super().__init__(
-            src, dst, style="dashed", color="#E20E14" if vulnerable else "#1ED044"
-        )
-        # self.set_label(condition)  # type: ignore
+        super().__init__(source=src, target=dst)

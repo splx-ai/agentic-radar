@@ -70,7 +70,7 @@ def _main(
     if not os.path.isdir(input_directory):
         print(f"Input directory '{input_directory}' does not exist.")
         raise typer.Exit(code=1)
-    
+
     args = Args(
         input_directory=input_directory, output_file=output_file, version=version
     )
@@ -80,12 +80,13 @@ def analyze_and_generate_report(framework: str, analyzer: Analyzer):
     print(f"Analyzing {args.input_directory} for {framework} graphs")
     graph = analyzer.analyze(args.input_directory)
 
-    if len(graph.nodes) <= 2: # Only start and end nodes are present
-        print(f"Agentic Radar didn't find any agentic workflow in input directory: {args.input_directory}")
+    if len(graph.nodes) <= 2:  # Only start and end nodes are present
+        print(
+            f"Agentic Radar didn't find any agentic workflow in input directory: {args.input_directory}"
+        )
         raise typer.Exit(code=1)
-    
     sanitize_graph(graph)
-    
+
     print("Mapping vulnerabilities")
     map_vulnerabilities(graph)
     pydot_graph = GraphDefinition(
@@ -114,6 +115,7 @@ def langgraph():
 @app.command("crewai", help="Scan code written with CrewAI")
 def crewai():
     analyze_and_generate_report("CrewAI", CrewAIAnalyzer())
+
 
 @app.command("n8n", help="Scan a n8n workflow configuration JSON")
 def n8n():
