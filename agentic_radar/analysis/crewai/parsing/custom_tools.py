@@ -4,7 +4,7 @@ from agentic_radar.analysis.crewai.models.tool import CrewAITool
 from agentic_radar.analysis.utils import walk_python_files
 
 
-class CustomToolsCollector(ast.NodeVisitor):
+class CustomToolsVisitor(ast.NodeVisitor):
     CREWAI_CUSTOM_TOOL_DECORATOR = "tool"
     CREWAI_CUSTOM_TOOL_BASE_CLASS = "BaseTool"
 
@@ -41,23 +41,28 @@ class CustomToolsCollector(ast.NodeVisitor):
 
         self.generic_visit(node)
 
-    def collect(self, root_dir: str) -> dict[str, CrewAITool]:
-        """Parses all Python modules in the given directory and collects custom tools.
 
-        Args:
-            root_dir (str): Path to the codebase directory
+def collect_custom_tools(root_dir: str) -> dict[str, CrewAITool]:
+    """Parses all Python modules in the given directory and collects custom tools.
 
-        Returns:
-            dict[str, CrewAITool]: Dictionary mapping custom tool name to corresponding CrewAITool instance
-        """
+    Args:
+        root_dir (str): Path to the codebase directory
 
-        for file in walk_python_files(root_dir):
-            with open(file, "r") as f:
-                try:
-                    tree = ast.parse(f.read())
-                except Exception as e:
-                    print(f"Cannot parse Python module: {file}. Error: {e}")
-                    continue
-                self.visit(tree)
+    Returns:
+        dict[str, CrewAITool]: Dictionary mapping custom tool name to corresponding CrewAITool instance
+    """
 
-        return self.custom_tools
+    custom_tools: dict[str, CrewAITool] = {}
+
+    for file in walk_python_files(root_dir):
+        with open(file, "r") as f:
+            try:
+                tree = ast.parse(f.read())
+            except Exception as e:
+                print(f"Cannot parse Python module: {file}. Error: {e}")
+                continue
+            custom_tools_visitor = CustomToolsVisitor()
+            custom_tools_visitor.visit(tree)
+            custom_tools |= custom_tools_visitor.custom_tools
+
+    return custom_tools
