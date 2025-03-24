@@ -22,7 +22,7 @@ from agentic_radar.report import (
     generate,
 )
 
-from .utils import sanitize_graph
+from agentic_radar.utils import sanitize_graph
 
 
 class Args(BaseModel):
