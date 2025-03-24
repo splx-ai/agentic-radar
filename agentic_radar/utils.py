@@ -1,6 +1,6 @@
 import html
 
-from .graph import GraphDefinition
+from agentic_radar.graph import GraphDefinition
 
 
 def sanitize_text(text: str) -> str:
