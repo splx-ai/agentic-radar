@@ -21,7 +21,6 @@ from agentic_radar.report import (
     NodeDefinition,
     generate,
 )
-
 from agentic_radar.utils import sanitize_graph
 
 
