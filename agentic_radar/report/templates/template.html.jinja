@@ -45,13 +45,13 @@
                         </div>
                         <div style="width: 100%; border-right: 0.50px #D4D4D4 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
                             <div style="align-self: stretch; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                                <div style="flex: 40%; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{project_name}}</div>
+                                <div style="flex: 40%; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{project_name|e}}</div>
                             </div>
                             <div style="align-self: stretch; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                                <div style="flex: 40%; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{timestamp}}</div>
+                                <div style="flex: 40%; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{timestamp|e}}</div>
                             </div>
                             <div style="align-self: stretch; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                                <div style="flex: 40%; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{framework}}</div>
+                                <div style="flex: 40%; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{framework|e}}</div>
                             </div>
                         </div>
                     </div>
@@ -219,9 +219,9 @@
                         </tr>
                         {% for tool in tools %}
                         <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.name}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.category}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.description}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.name|e}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.category|e}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.description|e}}</td>
                             <td style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">{{tool.vulnerabilities | length}}</td>
                         </tr>
                         {% endfor %}
@@ -238,7 +238,7 @@
                 <div style="width: 100%; margin-top:20px; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: inline-flex">
                     <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
                         <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex">
-                            <div style="color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">{{tool.name}}</div>
+                            <div style="color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">{{tool.name|e}}</div>
                         </div>
                         {% for v in tool.vulnerabilities %}
                         <div style="width:100%; align-self: stretch; border: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; display: inline-flex">
@@ -248,7 +248,7 @@
                                         <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Vulnerability</div>
                                     </div>
                                     <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word"><b>{{v.name}}</b></div>
+                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word"><b>{{v.name|e}}</b></div>
                                     </div>
                                 </div>
                                 <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
@@ -256,7 +256,7 @@
                                         <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Description</div>
                                     </div>
                                     <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{v.description}}</div>
+                                        <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{v.description|e}}</div>
                                     </div>
                                 </div>
                                 <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
@@ -274,7 +274,7 @@
                                         <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Remediation Steps</div>
                                     </div>
                                     <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                                        <div style="flex: 1 1 0; text-align: justify; white-space: pre-wrap; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{v.remediation}}</div>
+                                        <div style="flex: 1 1 0; text-align: justify; white-space: pre-wrap; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{v.remediation|e}}</div>
                                     </div>
                                 </div>
                             </div>
