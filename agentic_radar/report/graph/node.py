@@ -1,9 +1,16 @@
+import base64
 from importlib import resources
 from typing import Optional
 
 from pydantic import BaseModel
 
 from ...graph import ToolType
+
+
+def _load_image(path: str) -> str:
+    with open(path, "rb") as f:
+        data = f.read()
+        return "data:image/svg+xml;base64," + base64.encodebytes(data).decode("utf-8")
 
 
 class Node(BaseModel):
@@ -17,7 +24,9 @@ class AgentNode(Node):
         super().__init__(
             name=name,
             label=label,
-            image=str(resources.files(__package__) / "assets" / "agent.svg"),
+            image=_load_image(
+                str(resources.files(__package__) / "assets" / "agent.svg")
+            ),
         )
 
 
@@ -26,7 +35,9 @@ class BasicNode(Node):
         super().__init__(
             name=name,
             label=label,
-            image=str(resources.files(__package__) / "assets" / "basic.svg"),
+            image=_load_image(
+                str(resources.files(__package__) / "assets" / "basic.svg")
+            ),
         )
 
 
@@ -36,8 +47,8 @@ class ToolNode(Node):
         super().__init__(
             name=name,
             label=label,
-            image=str(
-                resources.files(__package__) / "assets" / "tools" / f"{ttype}.svg"
+            image=_load_image(
+                str(resources.files(__package__) / "assets" / "tools" / f"{ttype}.svg")
             ),
         )
 
@@ -47,5 +58,7 @@ class CustomToolNode(Node):
         super().__init__(
             name=name,
             label=label,
-            image=str(resources.files(__package__) / "assets" / "custom_tool.svg"),
+            image=_load_image(
+                str(resources.files(__package__) / "assets" / "custom_tool.svg")
+            ),
         )

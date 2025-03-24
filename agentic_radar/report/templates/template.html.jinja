@@ -2,7 +2,9 @@
 <html>
 <head>
 <meta charset="utf-8">
-<script src="{{force_graph_dependency_path}}"></script>
+<script>
+{% include 'assets/force-graph.js' %}
+</script>
 <script language="javascript" type="text/javascript">
 const __INLINE_DATA = {{graph}};
 </script>
@@ -337,7 +339,9 @@ const __INLINE_DATA = {{graph}};
         .graphData(gData)
     ;
     graph.d3Force('center', null);
-    graph.onEngineStop(() => graph.zoomToFit(1000, 16));
+    graph.onEngineStop(() => {
+        graph.zoomToFit(1000, 16)
+    });
 </script>
 </body>
 </html>
