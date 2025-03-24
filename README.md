@@ -168,8 +168,8 @@ Planned features (in no particular order)
   - [ ] [PydanticAI](https://github.com/pydantic/pydantic-ai)
   - [ ] [AutoGen](https://github.com/microsoft/autogen)
   - [ ] [Dify](https://github.com/langgenius/dify)
-- [ ] CI
-  - [ ] Code style checks
+- [x] CI
+  - [x] Code style checks
   - [x] Automated releases to PyPi
 - [x] Improve report design
   - [x] Improve SVG scaling
