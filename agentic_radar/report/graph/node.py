@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from ...graph import ToolType
 
 
-def _load_image(path: str) -> str:
+def _image_to_data_url(path: str) -> str:
     with open(path, "rb") as f:
         data = f.read()
         return "data:image/svg+xml;base64," + base64.encodebytes(data).decode("utf-8")
@@ -24,7 +24,7 @@ class AgentNode(Node):
         super().__init__(
             name=name,
             label=label,
-            image=_load_image(
+            image=_image_to_data_url(
                 str(resources.files(__package__) / "assets" / "agent.svg")
             ),
         )
@@ -35,7 +35,7 @@ class BasicNode(Node):
         super().__init__(
             name=name,
             label=label,
-            image=_load_image(
+            image=_image_to_data_url(
                 str(resources.files(__package__) / "assets" / "basic.svg")
             ),
         )
@@ -47,7 +47,7 @@ class ToolNode(Node):
         super().__init__(
             name=name,
             label=label,
-            image=_load_image(
+            image=_image_to_data_url(
                 str(resources.files(__package__) / "assets" / "tools" / f"{ttype}.svg")
             ),
         )
@@ -58,7 +58,7 @@ class CustomToolNode(Node):
         super().__init__(
             name=name,
             label=label,
-            image=_load_image(
+            image=_image_to_data_url(
                 str(resources.files(__package__) / "assets" / "custom_tool.svg")
             ),
         )
