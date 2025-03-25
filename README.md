@@ -126,6 +126,17 @@ pip install agentic-radar
 agentic-radar --version
 ```
 
+#### CrewAI Installation
+
+For better tool descriptions in CrewAI, you can install the `crewai` extra:
+```sh
+pip install agentic-radar[crewai]
+```
+
+> [!WARNING]
+> This will install the `crewai-tools` package which is only supported on Python versions >= 3.10 and < 3.13.
+> If you are using a different python version, the tool descriptions will be less detailed or entirely missing.
+
 ## Usage
 
 Run `agentic-radar --help` for more info:
