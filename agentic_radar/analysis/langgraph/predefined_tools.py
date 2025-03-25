@@ -6,7 +6,7 @@ from typing import Dict, List, Set
 from agentic_radar.analysis.utils import walk_python_files_and_notebooks
 
 
-def extract_imports_with_ast(file_content: str , file_path: str) -> List[str]:
+def extract_imports_with_ast(file_content: str, file_path: str) -> List[str]:
     imports = []
 
     try:

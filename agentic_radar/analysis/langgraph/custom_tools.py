@@ -45,9 +45,7 @@ def get_all_custom_tools_from_directory(directory_path: str) -> List[Dict[str, s
         if file_path.endswith(".py"):
             with open(file_path, "r", encoding="utf-8") as f:
                 file_content = f.read()
-                custom_tools = extract_custom_tools_with_ast(
-                    file_content, file_path
-                )
+                custom_tools = extract_custom_tools_with_ast(file_content, file_path)
                 for single_custom_tool in custom_tools:
                     all_custom_tools.append(single_custom_tool)
         elif file_path.endswith(".ipynb"):
@@ -58,9 +56,7 @@ def get_all_custom_tools_from_directory(directory_path: str) -> List[Dict[str, s
                     if cell["cell_type"] == "code":
                         for row in cell["source"]:
                             file_content += row
-                custom_tools = extract_custom_tools_with_ast(
-                    file_content, file_path
-                )
+                custom_tools = extract_custom_tools_with_ast(file_content, file_path)
                 for single_custom_tool in custom_tools:
                     all_custom_tools.append(single_custom_tool)
 

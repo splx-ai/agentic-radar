@@ -1,6 +1,6 @@
 import datetime
 import os
-import re
+from importlib import resources
 from typing import Dict, List, Optional
 
 import jinja2
@@ -40,17 +40,11 @@ class ReportData(BaseModel):
     tools: List[Tool]
     scanner_version: str
 
+    force_graph_dependency_path: str
+
 
 def generate(graph: GraphDefinition, out_file: str):
     svg = from_definition(graph).generate()
-
-    # remove xml definition, and put relative width and height
-    svg_lines = svg.splitlines()[1:]
-    svg_lines[0] = re.sub(r'width="(.*?)"', 'width="100%"', svg_lines[0])
-    svg_lines[0] = re.sub(
-        r'height="(.*?)"', 'height="100%" preserveAspectRatio="xMidYMin"', svg_lines[0]
-    )
-    svg = "\n".join(svg_lines)
 
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(
@@ -77,5 +71,8 @@ def generate(graph: GraphDefinition, out_file: str):
             },
             tools=tools,
             scanner_version=__version__,
+            force_graph_dependency_path=str(
+                resources.files(__package__) / "templates" / "assets" / "force-graph.js"
+            ),
         ).model_dump()
     ).dump(out_file)

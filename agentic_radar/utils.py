@@ -6,6 +6,7 @@ from agentic_radar.graph import GraphDefinition
 def sanitize_text(text: str) -> str:
     return html.escape(text)
 
+
 def sanitize_graph(graph: GraphDefinition) -> None:
     nodes = graph.nodes
     edges = graph.edges
@@ -18,7 +19,6 @@ def sanitize_graph(graph: GraphDefinition) -> None:
             node.description = sanitize_text(node.description)
         if node.label is not None:
             node.label = sanitize_text(node.label)
-    
     for edge in edges:
         if edge.start is not None:
             edge.start = sanitize_text(edge.start)

@@ -31,7 +31,6 @@ jobs:
       - name: Install dependencies
         run: | 
           poetry install
-          sudo apt-get install -y graphviz
 
       - name: Run tests
         run: |

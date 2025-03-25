@@ -116,25 +116,7 @@ Agentic systems have complex workflows and often interact with multiple tools, m
 
 ### Prerequisites
 
-Agentic Radar uses graphviz and cairo for dependency graph visualization.
-
-- graphviz
-```sh
-# homebrew
-brew install graphviz
-
-# linux
-apt-get install graphviz
-```
-
-- cairo
-```sh
-# homebrew
-brew install cairo
-
-# linux
-apt-get install libcairo
-```
+There are none! Just make sure you have Python (pip) installed on your machine.
 
 ### Installation
 ```sh
@@ -186,11 +168,11 @@ Planned features (in no particular order)
   - [ ] [PydanticAI](https://github.com/pydantic/pydantic-ai)
   - [ ] [AutoGen](https://github.com/microsoft/autogen)
   - [ ] [Dify](https://github.com/langgenius/dify)
-- [ ] CI
-  - [ ] Code style checks
+- [x] CI
+  - [x] Code style checks
   - [x] Automated releases to PyPi
-- [ ] Improve report design
-  - [ ] Improve SVG scaling
+- [x] Improve report design
+  - [x] Improve SVG scaling
 
 ## Demo 🎥
 

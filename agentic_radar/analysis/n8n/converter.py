@@ -10,7 +10,9 @@ from ...graph import (
 from .models import N8nConnection, N8nNode
 
 
-def convert_nodes(n8n_nodes: List[N8nNode]) -> Tuple[List[NodeDefinition], List[NodeDefinition]]:
+def convert_nodes(
+    n8n_nodes: List[N8nNode],
+) -> Tuple[List[NodeDefinition], List[NodeDefinition]]:
     nodes = []
     tools = []
     n8n_node_types_file = resources.files(__package__) / "n8n_node_types.json"
@@ -28,41 +30,38 @@ def convert_nodes(n8n_nodes: List[N8nNode]) -> Tuple[List[NodeDefinition], List[
             if type.get("tool_type", False):
                 nodes.append(
                     NodeDefinition(
-                        type = NodeType.TOOL,
-                        name = n8n_node.name,
-                        label = n8n_node.name,
-                        category = type.get("tool_type")
+                        type=NodeType.TOOL,
+                        name=n8n_node.name,
+                        label=n8n_node.name,
+                        category=type.get("tool_type"),
                     )
                 )
 
                 tools.append(
                     NodeDefinition(
-                        type = NodeType.TOOL,
-                        name = n8n_node.name,
-                        label = n8n_node.name,
-                        category = type.get("tool_type")
+                        type=NodeType.TOOL,
+                        name=n8n_node.name,
+                        label=n8n_node.name,
+                        category=type.get("tool_type"),
                     )
                 )
             else:
                 nodes.append(
                     NodeDefinition(
-                        type = type.get("node_type"),
-                        name = n8n_node.name,
-                        label = n8n_node.name
+                        type=type.get("node_type"),
+                        name=n8n_node.name,
+                        label=n8n_node.name,
                     )
                 )
 
-    return nodes, tools    
+    return nodes, tools
 
 
 def convert_connections(n8n_connections: List[N8nConnection]) -> List[EdgeDefinition]:
     edges = []
     for n8n_connection in n8n_connections:
         edges.append(
-            EdgeDefinition(
-                start = n8n_connection.start_node,
-                end = n8n_connection.end_node
-            )
+            EdgeDefinition(start=n8n_connection.start_node, end=n8n_connection.end_node)
         )
 
     return edges
