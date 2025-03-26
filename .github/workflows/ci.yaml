@@ -27,7 +27,8 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python3 -
-          [Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\Users\runneradmin\AppData\Roaming\Python\Scripts", "User")
+          echo "C:\Users\runneradmin\AppData\Roaming\Python\Scripts" >> $GITHUB_PATH
+        shell: bash
 
       - name: Install poetry
         if: runner.os != 'Windows'
