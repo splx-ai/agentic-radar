@@ -17,3 +17,38 @@ jobs:
         id: release
         with:
           release-type: python
+
+      - uses: actions/checkout@v4
+        if: ${{ steps.release.outputs.release_created }}
+      - uses: actions/setup-python@v5
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          python-version: '3.11'
+
+      - name: Install poetry
+        if: ${{ steps.release.outputs.release_created }}
+        run: curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
+
+      - name: Install dependencies
+        if: ${{ steps.release.outputs.release_created }}
+        run: | 
+          poetry install
+
+      - name: Run tests
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          poetry run python -m pytest -v -s
+
+      - name: Run checks
+        if: ${{ steps.release.outputs.release_created }}
+        run: | 
+          poetry run ruff check
+          poetry run mypy agentic_radar
+        
+      - name: Build
+        if: ${{ steps.release.outputs.release_created }}
+        run: poetry build
+
+      - name: Publish pypi
+        if: ${{ steps.release.outputs.release_created }}
+        uses: pypa/gh-action-pypi-publish@release/v1
