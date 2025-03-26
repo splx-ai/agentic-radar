@@ -1,6 +1,6 @@
 [project]
 name = "agentic-radar"
-version = "0.5.1"
+version = "0.5.2"
 description = "A python library for generating reports for agentic systems."
 license = { file = "LICENSE" }
 readme = "README.md"
