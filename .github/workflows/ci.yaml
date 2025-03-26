@@ -24,12 +24,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install poetry
-        run: |
-          if ["$RUNNER_OS" == "Windows"]; then
-            (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python3 - --version $POETRY_VERSION
-          else
-            curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
-          fi
+        if: runner.os == 'Windows'
+        run: (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python3 - --version $POETRY_VERSION
+
+      - name: Install poetry
+        if: runner.os != 'Windows'
+        run: curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
 
       - name: Install dependencies
         run: | 
