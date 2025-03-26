@@ -25,11 +25,11 @@ jobs:
 
       - name: Install poetry
         if: runner.os == 'Windows'
-        run: (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python3 - --version $POETRY_VERSION
+        run: (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python3 -
 
       - name: Install poetry
         if: runner.os != 'Windows'
-        run: curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
+        run: curl -sSL https://install.python-poetry.org | python3 -
 
       - name: Install dependencies
         run: | 
