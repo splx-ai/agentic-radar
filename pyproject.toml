@@ -25,7 +25,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-crewai = ["crewai-tools (>=0.38.1) ; python_version >= '3.10' and python_version < '3.13'"]
+crewai = [
+    "crewai-tools (>=0.38.1) ; python_version >= '3.10' and python_version < '3.13'"
+    ]
 langgraph = []
 all = []
 
