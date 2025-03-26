@@ -25,7 +25,9 @@ jobs:
 
       - name: Install poetry
         if: runner.os == 'Windows'
-        run: (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python3 -
+        run: |
+          (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python3 -
+          [Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\Users\runneradmin\AppData\Roaming\Python\Scripts", "User")
 
       - name: Install poetry
         if: runner.os != 'Windows'
@@ -33,7 +35,7 @@ jobs:
 
       - name: Install dependencies
         run: | 
-          poetry install --extras all
+          poetry install --all-extras
 
       - name: Run tests
         run: |
