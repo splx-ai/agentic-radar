@@ -8,9 +8,8 @@ class Tool(BaseModel):
     custom: bool
     description: Optional[str] = None
 
+
 class Agent(BaseModel):
     name: str
-    tools: list[str]
+    tools: list[Tool]
     handoffs: list[str]
-
-    
