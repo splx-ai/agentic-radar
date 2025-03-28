@@ -6,7 +6,7 @@ from collections import defaultdict
 GITHUB_REPO = "https://github.com/splx-ai/agentic-radar"
 COMMIT_SHA = os.environ.get("GITHUB_SHA", "main")
 
-def main(report_file: str, output_file: str = "test-report.md") -> None:
+def main(report_file: str, output_file: str = "./tests/unit_tests/test-report.md") -> None:
     with open(report_file, 'r') as f:
         data = json.load(f)
 
