@@ -11,22 +11,21 @@ When you want to add some code to the Agentic Scanner repository, first make sur
 ### Local development setup
 
 You will need the following things for developing the Agentic Scanner:
-- `graphviz` and `cairo`. These are necessary for the dependency chart visualization. Installation instructions can be found on https://www.cairographics.org/download/ and https://graphviz.org/download/.
 - `python` (3.9+)
 - `poetry` (2.0+)
 - `git`. (v2.0.0+)
 
 ### Fork and clone the repository
 
-1. For the Agentic Scanner repository to your personal Github account
+1. Fork the Agentic Radar repository to your personal Github account
 2. Clone the forked repository:
 ```sh
-git clone git@github.com:YOUR-USERNAME/agentic-scanner.git
+git clone git@github.com:YOUR-USERNAME/agentic-radar.git
 ```
 3. Add the upstream remote for rebasing:
 ```sh
-cd agentic-scanner
-git remote add upstream git@github.com:splx-ai/agentic-scanner.git
+cd agentic-radar
+git remote add upstream git@github.com:splx-ai/agentic-radar.git
 ```
 
 ### Development
@@ -41,7 +40,7 @@ source .venv/bin/activate # We recommend to configure poetry so it stores the vi
 
 You can run the current development version with:
 ```sh
-python agentic_scanner/cli.py --help
+python agentic_radar/cli.py --help
 ```
 
 When writing the code, please use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary). This enables automated versioning and utilizes a common practice for writing commit messages.
