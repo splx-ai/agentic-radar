@@ -159,9 +159,10 @@ Options:
   --help                          Show this message and exit.
 
 Commands:
-  langgraph  Scan code written with LangGraph
-  crewai     Scan code written with CrewAI
-  n8n        Scan a n8n workflow configuration JSON
+  langgraph       Scan code written with LangGraph
+  crewai          Scan code written with CrewAI
+  n8n             Scan a n8n workflow configuration JSON
+  openai-agents   Scan code written with OpenAI Agents SDK 
 ```
 
 
@@ -173,7 +174,7 @@ Planned features (in no particular order)
   - [x] [LangGraph](https://github.com/langchain-ai/langgraph)
   - [x] [CrewAI](https://github.com/crewAIInc/crewAI)
   - [x] [n8n](https://github.com/n8n-io/n8n)
-  - [ ] [OpenAI Agents](https://github.com/openai/openai-agents-python)
+  - [x] [OpenAI Agents](https://github.com/openai/openai-agents-python)
   - [ ] [LlamaIndex](https://github.com/run-llama/llama_index)
   - [ ] [Swarm](https://github.com/openai/swarm)
   - [ ] [PydanticAI](https://github.com/pydantic/pydantic-ai)
