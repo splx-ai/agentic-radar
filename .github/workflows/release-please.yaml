@@ -9,6 +9,9 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  POETRY_VERSION: 2.0.1
+
 jobs:
   release-please:
     runs-on: ubuntu-latest
