@@ -8,6 +8,7 @@ name: release-please
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 
 env:
   POETRY_VERSION: 2.0.1
