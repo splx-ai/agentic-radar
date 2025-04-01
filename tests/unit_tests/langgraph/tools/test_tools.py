@@ -19,7 +19,6 @@ def generate_document_parsed_input_json_tool(query):
 
     relevant_tool_node = None
 
-    print(graph.tools)
     for node in graph.tools:
         if node.node_type == NodeType.CUSTOM_TOOL and node.name == "generate_document_parsed_input_json_tool":
             relevant_tool_node = node
@@ -38,7 +37,6 @@ from langchain_community.tools import TavilySearchResults
 
     relevant_tool_node = None
 
-    print(graph.tools)
     for node in graph.tools:
         if node.node_type == NodeType.TOOL and node.category == ToolType.WEB_SEARCH and node.name == "Tavily Search":
             relevant_tool_node = node
