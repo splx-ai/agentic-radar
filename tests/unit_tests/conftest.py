@@ -48,4 +48,4 @@ def pytest_sessionfinish(session, exitstatus):
             f.write("| Test Description | Status | Link |\n")
             f.write("|------|--------|---------|\n")
             for result in results:
-                f.write(f"| {result['docstring']} | {result['outcome']} | [link]({result['url']}) |\n")
+                f.write(f"| {result['docstring'].replace("\n", "")} | {result['outcome']} | [link]({result['url']}) |\n")
