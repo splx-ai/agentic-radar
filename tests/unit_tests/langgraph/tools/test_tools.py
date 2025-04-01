@@ -5,6 +5,9 @@ import pytest
 
 @pytest.mark.supported
 def test_custom_tools(tmp_path):
+    """
+    A test for detecting custom tools defined with the @tool decorator.
+    """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
 from langchain.tools import tool
@@ -27,6 +30,9 @@ def generate_document_parsed_input_json_tool(query):
 
 @pytest.mark.supported
 def test_predefined_tools(tmp_path):
+    """
+    A test for detecting imported predefined tools.
+    """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
 from langchain_community.tools import TavilySearchResults

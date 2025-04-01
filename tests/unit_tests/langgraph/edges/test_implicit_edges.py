@@ -4,6 +4,9 @@ import pytest
 
 @pytest.mark.supported
 def test_add_node_with_Command_objects_single_return_single_value(tmp_path):
+    """
+    A test for detecting edges that are implicitly defined by a single returned Command object and its "goto" argument. The "goto" argument is a single value.
+    """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
 from langgraph.graph import StateGraph
@@ -46,6 +49,10 @@ def create_workflow():
 
 @pytest.mark.supported
 def test_add_node_with_Command_objects_single_return_multiple_values_list(tmp_path):
+    """
+    A test for detecting edges that are implicitly defined by a single returned Command object and its "goto" argument. 
+    The "goto" argument is a list containing multiple values, implicitly making the edges conditional.
+    """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
 from langgraph.graph import StateGraph
@@ -95,6 +102,10 @@ def create_workflow():
 
 @pytest.mark.supported
 def test_add_node_with_Command_objects_single_return_multiple_values_conditional(tmp_path):
+    """
+    A test for detecting edges that are implicitly defined by a single returned Command object and its "goto" argument.
+    The "goto" argument is a single variable that can have more than one value, making the edges implicitly conditional.
+    """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
 from langgraph.graph import StateGraph
@@ -148,6 +159,10 @@ def create_workflow():
 
 @pytest.mark.supported
 def test_add_node_with_Command_objects_multiple_returns_multiple_values_conditional(tmp_path):
+    """
+    A test for detecting edges that are implicitly defined by multiple returned Command objects and their "goto" arguments.
+    The "goto" arguments are single values, but since there are multiple returned Command object the edges are conditional.
+    """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
 from langgraph.graph import StateGraph

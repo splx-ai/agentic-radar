@@ -4,6 +4,9 @@ import pytest
 
 @pytest.mark.supported
 def test_add_node_with_name_and_with_function_name(tmp_path):
+    """
+    A test for adding a node to a Graph by passing the name of the node as the first argument and the name of the node function as the second argument.
+    """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
 from langgraph.graph import StateGraph
@@ -37,6 +40,9 @@ def create_workflow():
 
 @pytest.mark.supported
 def test_add_node_without_name_and_with_function_name(tmp_path):
+    """
+    A test for adding a node to a Graph by passing only the name of the node function as the first arguemnt.
+    """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
 from langgraph.graph import StateGraph
@@ -71,6 +77,9 @@ def create_workflow():
 
 @pytest.mark.supported
 def test_add_node_with_name_and_with_function_call(tmp_path):
+    """
+    A test for adding a node to a Graph by passing the name of the node as the first argument and a function call as the second argument.
+    """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
 from langgraph.graph import StateGraph
