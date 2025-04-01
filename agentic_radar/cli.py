@@ -13,6 +13,7 @@ from agentic_radar.analysis import (
     CrewAIAnalyzer,
     LangGraphAnalyzer,
     N8nAnalyzer,
+    OpenAIAgentsAnalyzer,
 )
 from agentic_radar.mapper import map_vulnerabilities
 from agentic_radar.report import (
@@ -120,6 +121,11 @@ def crewai():
 @app.command("n8n", help="Scan a n8n workflow configuration JSON")
 def n8n():
     analyze_and_generate_report("n8n", N8nAnalyzer())
+
+
+@app.command("openai-agents", help="Scan code written with OpenAI Agents SDK")
+def openai_agents():
+    analyze_and_generate_report("openai-agents", OpenAIAgentsAnalyzer())
 
 
 if __name__ == "__main__":

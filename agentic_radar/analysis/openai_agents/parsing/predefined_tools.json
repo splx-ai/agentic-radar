@@ -1,0 +1,5 @@
+{
+    "FileSearchTool": "A hosted tool that lets the LLM search through a vector store. Currently only supported with OpenAI models, using the Responses API.",
+    "WebSearchTool": "A hosted tool that lets the LLM search the web. Currently only supported with OpenAI models, using the Responses API.",
+    "ComputerTool": "A hosted tool that lets the LLM control a computer."
+}

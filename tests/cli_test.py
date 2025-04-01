@@ -17,6 +17,7 @@ def test_help():
 BASE_DIR_LANGGRAPH = "examples/langgraph"
 BASE_DIR_CREWAI = "examples/crewai"
 BASED_DIR_N8N = "examples/n8n"
+BASE_DIR_OPENAI_AGENTS = "examples/openai-agents"
 
 
 @pytest.fixture()
@@ -66,5 +67,19 @@ def test_crewai(params):
 def test_n8n(params):
     i, o = params
     result = runner.invoke(app, ["-i", i, "-o", o, "n8n"])
+    assert result.exit_code == 0
+    assert o in result.stdout
+
+@pytest.mark.parametrize(
+    "params",
+    [
+        (os.path.join(BASE_DIR_OPENAI_AGENTS, category_dir, example_dir), "report.html")
+        for category_dir in os.listdir(BASE_DIR_OPENAI_AGENTS) for example_dir in os.listdir(os.path.join(BASE_DIR_OPENAI_AGENTS, category_dir))
+    ],
+    indirect=True,
+)
+def test_openai_agents(params):
+    i, o = params
+    result = runner.invoke(app, ["-i", i, "-o", o, "openai-agents"])
     assert result.exit_code == 0
     assert o in result.stdout
