@@ -21,7 +21,7 @@ def pytest_runtest_logreport(report):
         docstring = meta.get("docstring", "")
         lineno = meta.get("lineno", 0)
         framework = report.nodeid.removeprefix("tests/unit_tests/").split("/")[0]
-        docstring = meta.get("docstring", "")
+        docstring = meta.get("docstring", "").replace("\n", "")
         outcome = "Unknown"
         url = report.nodeid.split("::")[0] + f"#L{lineno}"
 
@@ -48,4 +48,4 @@ def pytest_sessionfinish(session, exitstatus):
             f.write("| Test Description | Status | Link |\n")
             f.write("|------|--------|---------|\n")
             for result in results:
-                f.write(f"| {result['docstring'].replace("\n", "")} | {result['outcome']} | [link]({result['url']}) |\n")
+                f.write(f"| {result['docstring']} | {result['outcome']} | [link]({result['url']}) |\n")
