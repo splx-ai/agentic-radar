@@ -1,63 +1,22 @@
 # Langgraph Tests
 | Test Description | Status | Link |
 |------|--------|---------|
-| 
-    A test for detecting edges that are explicitly defined by positional arguments in the "add_edge" method.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L6) |
-| 
-    A test for detecting edges that are explicitly defined by keyword arguments in the "add_edge" method.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L49) |
-| 
-    A test for detecting edges that are explicitly defined by keyword arguments in the "add_conditional_edges" method with a routing function that is not imported.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L91) |
-| 
-    A test for detecting edges that are explicitly defined by keyword arguments in the "add_conditional_edges" method with a routing function that is imported.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L151) |
-| 
-    A test for detecting edges that are explicitly defined by positional arguments in the "add_conditional_edges" method with a routing function that is not imported.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L219) |
-| 
-    A test for detecting edges that are explicitly defined by positional arguments in the "add_conditional_edges" method with a routing function that is imported.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L279) |
-| 
-    A test for detecting edges that are explicitly defined by keyword arguments in the "add_conditional_edges" method with a path mapping that is not imported.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L347) |
-| 
-    A test for detecting edges that are explicitly defined by keyword arguments in the "add_conditional_edges" method with a path mapping that is imported.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L412) |
-| 
-    A test for detecting edges that are explicitly defined by positional arguments in the "add_conditional_edges" method with a path mapping that is not imported.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L484) |
-| 
-    A test for detecting edges that are explicitly defined by positional arguments in the "add_conditional_edges" method with a path mapping that is imported.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L549) |
-| 
-    A test for detecting edges that are implicitly defined by a single returned Command object and its "goto" argument. The "goto" argument is a single value.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_implicit_edges.py#L6) |
-| 
-    A test for detecting edges that are implicitly defined by a single returned Command object and its "goto" argument. 
-    The "goto" argument is a list containing multiple values, implicitly making the edges conditional.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_implicit_edges.py#L51) |
-| 
-    A test for detecting edges that are implicitly defined by a single returned Command object and its "goto" argument.
-    The "goto" argument is a single variable that can have more than one value, making the edges implicitly conditional.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_implicit_edges.py#L104) |
-| 
-    A test for detecting edges that are implicitly defined by multiple returned Command objects and their "goto" arguments.
-    The "goto" arguments are single values, but since there are multiple returned Command object the edges are conditional.
-     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_implicit_edges.py#L161) |
-| 
-    A test for adding a node to a Graph by passing the name of the node as the first argument and the name of the node function as the second argument.
-     | Passed✅ | [link](tests/unit_tests/langgraph/nodes/test_nodes.py#L6) |
-| 
-    A test for adding a node to a Graph by passing only the name of the node function as the first arguemnt.
-     | Passed✅ | [link](tests/unit_tests/langgraph/nodes/test_nodes.py#L42) |
-| 
-    A test for adding a node to a Graph by passing the name of the node as the first argument and a function call as the second argument.
-     | Passed✅ | [link](tests/unit_tests/langgraph/nodes/test_nodes.py#L79) |
-| 
-    A test for detecting custom tools defined with the @tool decorator.
-     | Passed✅ | [link](tests/unit_tests/langgraph/tools/test_tools.py#L7) |
-| 
-    A test for detecting imported predefined tools.
-     | Passed✅ | [link](tests/unit_tests/langgraph/tools/test_tools.py#L32) |
+|     A test for detecting edges that are explicitly defined by positional arguments in the "add_edge" method.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L6) |
+|     A test for detecting edges that are explicitly defined by keyword arguments in the "add_edge" method.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L49) |
+|     A test for detecting edges that are explicitly defined by keyword arguments in the "add_conditional_edges" method with a routing function that is not imported.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L91) |
+|     A test for detecting edges that are explicitly defined by keyword arguments in the "add_conditional_edges" method with a routing function that is imported.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L151) |
+|     A test for detecting edges that are explicitly defined by positional arguments in the "add_conditional_edges" method with a routing function that is not imported.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L219) |
+|     A test for detecting edges that are explicitly defined by positional arguments in the "add_conditional_edges" method with a routing function that is imported.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L279) |
+|     A test for detecting edges that are explicitly defined by keyword arguments in the "add_conditional_edges" method with a path mapping that is not imported.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L347) |
+|     A test for detecting edges that are explicitly defined by keyword arguments in the "add_conditional_edges" method with a path mapping that is imported.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L412) |
+|     A test for detecting edges that are explicitly defined by positional arguments in the "add_conditional_edges" method with a path mapping that is not imported.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L484) |
+|     A test for detecting edges that are explicitly defined by positional arguments in the "add_conditional_edges" method with a path mapping that is imported.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L549) |
+|     A test for detecting edges that are implicitly defined by a single returned Command object and its "goto" argument. The "goto" argument is a single value.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_implicit_edges.py#L6) |
+|     A test for detecting edges that are implicitly defined by a single returned Command object and its "goto" argument.     The "goto" argument is a list containing multiple values, implicitly making the edges conditional.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_implicit_edges.py#L51) |
+|     A test for detecting edges that are implicitly defined by a single returned Command object and its "goto" argument.    The "goto" argument is a single variable that can have more than one value, making the edges implicitly conditional.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_implicit_edges.py#L104) |
+|     A test for detecting edges that are implicitly defined by multiple returned Command objects and their "goto" arguments.    The "goto" arguments are single values, but since there are multiple returned Command object the edges are conditional.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_implicit_edges.py#L161) |
+|     A test for adding a node to a Graph by passing the name of the node as the first argument and the name of the node function as the second argument.     | Passed✅ | [link](tests/unit_tests/langgraph/nodes/test_nodes.py#L6) |
+|     A test for adding a node to a Graph by passing only the name of the node function as the first arguemnt.     | Passed✅ | [link](tests/unit_tests/langgraph/nodes/test_nodes.py#L42) |
+|     A test for adding a node to a Graph by passing the name of the node as the first argument and a function call as the second argument.     | Passed✅ | [link](tests/unit_tests/langgraph/nodes/test_nodes.py#L79) |
+|     A test for detecting custom tools defined with the @tool decorator.     | Passed✅ | [link](tests/unit_tests/langgraph/tools/test_tools.py#L7) |
+|     A test for detecting imported predefined tools.     | Passed✅ | [link](tests/unit_tests/langgraph/tools/test_tools.py#L32) |
