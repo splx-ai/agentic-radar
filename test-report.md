@@ -19,4 +19,4 @@
 | None | Passed✅ | [link](tests/unit_tests/langgraph/nodes/test_nodes.py#L39) |
 | None | Passed✅ | [link](tests/unit_tests/langgraph/nodes/test_nodes.py#L73) |
 | None | Passed✅ | [link](tests/unit_tests/langgraph/tools/test_tools.py#L7) |
-| None | Passed✅ | [link](tests/unit_tests/langgraph/tools/test_tools.py#L30) |
+| None | Passed✅ | [link](tests/unit_tests/langgraph/tools/test_tools.py#L29) |
