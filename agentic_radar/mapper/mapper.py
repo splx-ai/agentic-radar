@@ -1,7 +1,7 @@
 import json
-import importlib_resources as resources
 from typing import List, Literal
 
+import importlib_resources as resources
 from pydantic import BaseModel
 
 from ..graph import GraphDefinition, NodeType, VulnerabilityDefinition

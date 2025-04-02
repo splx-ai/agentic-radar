@@ -1,4 +1,5 @@
 import json
+
 import importlib_resources as resources
 
 from agentic_radar.graph import ToolType
