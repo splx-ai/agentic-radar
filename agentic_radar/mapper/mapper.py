@@ -1,5 +1,5 @@
 import json
-from importlib import resources
+import importlib_resources as resources
 from typing import List, Literal
 
 from pydantic import BaseModel

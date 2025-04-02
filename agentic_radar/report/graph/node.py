@@ -1,5 +1,5 @@
 import base64
-from importlib import resources
+import importlib_resources as resources
 from typing import Optional
 
 from pydantic import BaseModel

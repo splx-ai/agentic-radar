@@ -1,6 +1,6 @@
 import ast
 import json
-from importlib import resources
+import importlib_resources as resources
 from typing import Dict, List, Set
 
 from agentic_radar.analysis.utils import walk_python_files_and_notebooks

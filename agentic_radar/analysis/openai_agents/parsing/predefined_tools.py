@@ -1,5 +1,5 @@
 import json
-from importlib import resources
+import importlib_resources as resources
 
 from ..models import Tool
 

@@ -1,6 +1,6 @@
 import datetime
 import os
-from importlib import resources
+import importlib_resources as resources
 from typing import Dict, List, Optional
 
 import jinja2
