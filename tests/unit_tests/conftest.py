@@ -3,8 +3,6 @@ import pytest
 
 from collections import defaultdict
 
-GITHUB_REPO = "https://github.com/splx-ai/agentic-radar"
-COMMIT_SHA = os.environ.get("GITHUB_SHA", "main")
 FRAMEWORK_NAME_MAPPING = {
     "langgraph": "LangGraph",
     "crewai": "CrewAI",
@@ -34,7 +32,7 @@ def pytest_runtest_logreport(report):
         category = report.nodeid.split("unit_tests/")[-1].split("/")[1]
         docstring = meta.get("docstring", "").replace("\n", "")
         outcome = "Unknown"
-        url = f"{GITHUB_REPO}/blob/{COMMIT_SHA}/{report.nodeid.split('::')[0] + f'#L{lineno}'}"
+        url = report.nodeid.split("::")[0] + f"#L{lineno}"
 
         if "supported" in markers:
             if report.outcome == "passed":
