@@ -5,7 +5,7 @@ import pytest
 @pytest.mark.supported
 def test_add_edge_positional_arguments(tmp_path):
     """
-    A test for detecting edges that are explicitly defined by positional arguments in the "add_edge" method.
+    Positional arguments in "add_edge".
     """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
@@ -48,7 +48,7 @@ def create_workflow():
 @pytest.mark.supported
 def test_add_edge_keyword_arguments(tmp_path):
     """
-    A test for detecting edges that are explicitly defined by keyword arguments in the "add_edge" method.
+    Keyword arguments in "add_edge".
     """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
@@ -90,7 +90,7 @@ def create_workflow():
 @pytest.mark.supported
 def test_add_conditional_edges_keyword_arguments_without_map_local(tmp_path):
     """
-    A test for detecting edges that are explicitly defined by keyword arguments in the "add_conditional_edges" method with a routing function that is not imported.
+    Keyword arguments in "add_conditional_edges". Routing function not imported.
     """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
@@ -150,7 +150,7 @@ def create_workflow():
 @pytest.mark.supported
 def test_add_conditional_edges_keyword_arguments_without_map_imported(tmp_path):
     """
-    A test for detecting edges that are explicitly defined by keyword arguments in the "add_conditional_edges" method with a routing function that is imported.
+    Keyword arguments in "add_conditional_edges". Routing function imported.
     """
     py_file_1 = tmp_path / "test_file_1.py"
     py_file_1.write_text("""
@@ -218,7 +218,7 @@ def route_function(
 @pytest.mark.supported
 def test_add_conditional_edges_positional_arguments_without_map_local(tmp_path):
     """
-    A test for detecting edges that are explicitly defined by positional arguments in the "add_conditional_edges" method with a routing function that is not imported.
+    Positional arguments in "add_conditional_edges". Routing function not imported.
     """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
@@ -278,7 +278,7 @@ def create_workflow():
 @pytest.mark.supported
 def test_add_conditional_edges_positional_arguments_without_map_imported(tmp_path):
     """
-    A test for detecting edges that are explicitly defined by positional arguments in the "add_conditional_edges" method with a routing function that is imported.
+    Positional arguments in "add_conditional_edges". Routing function imported.
     """
     py_file_1 = tmp_path / "test_file_1.py"
     py_file_1.write_text("""
@@ -346,7 +346,7 @@ def route_function(
 @pytest.mark.supported
 def test_add_conditional_edges_keyword_arguments_with_map_local(tmp_path):
     """
-    A test for detecting edges that are explicitly defined by keyword arguments in the "add_conditional_edges" method with a path mapping that is not imported.
+    Keyword arguments in "add_conditional_edges". Path mapping not imported.
     """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
@@ -411,7 +411,7 @@ def create_workflow():
 @pytest.mark.supported
 def test_add_conditional_edges_keyword_arguments_with_map_imported(tmp_path):
     """
-    A test for detecting edges that are explicitly defined by keyword arguments in the "add_conditional_edges" method with a path mapping that is imported.
+    Keyword arguments in "add_conditional_edges". Path mapping imported.
     """
     py_file_1 = tmp_path / "test_file_1.py"
     py_file_1.write_text("""
@@ -483,7 +483,7 @@ mapping = {
 @pytest.mark.supported
 def test_add_conditional_edges_positional_arguments_with_map_local(tmp_path):
     """
-    A test for detecting edges that are explicitly defined by positional arguments in the "add_conditional_edges" method with a path mapping that is not imported.
+    Positional arguments in "add_conditional_edges". Path mapping not imported.
     """
     py_file = tmp_path / "test_file.py"
     py_file.write_text("""
@@ -548,7 +548,7 @@ def create_workflow():
 @pytest.mark.supported
 def test_add_conditional_edges_positional_arguments_with_map_imported(tmp_path):
     """
-    A test for detecting edges that are explicitly defined by positional arguments in the "add_conditional_edges" method with a path mapping that is imported.
+    Positional arguments in "add_conditional_edges". Path mapping imported.
     """
     py_file_1 = tmp_path / "test_file_1.py"
     py_file_1.write_text("""
