@@ -2,6 +2,13 @@ import pytest
 
 from collections import defaultdict
 
+FRAMEWORK_NAME_MAPPING = {
+    "langgraph": "LangGraph",
+    "crewai": "CrewAI",
+    "n8n": "n8n",
+    "openai-agents": "OpenAI Agents"
+}
+
 test_metadata = {}
 all_results = defaultdict(list)
 
@@ -20,7 +27,7 @@ def pytest_runtest_logreport(report):
         markers = meta.get("markers", [])
         docstring = meta.get("docstring", "")
         lineno = meta.get("lineno", 0)
-        framework = report.nodeid.removeprefix("tests/unit_tests/").split("/")[0]
+        framework = FRAMEWORK_NAME_MAPPING.get(report.nodeid.removeprefix("tests/unit_tests/").split("/")[0], "Unknown (error while mapping name)")
         docstring = meta.get("docstring", "").replace("\n", "")
         outcome = "Unknown"
         url = report.nodeid.split("::")[0] + f"#L{lineno}"
@@ -44,7 +51,7 @@ def pytest_runtest_logreport(report):
 def pytest_sessionfinish(session, exitstatus):
     with open("test-report.md", "w", encoding="utf-8") as f:
         for framework, results in all_results.items():
-            f.write(f"# {framework.capitalize()} Tests\n")
+            f.write(f"# {framework} Tests\n")
             f.write("| Test Description | Status | Link |\n")
             f.write("|------|--------|---------|\n")
             for result in results:
