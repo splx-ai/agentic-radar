@@ -57,23 +57,17 @@ def pytest_sessionfinish(session, exitstatus):
     with open("test-report.md", "w", encoding="utf-8") as f:
         for framework, results in all_results.items():
             f.write(f"# {framework} Tests\n")
-            # f.write("| Test Description | Status | Link |\n")
-            # f.write("|------|--------|---------|\n")
-            # for result in results:
-            #     f.write(f"| {result['docstring']} | {result['outcome']} | [link]({result['url']}) |\n")
             f.write("| Category | Test Description | Status | Link |\n")
             f.write("|----------|------------------|--------|------|\n")
 
-            # Group results by category
             results_by_category = defaultdict(list)
             for result in results:
                 results_by_category[result["category"]].append(result)
 
-            # Sort categories for consistent output
             for category in sorted(results_by_category.keys()):
                 category_results = results_by_category[category]
                 first = True
                 for result in category_results:
-                    cat_cell = category if first else ""  # Print category only once
+                    cat_cell = category if first else ""
                     f.write(f"| {cat_cell} | {result['docstring']} | {result['outcome']} | [link]({result['url']}) |\n")
                     first = False
