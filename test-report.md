@@ -1,4 +1,4 @@
-# Langgraph Tests
+# LangGraph Tests
 | Test Description | Status | Link |
 |------|--------|---------|
 |     A test for detecting edges that are explicitly defined by positional arguments in the "add_edge" method.     | Passed✅ | [link](tests/unit_tests/langgraph/edges/test_explicit_edges.py#L6) |
