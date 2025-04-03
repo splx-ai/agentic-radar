@@ -202,6 +202,7 @@ It helps you understand agentic system behavior, visualize security risks, and e
 
 - [CrewAI](https://splx.ai/blog/enhancing-ai-transparency-scanning-crewai-workflows-with-agentic-radar)
 - [n8n](https://splx.ai/blog/scanning-n8n-workflows-with-agentic-radar)
+- [OpenAI Agents](https://splx.ai/blog/openai-agents-sdk-transparent-workflows-with-agentic-radar)
 
 ## Community 🤝
 
