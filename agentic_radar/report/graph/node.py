@@ -1,7 +1,7 @@
 import base64
-from importlib import resources
 from typing import Optional
 
+import importlib_resources as resources
 from pydantic import BaseModel
 
 from ...graph import ToolType

@@ -1,6 +1,7 @@
 import json
-from importlib import resources
 from typing import List, Tuple
+
+import importlib_resources as resources
 
 from ...graph import (
     EdgeDefinition,

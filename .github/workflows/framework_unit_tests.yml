@@ -1,0 +1,59 @@
+name: Pytest + Report
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+permissions:
+  contents: write
+  
+env:
+  POETRY_VERSION: 2.0.1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout PR branch
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.head_ref }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install poetry
+      run: curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
+
+    - name: Install dependencies
+      run: | 
+        poetry install
+
+    - name: Run tests and generate JSON report
+      run: |
+        poetry run python -m pytest tests/unit_tests
+      continue-on-error: true
+
+    - name: Upload report as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pytest-markdown-report
+        path: test-report.md
+
+    - name: Commit and push test report
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        if ! git diff --quiet HEAD test-report.md; then
+          git add test-report.md
+          git commit -m "chore(framework-support): update report [skip-ci]"
+          git push origin ${{ github.head_ref }}
+        else
+          echo "No changes in test-report.md"
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
