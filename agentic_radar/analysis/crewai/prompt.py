@@ -3,7 +3,7 @@ from agentic_radar.analysis.crewai.models import CrewAIAgent
 
 def build_system_prompt(agent: CrewAIAgent) -> str:
     try:
-        from crewai.utilities.prompts import I18N, Prompts
+        from crewai.utilities.prompts import I18N, Prompts  # type: ignore
     except ImportError:
         raise ImportError("Please install the crewai package to use this feature.")
 
