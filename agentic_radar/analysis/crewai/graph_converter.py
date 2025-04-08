@@ -67,13 +67,18 @@ def convert_graph(
 
     # Add Agent metadata
     report_agents = []
-    for agent_name, agent in agents.items():
-        if crewai_graph.is_agent_in_graph(agent_name):
-            system_prompt = build_system_prompt(agent)
-            report_agent = ReportAgent(
-                name=agent_name, llm=agent.llm, system_prompt=system_prompt
-            )
-            report_agents.append(report_agent)
+    try:
+        for agent_name, agent in agents.items():
+            if crewai_graph.is_agent_in_graph(agent_name):
+                system_prompt = build_system_prompt(agent)
+                report_agent = ReportAgent(
+                    name=agent_name, llm=agent.llm, system_prompt=system_prompt
+                )
+                report_agents.append(report_agent)
+    except ImportError:
+        print(
+            "CrewAI package is not installed. Skipping agent metadata. Install the package to use this feature."
+        )
 
     return GraphDefinition(
         name=crewai_graph.name,
