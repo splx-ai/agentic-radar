@@ -211,29 +211,6 @@ const __INLINE_DATA = {{graph}};
                         </div>
                     </div>
                 </div>
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Tools</div>
-                    </div>
-                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
-                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Name</th>
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Category</th>
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Description</th>
-                            <th style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">Number of Vulnerabilities</th>
-                        </tr>
-                        {% for tool in tools %}
-                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.name|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.category|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.description|e}}</td>
-                            <td style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">{{tool.vulnerabilities | length}}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
         <div style="margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
             <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
                 <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Tool Vulnerabilities</div>
@@ -289,6 +266,50 @@ const __INLINE_DATA = {{graph}};
                 </div>
                 {% endif %}
                 {% endfor %}
+            </div>
+        </div>
+            {% if agents %}
+              <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
+                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Agents</div>
+                    </div>
+                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
+                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Agent Name</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">LLM Model</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">System Prompt</th>
+                        </tr>
+                        {% for agent in agents %}
+                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.name|e}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.llm|e}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.system_prompt|e}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
+                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Tools</div>
+                    </div>
+                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
+                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Name</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Category</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Description</th>
+                            <th style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">Number of Vulnerabilities</th>
+                        </tr>
+                        {% for tool in tools %}
+                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.name|e}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.category|e}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.description|e}}</td>
+                            <td style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">{{tool.vulnerabilities | length}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
         </div>
     </div>

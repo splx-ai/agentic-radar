@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 import yaml
 
-from agentic_radar.analysis.crewai.models.tool import CrewAITool
+from agentic_radar.analysis.crewai.models import CrewAITool, PartialCrewAIAgent
 from agentic_radar.analysis.crewai.tool_descriptions import (
     get_crewai_tools_descriptions,
 )
@@ -50,15 +50,17 @@ def is_task_config(file_content: Any) -> bool:
     return False
 
 
-def extract_agent_tools_from_config(
+def _extract_agents_from_config(
     file_content: dict[str, dict[str, Any]], crewai_tool_descriptions: dict[str, str]
-) -> dict[str, list[CrewAITool]]:
+) -> dict[str, PartialCrewAIAgent]:
     assert is_agent_config(file_content)
 
-    yaml_agent_tool_mapping = {}
+    yaml_agents = {}
 
     for agent in file_content:
-        tool_names: list[str] = file_content[agent].get("tools", [])
+        agent_info = file_content[agent]
+
+        tool_names = agent_info.get("tools", [])
         tools: list[CrewAITool] = [
             CrewAITool(
                 name=tool_name,
@@ -67,9 +69,20 @@ def extract_agent_tools_from_config(
             )
             for tool_name in tool_names
         ]
-        yaml_agent_tool_mapping[agent] = tools
 
-    return yaml_agent_tool_mapping
+        yaml_agents[agent] = PartialCrewAIAgent(
+            role=agent_info["role"],
+            goal=agent_info["goal"],
+            backstory=agent_info["backstory"],
+            tools=tools,
+            llm=agent_info.get("llm", "gpt-4"),
+            system_template=agent_info.get("system_template", None),
+            prompt_template=agent_info.get("prompt_template", None),
+            response_template=agent_info.get("response_template", None),
+            use_system_prompt=agent_info.get("use_system_prompt", True),
+        )
+
+    return yaml_agents
 
 
 def extract_task_agent_from_config(
@@ -88,11 +101,11 @@ def extract_task_agent_from_config(
     return yaml_task_agent_mapping
 
 
-def collect_agent_tools_from_config(
+def collect_agents_from_config(
     root_dir: str,
-) -> dict[str, dict[str, list[CrewAITool]]]:
+) -> dict[str, dict[str, PartialCrewAIAgent]]:
     crewai_tools_descriptions = get_crewai_tools_descriptions()
-    yaml_file_to_agent_tool_mapping: dict[str, dict[str, list[CrewAITool]]] = {}
+    yaml_file_to_agents: dict[str, dict[str, PartialCrewAIAgent]] = {}
     for file in walk_yaml_files(root_dir):
         try:
             file_content = read_yaml_config_file(file)
@@ -100,12 +113,12 @@ def collect_agent_tools_from_config(
             print(f"Error while reading YAML file: {e}")
             continue
         if is_agent_config(file_content):
-            yaml_agent_tool_mapping = extract_agent_tools_from_config(
+            yaml_agents = _extract_agents_from_config(
                 file_content, crewai_tools_descriptions
             )
-            yaml_file_to_agent_tool_mapping[file] = yaml_agent_tool_mapping
+            yaml_file_to_agents[file] = yaml_agents
 
-    return yaml_file_to_agent_tool_mapping
+    return yaml_file_to_agents
 
 
 def collect_task_agents_from_config(root_dir: str) -> dict[str, dict[str, str]]:

@@ -50,8 +50,15 @@ class EdgeDefinition(BaseModel):
     condition: Optional[str] = None
 
 
+class Agent(BaseModel):
+    name: str
+    llm: str
+    system_prompt: str
+
+
 class GraphDefinition(BaseModel):
     name: str
     nodes: List[NodeDefinition]
     edges: List[EdgeDefinition]
+    agents: List[Agent] = Field(default_factory=list)
     tools: List[NodeDefinition] = Field(default_factory=list)

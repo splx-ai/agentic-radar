@@ -15,6 +15,7 @@ from agentic_radar.analysis import (
     N8nAnalyzer,
     OpenAIAgentsAnalyzer,
 )
+from agentic_radar.graph import Agent
 from agentic_radar.mapper import map_vulnerabilities
 from agentic_radar.report import (
     EdgeDefinition,
@@ -99,6 +100,7 @@ def analyze_and_generate_report(framework: str, analyzer: Analyzer):
         edges=[
             EdgeDefinition.model_validate(e, from_attributes=True) for e in graph.edges
         ],
+        agents=[Agent.model_validate(a, from_attributes=True) for a in graph.agents],
         tools=[
             NodeDefinition.model_validate(t, from_attributes=True) for t in graph.tools
         ],
