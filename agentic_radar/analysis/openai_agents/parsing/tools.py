@@ -64,7 +64,11 @@ class ToolsVisitor(ast.NodeVisitor):
         tool_name = node.name
         if isinstance(tool_decorator, ast.Call):
             try:
-                tool_name = get_string_keyword_arg(tool_decorator, "name_override")
+                tool_name_override = get_string_keyword_arg(
+                    tool_decorator, "name_override"
+                )
+                if tool_name_override:
+                    tool_name = tool_name_override
             except (ValueError, TypeError):
                 pass
         description = ast.get_docstring(node) or ""
