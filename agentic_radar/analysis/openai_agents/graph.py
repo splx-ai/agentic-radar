@@ -1,5 +1,8 @@
 from agentic_radar.analysis.openai_agents.models import Agent, Tool
 from agentic_radar.graph import (
+    Agent as ReportAgent,
+)
+from agentic_radar.graph import (
     EdgeDefinition,
     GraphDefinition,
     NodeDefinition,
@@ -48,7 +51,18 @@ def create_graph_definition(
                 )
 
     nodes, edges = _add_start_end_nodes(nodes=nodes, edges=edges)
-    return GraphDefinition(name=graph_name, nodes=nodes, edges=edges, tools=tools)
+
+    report_agents = [
+        ReportAgent(
+            name=agent.name,
+            llm=agent.model or "gpt-4o",
+            system_prompt=agent.instructions or "",
+        )
+        for agent in agent_assignments.values()
+    ]
+    return GraphDefinition(
+        name=graph_name, nodes=nodes, edges=edges, tools=tools, agents=report_agents
+    )
 
 
 def _get_agent_node(agent: Agent) -> NodeDefinition:

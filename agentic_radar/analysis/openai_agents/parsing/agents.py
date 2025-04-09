@@ -71,8 +71,22 @@ class AgentsVisitor(ast.NodeVisitor):
             name = self._extract_agent_name(agent_node)
             tools = self._extract_agent_tools(agent_node)
             handoffs = self._extract_agent_handoffs(agent_node)
-            return Agent(name=name, tools=tools, handoffs=handoffs)
-        except (ValueError, ValidationError) as e:
+            try:
+                instructions = get_string_keyword_arg(agent_node, "instructions")
+            except ValueError:
+                print(f"Invalid 'instructions' keyword argument for Agent {name}.")
+                instructions = None
+
+            model = get_string_keyword_arg(agent_node, "model")
+
+            return Agent(
+                name=name,
+                tools=tools,
+                handoffs=handoffs,
+                instructions=instructions,
+                model=model,
+            )
+        except (ValueError, ValidationError, ValueError) as e:
             raise InvalidAgentConstructorError from e
 
     def _extract_agent_name(self, agent_node: ast.Call) -> str:
@@ -194,11 +208,13 @@ class AgentsVisitor(ast.NodeVisitor):
 
     def _extract_as_tool(self, as_tool_node: ast.Call) -> Tool:
         tool_name = get_string_keyword_arg(as_tool_node, "tool_name")
-
-        try:
-            tool_description = get_string_keyword_arg(as_tool_node, "tool_description")
-        except (TypeError, ValueError):
-            tool_description = ""
+        if not tool_name:
+            raise ValueError(
+                "Missing required 'tool_name' keyword argument for as_tool call"
+            )
+        tool_description = (
+            get_string_keyword_arg(as_tool_node, "tool_description") or ""
+        )
 
         return Tool(name=tool_name, custom=True, description=tool_description)
 
