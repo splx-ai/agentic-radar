@@ -1,5 +1,13 @@
-from agentic_radar.analysis.crewai.models import CrewAIGraph, CrewAINodeType
+from agentic_radar.analysis.crewai.models import (
+    CrewAIAgent,
+    CrewAIGraph,
+    CrewAINodeType,
+)
+from agentic_radar.analysis.crewai.prompt import build_system_prompt
 from agentic_radar.analysis.crewai.tool_categorizer import categorize_tool
+from agentic_radar.graph import (
+    Agent as ReportAgent,
+)
 from agentic_radar.graph import (
     EdgeDefinition,
     GraphDefinition,
@@ -9,7 +17,9 @@ from agentic_radar.graph import (
 )
 
 
-def convert_graph(crewai_graph: CrewAIGraph) -> GraphDefinition:
+def convert_graph(
+    crewai_graph: CrewAIGraph, agents: dict[str, CrewAIAgent]
+) -> GraphDefinition:
     """Convert CrewAI Graph to GraphDefinition."""
     nodes = []
     edges = []
@@ -55,6 +65,25 @@ def convert_graph(crewai_graph: CrewAIGraph) -> GraphDefinition:
             )
         )
 
+    # Add Agent metadata
+    report_agents = []
+    try:
+        for agent_name, agent in agents.items():
+            if crewai_graph.is_agent_in_graph(agent_name):
+                system_prompt = build_system_prompt(agent)
+                report_agent = ReportAgent(
+                    name=agent_name, llm=agent.llm, system_prompt=system_prompt
+                )
+                report_agents.append(report_agent)
+    except ImportError:
+        print(
+            "CrewAI package is not installed. Skipping agent metadata. Install the package to use this feature."
+        )
+
     return GraphDefinition(
-        name=crewai_graph.name, nodes=nodes, edges=edges, tools=tools
+        name=crewai_graph.name,
+        nodes=nodes,
+        edges=edges,
+        agents=report_agents,
+        tools=tools,
     )

@@ -1,13 +1,21 @@
 import ast
 from typing import Optional
 
-from agentic_radar.analysis.crewai.models.tool import CrewAITool
+from pydantic import ValidationError
+
+from agentic_radar.analysis.crewai.models import (
+    CrewAIAgent,
+    CrewAITool,
+    PartialCrewAIAgent,
+)
 from agentic_radar.analysis.crewai.parsing.utils import (
     find_return_of_function_call,
+    get_bool_kwarg_value,
+    get_string_kwarg_value,
     is_function_call,
 )
 from agentic_radar.analysis.crewai.parsing.yaml_config import (
-    collect_agent_tools_from_config,
+    collect_agents_from_config,
 )
 from agentic_radar.analysis.crewai.tool_descriptions import (
     get_crewai_tools_descriptions,
@@ -31,7 +39,7 @@ class AgentsVisitor(ast.NodeVisitor):
         self.crewai_tool_descriptions = get_crewai_tools_descriptions()
 
         self.yaml_config_paths: list[str] = []
-        self.agent_tool_mapping: dict[str, list[CrewAITool]] = {}
+        self.agents: dict[str, PartialCrewAIAgent] = {}
 
     def _find_agent_return(self, node: ast.AST) -> Optional[ast.Call]:
         """
@@ -57,7 +65,7 @@ class AgentsVisitor(ast.NodeVisitor):
             agent_node: The Agent constructor AST node
 
         Returns:
-            A list of tool names used by this agent
+            A list of tools
         """
         tools = []
 
@@ -124,6 +132,42 @@ class AgentsVisitor(ast.NodeVisitor):
 
         self.yaml_config_paths.append(s)
 
+    def _extract_agent(self, agent_node: ast.Call) -> PartialCrewAIAgent:
+        """
+        Extract the agent from an Agent constructor node.
+
+        Args:
+            agent_node: The Agent constructor AST node
+
+        Returns:
+            A PartialCrewAIAgent object
+        """
+
+        role = get_string_kwarg_value(agent_node, "role")
+        goal = get_string_kwarg_value(agent_node, "goal")
+        backstory = get_string_kwarg_value(agent_node, "backstory")
+        system_template = get_string_kwarg_value(agent_node, "system_template")
+        prompt_template = get_string_kwarg_value(agent_node, "prompt_template")
+        response_template = get_string_kwarg_value(agent_node, "response_template")
+        use_system_prompt = get_bool_kwarg_value(agent_node, "use_system_prompt")
+        llm = get_string_kwarg_value(agent_node, "llm")
+        tools = self._extract_agent_tools(agent_node)
+
+        if use_system_prompt is None:
+            use_system_prompt = True
+
+        return PartialCrewAIAgent(
+            role=role,
+            goal=goal,
+            backstory=backstory,
+            tools=tools,
+            llm=llm,
+            system_template=system_template,
+            prompt_template=prompt_template,
+            response_template=response_template,
+            use_system_prompt=use_system_prompt,
+        )
+
     def visit_FunctionDef(self, node):
         """Track functions that return an Agent instance."""
 
@@ -132,8 +176,11 @@ class AgentsVisitor(ast.NodeVisitor):
             self.generic_visit(node)
             return
 
-        agent_tools = self._extract_agent_tools(agent_node)
-        self.agent_tool_mapping[node.name] = agent_tools
+        try:
+            agent = self._extract_agent(agent_node)
+            self.agents[node.name] = agent
+        except (ValueError, TypeError) as e:
+            print(f"Cannot extract agent {ast.dump(agent_node)}. Error: {e}")
 
         self.generic_visit(node)
 
@@ -150,8 +197,13 @@ class AgentsVisitor(ast.NodeVisitor):
         # Handles cases like agent = Agent(...)
         for target in node.targets:
             if isinstance(target, ast.Name):
-                agent_tools = self._extract_agent_tools(node.value)
-                self.agent_tool_mapping[target.id] = agent_tools
+                try:
+                    agent = self._extract_agent(node.value)
+                except (ValueError, TypeError) as e:
+                    print(f"Cannot extract agent {ast.dump(node.value)}. Error: {e}")
+                    continue
+
+                self.agents[target.id] = agent
 
         self.generic_visit(node)
 
@@ -170,8 +222,8 @@ def collect_agents(
     known_tool_aliases: set[str],
     predefined_tools: dict[str, CrewAITool],
     custom_tools: dict[str, CrewAITool],
-) -> dict[str, list[CrewAITool]]:
-    """Parses all Python modules in the given directory and collects agents together with their tools.
+) -> dict[str, CrewAIAgent]:
+    """Parses all Python modules and YAML configs in the given directory and collects agents.
 
     Args:
         root_dir (str): Path to the codebase directory
@@ -180,11 +232,12 @@ def collect_agents(
         custom_tools (dict[str, CrewAITool]): Dictionary mapping variable name to custom tool
 
     Returns:
-        dict[str, list[CrewAITool]]: A dictionary mapping agent names to their tools
+        dict[str, CrewAIAgent]: A dictionary mapping agent variable to CrewAIAgent object
     """
-    agent_tool_mapping: dict[str, list[CrewAITool]] = {}
-
-    yaml_file_to_agent_tool_mapping = collect_agent_tools_from_config(root_dir)
+    all_agents: dict[str, CrewAIAgent] = {}
+    yaml_file_to_agents: dict[
+        str, dict[str, PartialCrewAIAgent]
+    ] = collect_agents_from_config(root_dir)
 
     for file in walk_python_files(root_dir):
         with open(file, "r") as f:
@@ -199,22 +252,51 @@ def collect_agents(
                 custom_tools=custom_tools,
             )
             agents_visitor.visit(tree)
-            agent_tool_mapping |= agents_visitor.agent_tool_mapping
+            code_agents = agents_visitor.agents
 
-            # Add agent-tool mapping from YAML config files
+            # Add agents from found YAML config files
             for found_config_path in agents_visitor.yaml_config_paths:
                 for (
                     config_path,
-                    yaml_agent_tool_mapping,
-                ) in yaml_file_to_agent_tool_mapping.items():
+                    yaml_agents,
+                ) in yaml_file_to_agents.items():
                     if found_config_path not in config_path:
                         continue
-                    for yaml_agent, yaml_tools in yaml_agent_tool_mapping.items():
-                        if (
-                            yaml_tools
-                            and yaml_agent in agent_tool_mapping
-                            and not agent_tool_mapping[yaml_agent]
-                        ):
-                            agent_tool_mapping[yaml_agent] = yaml_tools
+                    for agent_name, yaml_agent in yaml_agents.items():
+                        if agent_name in code_agents:
+                            code_agent = code_agents[agent_name]
+                            try:
+                                agent = CrewAIAgent.from_partial_agents(
+                                    code_agent, yaml_agent
+                                )
+                            except (ValidationError, ValueError) as e:
+                                print(
+                                    f"Cannot merge agent {agent_name} from code and YAML config. Error: {e}"
+                                )
+                                continue
+                        else:
+                            try:
+                                agent = CrewAIAgent.from_partial_agent(yaml_agent)
+                            except (ValidationError, ValueError) as e:
+                                print(
+                                    f"Cannot create agent {agent_name} from YAML config: {yaml_agent}. Error: {e}"
+                                )
+                                continue
 
-    return agent_tool_mapping
+                        all_agents[agent_name] = agent
+
+            # Add agents from code
+            for agent_name, code_agent in code_agents.items():
+                if agent_name in all_agents:
+                    continue
+                try:
+                    agent = CrewAIAgent.from_partial_agent(code_agent)
+                except (ValidationError, ValueError) as e:
+                    print(
+                        f"Cannot create agent {agent_name} from code: {code_agent}. Error: {e}"
+                    )
+                    continue
+
+                all_agents[agent_name] = agent
+
+    return all_agents

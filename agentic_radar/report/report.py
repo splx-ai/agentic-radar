@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 from agentic_radar import __version__
 
-from ..graph import NodeType
+from ..graph import Agent, NodeType
 from .graph import (
     GraphDefinition,
     from_definition,
@@ -37,6 +37,7 @@ class ReportData(BaseModel):
 
     count: Dict[str, int]
 
+    agents: List[Agent]
     tools: List[Tool]
     scanner_version: str
 
@@ -53,6 +54,7 @@ def generate(graph: GraphDefinition, out_file: str):
     )
 
     template = env.get_template("template.html.jinja")
+    agents = [Agent.model_validate(a, from_attributes=True) for a in graph.agents]
     tools = [Tool.model_validate(t, from_attributes=True) for t in graph.tools]
     template.stream(
         **ReportData(
@@ -69,6 +71,7 @@ def generate(graph: GraphDefinition, out_file: str):
                     [v for t in graph.tools for v in t.vulnerabilities]
                 ),
             },
+            agents=agents,
             tools=tools,
             scanner_version=__version__,
             force_graph_dependency_path=str(

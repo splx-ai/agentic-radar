@@ -41,6 +41,7 @@ class GraphDefinition(BaseModel):
     nodes: List[NodeDefinition]
     edges: List[EdgeDefinition]
 
+    agents: List[graph.Agent] = Field(default_factory=list)
     tools: List[NodeDefinition] = Field(default_factory=list)
 
 
