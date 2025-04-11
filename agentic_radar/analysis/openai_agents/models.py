@@ -13,3 +13,5 @@ class Agent(BaseModel):
     name: str
     tools: list[Tool]
     handoffs: list[str]
+    instructions: Optional[str] = None
+    model: Optional[str] = None

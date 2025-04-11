@@ -152,7 +152,7 @@ def has_decorator(
     return find_decorator_by_name(node, decorator_name) is not None
 
 
-def get_string_keyword_arg(node: ast.Call, keyword_name: str) -> str:
+def get_string_keyword_arg(node: ast.Call, keyword_name: str) -> Optional[str]:
     """
     Extract the value of a keyword argument from an ast.Call node if it is a string.
 
@@ -161,11 +161,11 @@ def get_string_keyword_arg(node: ast.Call, keyword_name: str) -> str:
         keyword_name (str): The name of the keyword argument to extract.
 
     Returns:
-        str: The string value of the keyword argument.
+        Optional[str]: The string value of the keyword argument, or None if the keyword argument is missing.
 
     Raises:
-        ValueError: If the keyword argument is missing or not a string.
         TypeError: If the node is not an ast.Call instance.
+        ValueError: If the keyword argument is not a string.
     """
     if not isinstance(node, ast.Call):
         raise TypeError(f"Expected ast.Call, got {type(node).__name__}")
@@ -173,7 +173,7 @@ def get_string_keyword_arg(node: ast.Call, keyword_name: str) -> str:
     keyword_value = get_keyword_arg_value(node, keyword_name)
 
     if keyword_value is None:
-        raise ValueError(f"Keyword argument '{keyword_name}' not found")
+        return None
 
     if not (
         isinstance(keyword_value, ast.Constant) and isinstance(keyword_value.value, str)
