@@ -4,6 +4,7 @@ import time
 from typing import Optional
 
 import typer
+from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing_extensions import Annotated
 
@@ -17,6 +18,9 @@ from agentic_radar.analysis import (
 )
 from agentic_radar.graph import Agent
 from agentic_radar.mapper import map_vulnerabilities
+from agentic_radar.prompt_enhancer.enhancer import enhance_prompts
+from agentic_radar.prompt_enhancer.pipeline import PromptEnhancingPipeline
+from agentic_radar.prompt_enhancer.steps import OpenAIGeneratorStep
 from agentic_radar.report import (
     EdgeDefinition,
     GraphDefinition,
@@ -25,10 +29,14 @@ from agentic_radar.report import (
 )
 from agentic_radar.utils import sanitize_graph
 
+load_dotenv()
+
 
 class Args(BaseModel):
     input_directory: str
     output_file: str
+    enhance_prompts: bool
+
     version: Optional[bool]
 
 
@@ -62,6 +70,15 @@ def _main(
             envvar="AGENTIC_RADAR_OUTPUT_FILE",
         ),
     ] = f"report_{datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d_%H%M%S')}.html",
+    enhance_prompts: Annotated[
+        bool,
+        typer.Option(
+            "--enhance-prompts",
+            help="Enhance detected system prompts.",
+            is_flag=True,
+            envvar="AGENTIC_RADAR_ENHANCE_PROMPTS",
+        ),
+    ] = False,
     version: Annotated[
         Optional[bool],
         typer.Option("--version", callback=version_callback, is_eager=True),
@@ -74,7 +91,10 @@ def _main(
         raise typer.Exit(code=1)
 
     args = Args(
-        input_directory=input_directory, output_file=output_file, version=version
+        input_directory=input_directory,
+        output_file=output_file,
+        enhance_prompts=enhance_prompts,
+        version=version,
     )
 
 
@@ -91,6 +111,14 @@ def analyze_and_generate_report(framework: str, analyzer: Analyzer):
 
     print("Mapping vulnerabilities")
     map_vulnerabilities(graph)
+
+    if args.enhance_prompts:
+        print("Enhancing system prompts")
+        pipeline = PromptEnhancingPipeline([OpenAIGeneratorStep()])
+        enhanced_prompts = enhance_prompts(graph.agents, pipeline)
+    else:
+        enhanced_prompts = {}
+
     pydot_graph = GraphDefinition(
         framework=framework,
         name=graph.name,
@@ -104,6 +132,7 @@ def analyze_and_generate_report(framework: str, analyzer: Analyzer):
         tools=[
             NodeDefinition.model_validate(t, from_attributes=True) for t in graph.tools
         ],
+        enhanced_prompts=enhanced_prompts,
     )
     print("Generating report")
     generate(pydot_graph, args.output_file)

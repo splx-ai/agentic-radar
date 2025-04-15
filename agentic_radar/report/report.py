@@ -45,6 +45,7 @@ class ReportData(BaseModel):
     agents: List[Agent]
     tools: List[Tool]
     mcp_servers: List[MCPServer]
+    enhanced_prompts: Dict[str, str]
     scanner_version: str
 
     force_graph_dependency_path: str
@@ -85,6 +86,7 @@ def generate(graph: GraphDefinition, out_file: str):
             agents=agents,
             tools=tools,
             mcp_servers=mcp_servers,
+            enhanced_prompts=graph.enhanced_prompts,
             scanner_version=__version__,
             force_graph_dependency_path=str(
                 resources.files(__package__) / "templates" / "assets" / "force-graph.js"
