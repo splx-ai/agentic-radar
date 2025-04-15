@@ -73,6 +73,12 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li>
+      <a href="#advanced-features-">Advanced Features</a>
+      <ul>
+        <li><a href="#prompt-enhancement">Prompt Enhancement</a></li>
+      </ul>
+    </li>
     <li><a href="#roadmap-">Roadmap</a></li>
     <li><a href="#demo-">Demo</a></li>
     <li><a href="#blog-tutorials-">Blog Tutorials</a></li>
@@ -151,6 +157,7 @@ Options:
   -o, --output-file TEXT          Where should the output report be stored
                                   [env var: AGENTIC_RADAR_OUTPUT_FILE;
                                   default: report_20250311_122338.html]
+  --enhance-prompts               Enhance detected system prompts. [env var: AGENTIC_RADAR_ENHANCE_PROMPTS] 
   --version
   --install-completion [bash|zsh|fish|powershell|pwsh]
                                   Install completion for the specified shell.
@@ -166,6 +173,27 @@ Commands:
   openai-agents   Scan code written with OpenAI Agents SDK 
 ```
 
+## Advanced Features ✨
+
+### Prompt Enhancement
+
+Prompt Enhancement automatically improves detected system prompts in your agentic workflow and displays them in the report. It transforms simple agent instructions into high-quality structured system prompts which follow best prompt engineering practices.
+
+It is quite straightforward to use:
+1. Copy `.env.example` to `.env` file by running:
+```sh
+cp .env.example .env
+```
+2. Store your OpenAI API key and other necessary information in the `.env` file.
+
+3. Run Agentic Radar with the `--enhance-prompts` flag, for example:
+```sh
+agentic-radar --enhance-prompts -i examples/openai-agents/
+basic/lifecycle_example -o report.html openai-agents
+```
+
+4. Inspect enhanced system prompts in the generated report:
+<img src="docs/prompt_enhancement.png"/>
 
 ## Roadmap 📈
 
@@ -214,7 +242,7 @@ If you like what you see, give us a star! It keeps us inspired to improve and in
 ## Frequently Asked Questions ❓
 
 **Q: Is my source code being shared or is everything running locally?**  
-A: Everything is running locally. Your source code is never uploaded anywhere.
+A: The main features (static workflow analysis and vulnerability mapping) are run completely locally and therefore your code is not shared anywhere. For optional advanced features, LLM's might be used. Eg. when using [Prompt Enhancement](#prompt-enhancement), detected system prompts can get sent to LLM for analysis.
 
 ## Contributing 💻 
 
