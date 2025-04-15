@@ -1150,6 +1150,20 @@ files = [
 ]
 
 [[package]]
+name = "dotenv"
+version = "0.9.9"
+description = "Deprecated package"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "dotenv-0.9.9-py2.py3-none-any.whl", hash = "sha256:29cf74a087b31dafdb5a446b6d7e11cbce8ed2741540e2339c69fbef92c94ce9"},
+]
+
+[package.dependencies]
+python-dotenv = "*"
+
+[[package]]
 name = "durationpy"
 version = "0.9"
 description = "Module for converting between datetime.timedelta and Go's Duration strings."
@@ -4877,10 +4891,9 @@ six = ">=1.5"
 name = "python-dotenv"
 version = "1.1.0"
 description = "Read key-value pairs from a .env file and set them as environment variables"
-optional = true
+optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and extra == \"crewai\" and python_version < \"3.13\""
 files = [
     {file = "python_dotenv-1.1.0-py3-none-any.whl", hash = "sha256:d7c01d9e2293916c18baf562d95698754b0dbbb5e74d457c45d4f6561fb9d55d"},
     {file = "python_dotenv-1.1.0.tar.gz", hash = "sha256:41f90bc6f5f177fb41f53e87666db362025010eb28f60a01c9143bfa33a2b2d5"},
@@ -6737,4 +6750,4 @@ langgraph = []
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9"
-content-hash = "53b6557d74db17d46979437a69fcfe702142f4f0dd28385abc1cb2fa40e38591"
+content-hash = "a0428523d2458725e18befdc625083d72f31eb4edfe45ee3183d6fca638a7428"
