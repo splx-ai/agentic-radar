@@ -4,7 +4,7 @@ from pydantic import ValidationError
 
 from ...utils import walk_python_files
 from ..exceptions import InvalidAgentConstructorError, InvalidHandoffDefinitionError
-from ..models import Agent, Tool
+from ..models import Agent, MCPServerInfo, Tool
 from .ast_utils import (
     get_keyword_arg_value,
     get_nth_arg_value,
@@ -20,11 +20,15 @@ class AgentsVisitor(ast.NodeVisitor):
     HANDOFF_FUNCTION_NAME = "handoff"
 
     def __init__(
-        self, tool_assignments: dict[str, Tool], predefined_tools: dict[str, Tool]
+        self,
+        tool_assignments: dict[str, Tool],
+        predefined_tools: dict[str, Tool],
+        mcp_servers: dict[str, MCPServerInfo],
     ):
         super().__init__()
         self.tool_assignments = tool_assignments
         self.predefined_tools = predefined_tools
+        self.mcp_servers = mcp_servers
         self.handoff_assignments: dict[str, str] = {}
         self.agent_assignments: dict[str, Agent] = {}
 
@@ -78,6 +82,7 @@ class AgentsVisitor(ast.NodeVisitor):
                 instructions = None
 
             model = get_string_keyword_arg(agent_node, "model")
+            mcp_servers = self._extract_agent_mcp_servers(agent_node)
 
             return Agent(
                 name=name,
@@ -85,6 +90,7 @@ class AgentsVisitor(ast.NodeVisitor):
                 handoffs=handoffs,
                 instructions=instructions,
                 model=model,
+                mcp_servers=mcp_servers,
             )
         except (ValueError, ValidationError, ValueError) as e:
             raise InvalidAgentConstructorError from e
@@ -138,6 +144,31 @@ class AgentsVisitor(ast.NodeVisitor):
                 )
 
         return handoffs
+
+    def _extract_agent_mcp_servers(self, agent_node: ast.Call) -> list[MCPServerInfo]:
+        mcp_servers_node = get_keyword_arg_value(agent_node, "mcp_servers")
+        if not mcp_servers_node or not isinstance(mcp_servers_node, ast.List):
+            return []
+
+        mcp_servers = []
+        for mcp_server_node in mcp_servers_node.elts:
+            try:
+                if not is_simple_identifier(mcp_server_node):
+                    raise ValueError(
+                        f"Unrecognized MCP server node: {ast.dump(mcp_server_node)}"
+                    )
+                mcp_server_var = get_simple_identifier_name(mcp_server_node)
+                if mcp_server_var in self.mcp_servers:
+                    mcp_server_info = self.mcp_servers[mcp_server_var]
+                    mcp_servers.append(mcp_server_info)
+                else:
+                    print("Unrecognized MCP server variable: ", mcp_server_var)
+            except ValueError as e:
+                print(
+                    f"Could not parse agent MCP server node {ast.dump(mcp_server_node)}. Error: {e}"
+                )
+
+        return mcp_servers
 
     def _extract_agent_tool(self, tool_node: ast.AST) -> Tool:
         if is_simple_identifier(tool_node):
@@ -220,7 +251,10 @@ class AgentsVisitor(ast.NodeVisitor):
 
 
 def collect_agent_assignments(
-    root_dir: str, tool_assignments: dict[str, Tool], predefined_tools: dict[str, Tool]
+    root_dir: str,
+    tool_assignments: dict[str, Tool],
+    predefined_tools: dict[str, Tool],
+    mcp_servers: dict[str, MCPServerInfo],
 ) -> dict[str, Agent]:
     agent_assignments: dict[str, Agent] = {}
     for file in walk_python_files(root_dir):
@@ -231,7 +265,9 @@ def collect_agent_assignments(
                 print(f"Cannot parse Python module: {file}. Error: {e}")
                 continue
             agents_visitor = AgentsVisitor(
-                tool_assignments=tool_assignments, predefined_tools=predefined_tools
+                tool_assignments=tool_assignments,
+                predefined_tools=predefined_tools,
+                mcp_servers=mcp_servers,
             )
             agents_visitor.visit(tree)
             agent_assignments |= agents_visitor.agent_assignments

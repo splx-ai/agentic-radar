@@ -4,6 +4,7 @@ from agentic_radar.analysis.analyze import Analyzer
 from agentic_radar.analysis.openai_agents.graph import create_graph_definition
 from agentic_radar.analysis.openai_agents.parsing import (
     collect_agent_assignments,
+    collect_mcp_servers,
     collect_tool_assignments,
     load_predefined_tools,
 )
@@ -20,10 +21,12 @@ class OpenAIAgentsAnalyzer(Analyzer):
     def analyze(self, root_directory: str) -> GraphDefinition:
         tool_assignments = collect_tool_assignments(root_directory)
         predefined_tools = load_predefined_tools()
+        mcp_servers = collect_mcp_servers(root_directory)
         agent_assignments = collect_agent_assignments(
             root_dir=root_directory,
             tool_assignments=tool_assignments,
             predefined_tools=predefined_tools,
+            mcp_servers=mcp_servers,
         )
         tool_categories = load_tool_categories()
         graph_definition = create_graph_definition(

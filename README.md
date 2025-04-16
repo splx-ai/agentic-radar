@@ -56,7 +56,7 @@
   </h4>
 </div>
 
-<img src="https://github.com/splx-ai/agentic-radar/raw/main/docs/overview_image.png"/>
+<img src="docs/overview_image.png"/>
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -91,7 +91,8 @@ The **Agentic Radar** is designed to analyze and assess agentic systems for secu
 It allows users to create a security report for agentic systems, including:
 1. **Workflow Visualization** - a graph of the agentic system's workflow✅
 2. **Tool Identification** - a list of all external and custom tools utilized by the system✅
-3. **Vulnerability Mapping** - a table connecting identified tools to known vulnerabilities, providing a security overview✅
+3. **MCP Server Detection** - a list of all MCP servers used by system's agents✅
+4. **Vulnerability Mapping** - a table connecting identified tools to known vulnerabilities, providing a security overview✅
 
 The comprehensive HTML report summarizes all findings and allows for easy reviewing and sharing.
 
