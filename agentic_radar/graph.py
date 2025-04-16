@@ -9,6 +9,7 @@ class NodeType(Enum):
     BASIC = "basic"
     TOOL = "tool"
     CUSTOM_TOOL = "custom_tool"
+    MCP_SERVER = "mcp_server"
     DEFAULT = "default"
 
     def __str__(self) -> str:

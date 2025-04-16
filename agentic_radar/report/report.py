@@ -29,6 +29,11 @@ class Tool(BaseModel):
     vulnerabilities: List[Vulnerability] = Field(default_factory=list)
 
 
+class MCPServer(BaseModel):
+    name: str
+    description: str
+
+
 class ReportData(BaseModel):
     project_name: str
     framework: str
@@ -39,6 +44,7 @@ class ReportData(BaseModel):
 
     agents: List[Agent]
     tools: List[Tool]
+    mcp_servers: List[MCPServer]
     scanner_version: str
 
     force_graph_dependency_path: str
@@ -56,6 +62,11 @@ def generate(graph: GraphDefinition, out_file: str):
     template = env.get_template("template.html.jinja")
     agents = [Agent.model_validate(a, from_attributes=True) for a in graph.agents]
     tools = [Tool.model_validate(t, from_attributes=True) for t in graph.tools]
+    mcp_servers = [
+        MCPServer(name=node.name, description=node.description or "")
+        for node in graph.nodes
+        if node.node_type == NodeType.MCP_SERVER
+    ]
     template.stream(
         **ReportData(
             project_name=graph.name,
@@ -73,6 +84,7 @@ def generate(graph: GraphDefinition, out_file: str):
             },
             agents=agents,
             tools=tools,
+            mcp_servers=mcp_servers,
             scanner_version=__version__,
             force_graph_dependency_path=str(
                 resources.files(__package__) / "templates" / "assets" / "force-graph.js"

@@ -5,13 +5,7 @@ from pydantic import BaseModel, Field
 from ... import graph
 from .edge import ConditionalEdge, DefaultEdge, Edge
 from .graph import Graph
-from .node import (
-    AgentNode,
-    BasicNode,
-    CustomToolNode,
-    Node,
-    ToolNode,
-)
+from .node import AgentNode, BasicNode, CustomToolNode, MCPServerNode, Node, ToolNode
 
 
 class NodeDefinition(graph.NodeDefinition):
@@ -24,6 +18,8 @@ class NodeDefinition(graph.NodeDefinition):
             return ToolNode(self.name, self.label or self.name, self.category)
         if self.node_type == graph.NodeType.CUSTOM_TOOL:
             return CustomToolNode(self.name, self.label or self.name)
+        if self.node_type == graph.NodeType.MCP_SERVER:
+            return MCPServerNode(self.name, self.label or self.name)
         raise ValueError(f"Unknown node type: {self.node_type}")
 
 

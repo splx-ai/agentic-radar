@@ -1,3 +1,5 @@
+import json
+
 from agentic_radar.analysis.openai_agents.models import Agent, Tool
 from agentic_radar.graph import (
     Agent as ReportAgent,
@@ -19,6 +21,8 @@ def create_graph_definition(
     nodes = []
     edges = []
     tools = []
+
+    graph_mcp_server_nodes: set[str] = set()
 
     for agent in agent_assignments.values():
         nodes.append(_get_agent_node(agent))
@@ -49,6 +53,22 @@ def create_graph_definition(
                         condition=edge_condition,
                     )
                 )
+
+        for mcp_server in agent.mcp_servers:
+            name = mcp_server.name or mcp_server.var
+            description = mcp_server.params
+            description["type"] = "STDIO" if mcp_server.type == "stdio" else "SSE"
+            mcp_server_node = NodeDefinition(
+                type=NodeType.MCP_SERVER,
+                name=name,
+                label=name,
+                description=json.dumps(description),
+            )
+            if name not in graph_mcp_server_nodes:
+                nodes.append(mcp_server_node)
+                graph_mcp_server_nodes.add(name)
+
+            edges.append(EdgeDefinition(start=agent.name, end=name, condition="mcp"))
 
     nodes, edges = _add_start_end_nodes(nodes=nodes, edges=edges)
 

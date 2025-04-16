@@ -62,3 +62,14 @@ class CustomToolNode(Node):
                 str(resources.files(__package__) / "assets" / "custom_tool.svg")
             ),
         )
+
+
+class MCPServerNode(Node):
+    def __init__(self, name: str, label: str):
+        super().__init__(
+            name=name,
+            label=label,
+            image=_image_to_data_url(
+                str(resources.files(__package__) / "assets" / "mcp_server.svg")
+            ),
+        )
