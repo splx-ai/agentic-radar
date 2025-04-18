@@ -179,6 +179,9 @@ Commands:
 
 Prompt Enhancement automatically improves detected system prompts in your agentic workflow and displays them in the report. It transforms simple agent instructions into high-quality structured system prompts which follow best prompt engineering practices.
 
+> [!NOTE]  
+> Currently supported frameworks (with more to come): OpenAI Agents, CrewAI
+
 It is quite straightforward to use:
 1. Copy `.env.example` to `.env` file by running:
 ```sh
