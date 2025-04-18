@@ -80,34 +80,53 @@ def _main(
 
 def analyze_and_generate_report(framework: str, analyzer: Analyzer):
     print(f"Analyzing {args.input_directory} for {framework} graphs")
-    graph = analyzer.analyze(args.input_directory)
+    result = analyzer.analyze(args.input_directory)
 
-    if len(graph.nodes) <= 2:  # Only start and end nodes are present
+    # Handle both single GraphDefinition and list of GraphDefinitions
+    graphs = result if isinstance(result, list) else [result]
+
+    if not graphs:
         print(
             f"Agentic Radar didn't find any agentic workflow in input directory: {args.input_directory}"
         )
         raise typer.Exit(code=1)
-    sanitize_graph(graph)
 
-    print("Mapping vulnerabilities")
-    map_vulnerabilities(graph)
-    pydot_graph = GraphDefinition(
-        framework=framework,
-        name=graph.name,
-        nodes=[
-            NodeDefinition.model_validate(n, from_attributes=True) for n in graph.nodes
-        ],
-        edges=[
-            EdgeDefinition.model_validate(e, from_attributes=True) for e in graph.edges
-        ],
-        agents=[Agent.model_validate(a, from_attributes=True) for a in graph.agents],
-        tools=[
-            NodeDefinition.model_validate(t, from_attributes=True) for t in graph.tools
-        ],
-    )
-    print("Generating report")
-    generate(pydot_graph, args.output_file)
-    print(f"Report {args.output_file} generated")
+    for i, graph in enumerate(graphs):
+        if len(graph.nodes) <= 2:  # Only start and end nodes are present
+            print(f"Skipping workflow '{graph.name}' as it doesn't contain any agentic nodes")
+            continue
+
+        sanitize_graph(graph)
+
+        print(f"Mapping vulnerabilities for workflow '{graph.name}'")
+        map_vulnerabilities(graph)
+        pydot_graph = GraphDefinition(
+            framework=framework,
+            name=graph.name,
+            nodes=[
+                NodeDefinition.model_validate(n, from_attributes=True) for n in graph.nodes
+            ],
+            edges=[
+                EdgeDefinition.model_validate(e, from_attributes=True) for e in graph.edges
+            ],
+            agents=[Agent.model_validate(a, from_attributes=True) for a in graph.agents],
+            tools=[
+                NodeDefinition.model_validate(t, from_attributes=True) for t in graph.tools
+            ],
+        )
+
+        # Generate a unique output file name for each workflow
+        if len(graphs) > 1:
+            base_name, ext = os.path.splitext(args.output_file)
+            # Sanitize workflow name for use in filename
+            safe_name = "".join(c if c.isalnum() else "_" for c in graph.name)
+            output_file = f"{base_name}_{safe_name}{ext}"
+        else:
+            output_file = args.output_file
+
+        print(f"Generating report for workflow '{graph.name}'")
+        generate(pydot_graph, output_file)
+        print(f"Report {output_file} generated")
 
 
 @app.command("langgraph", help="Scan code written with LangGraph")
