@@ -10,8 +10,9 @@ from .parsing import parse_n8n_connections, parse_n8n_nodes
 
 
 class N8nAnalyzer(Analyzer):
-    def __init__(self):
+    def __init__(self, connected_only=False):
         super().__init__()
+        self.connected_only = connected_only
 
     def parse_n8n_config_file(
         self, file_path: str
@@ -44,6 +45,11 @@ class N8nAnalyzer(Analyzer):
                     n8n_nodes, n8n_connections, workflow_name = self.parse_n8n_config_file(file_path)
 
                     if n8n_nodes and n8n_connections:
+                        # Skip workflows without connections if connected_only is True
+                        if self.connected_only and not n8n_connections:
+                            print(f"Skipping workflow '{workflow_name}' as it has no connections")
+                            continue
+                            
                         nodes, tools = convert_nodes(n8n_nodes)
                         edges = convert_connections(n8n_connections)
 

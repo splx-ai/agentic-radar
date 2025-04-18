@@ -140,8 +140,17 @@ def crewai():
 
 
 @app.command("n8n", help="Scan a n8n workflow configuration JSON")
-def n8n():
-    analyze_and_generate_report("n8n", N8nAnalyzer())
+def n8n(
+    connected_only: Annotated[
+        bool,
+        typer.Option(
+            "--connected-only",
+            help="Only generate reports for workflows with connected nodes",
+        ),
+    ] = False,
+):
+    print(f"Connected-only mode: {'Enabled' if connected_only else 'Disabled'}")
+    analyze_and_generate_report("n8n", N8nAnalyzer(connected_only=connected_only))
 
 
 @app.command("openai-agents", help="Scan code written with OpenAI Agents SDK")
