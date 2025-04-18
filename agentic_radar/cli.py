@@ -148,9 +148,17 @@ def n8n(
             help="Only generate reports for workflows with connected nodes",
         ),
     ] = False,
+    langchain_only: Annotated[
+        bool,
+        typer.Option(
+            "--langchain-only",
+            help="Only generate reports for workflows that contain LangChain nodes",
+        ),
+    ] = False,
 ):
     print(f"Connected-only mode: {'Enabled' if connected_only else 'Disabled'}")
-    analyze_and_generate_report("n8n", N8nAnalyzer(connected_only=connected_only))
+    print(f"LangChain-only mode: {'Enabled' if langchain_only else 'Disabled'}")
+    analyze_and_generate_report("n8n", N8nAnalyzer(connected_only=connected_only, langchain_only=langchain_only))
 
 
 @app.command("openai-agents", help="Scan code written with OpenAI Agents SDK")
