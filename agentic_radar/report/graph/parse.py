@@ -39,6 +39,7 @@ class GraphDefinition(BaseModel):
 
     agents: List[graph.Agent] = Field(default_factory=list)
     tools: List[NodeDefinition] = Field(default_factory=list)
+    enhanced_prompts: dict[str, str] = Field(default_factory=dict)
 
 
 def from_definition(definition: GraphDefinition) -> Graph:
