@@ -42,6 +42,8 @@ class NodeDefinition(BaseModel):
     label: Optional[str] = None
     category: Optional[ToolType] = None
     vulnerabilities: List[VulnerabilityDefinition] = Field(default_factory=list)
+    position_x: Optional[float] = None
+    position_y: Optional[float] = None
 
 
 class EdgeDefinition(BaseModel):

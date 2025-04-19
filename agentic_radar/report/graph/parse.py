@@ -11,15 +11,15 @@ from .node import AgentNode, BasicNode, CustomToolNode, MCPServerNode, Node, Too
 class NodeDefinition(graph.NodeDefinition):
     def parse(self) -> Node:
         if self.node_type == graph.NodeType.AGENT:
-            return AgentNode(self.name, self.label or self.name)
+            return AgentNode(self.name, self.label or self.name, self.position_x, self.position_y)
         if self.node_type == graph.NodeType.BASIC:
-            return BasicNode(self.name, self.label or self.name)
+            return BasicNode(self.name, self.label or self.name, self.position_x, self.position_y)
         if self.node_type == graph.NodeType.TOOL:
-            return ToolNode(self.name, self.label or self.name, self.category)
+            return ToolNode(self.name, self.label or self.name, self.category, self.position_x, self.position_y)
         if self.node_type == graph.NodeType.CUSTOM_TOOL:
-            return CustomToolNode(self.name, self.label or self.name)
+            return CustomToolNode(self.name, self.label or self.name, self.position_x, self.position_y)
         if self.node_type == graph.NodeType.MCP_SERVER:
-            return MCPServerNode(self.name, self.label or self.name)
+            return MCPServerNode(self.name, self.label or self.name, self.position_x, self.position_y)
         raise ValueError(f"Unknown node type: {self.node_type}")
 
 

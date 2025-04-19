@@ -22,17 +22,19 @@ class N8nAnalyzer(Analyzer):
         langchain_only (bool): If True, only include workflows with LangChain nodes.
     """
     
-    def __init__(self, connected_only=False, langchain_only=False):
+    def __init__(self, connected_only=False, langchain_only=False, use_n8n_positions=False):
         """
         Initialize the n8n analyzer.
         
         Args:
             connected_only (bool): If True, only include workflows with connections.
             langchain_only (bool): If True, only include workflows with LangChain nodes.
+            use_n8n_positions (bool): If True, use position data from n8n workflows.
         """
         super().__init__()
         self.connected_only = connected_only
         self.langchain_only = langchain_only
+        self.use_n8n_positions = use_n8n_positions
         self.logger = logging.getLogger(__name__)
 
     def parse_n8n_config_file(
@@ -163,7 +165,7 @@ class N8nAnalyzer(Analyzer):
                         skipped_count += 1
                         continue
                         
-                    nodes, tools = convert_nodes(n8n_nodes)
+                    nodes, tools = convert_nodes(n8n_nodes, self.use_n8n_positions)
                     edges = convert_connections(n8n_connections)
                     
                     # Ensure all nodes referenced in edges exist in the nodes list

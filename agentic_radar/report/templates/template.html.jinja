@@ -354,12 +354,18 @@ const __INLINE_DATA = {{graph}};
     const nodes = __INLINE_DATA.nodes;
     const links = __INLINE_DATA.edges;
 
+    // Process nodes to include image objects and check for position data
     const gData = {
         nodes: nodes.map((n) => {
             const img = new Image();
             if (n.image) {
                 img.src = n.image;
                 n.image = img;
+            }
+            // If x and y coordinates exist, store them as fx and fy (fixed position)
+            if (n.x !== null && n.y !== null) {
+                n.fx = n.x;
+                n.fy = n.y;
             }
             return n;
         }), 
@@ -390,14 +396,22 @@ const __INLINE_DATA = {{graph}};
 
         })
         .nodeCanvasObjectMode(() => "replace")
-        .warmupTicks(250)
+        .warmupTicks(n => {
+            // Use fewer warmup ticks if positions are defined for nodes
+            const hasPositions = nodes.some(node => node.fx !== undefined || node.fy !== undefined);
+            return hasPositions ? 50 : 250;
+        })
         .cooldownTime(50)
         .enableNodeDrag(true)
         .graphData(gData)
     ;
     graph.d3Force('center', null);
     graph.onEngineStop(() => {
-        graph.zoomToFit(1000, 16)
+        // Only zoom to fit if no positions were defined
+        const hasPositions = nodes.some(node => node.fx !== undefined || node.fy !== undefined);
+        if (!hasPositions) {
+            graph.zoomToFit(1000, 16);
+        }
     });
 </script>
 </body>

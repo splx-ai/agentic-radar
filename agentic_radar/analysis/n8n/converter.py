@@ -13,6 +13,7 @@ from .models import N8nConnection, N8nNode
 
 def convert_nodes(
     n8n_nodes: List[N8nNode],
+    use_n8n_positions: bool = False
 ) -> Tuple[List[NodeDefinition], List[NodeDefinition]]:
     nodes = []
     tools = []
@@ -27,6 +28,18 @@ def convert_nodes(
         elif n8n_node.type.strip("tool") in n8n_node_types_dict:
             type = n8n_node_types_dict.get(n8n_node.type.strip("tool"))
 
+        # Extract position coordinates if available
+        position_x = None
+        position_y = None
+        if n8n_node.position and len(n8n_node.position) >= 2 and use_n8n_positions:
+            # Scale down position values to reduce distance between nodes
+            position_x = n8n_node.position[0] / 3
+            position_y = n8n_node.position[1] / 3
+        elif n8n_node.position and len(n8n_node.position) >= 2:
+            # When not using scaled positions, still store the original positions
+            position_x = None
+            position_y = None
+
         if type:
             if type.get("tool_type", False):
                 nodes.append(
@@ -35,6 +48,8 @@ def convert_nodes(
                         name=n8n_node.name,
                         label=n8n_node.name,
                         category=type.get("tool_type"),
+                        position_x=position_x,
+                        position_y=position_y
                     )
                 )
 
@@ -44,6 +59,8 @@ def convert_nodes(
                         name=n8n_node.name,
                         label=n8n_node.name,
                         category=type.get("tool_type"),
+                        position_x=position_x,
+                        position_y=position_y
                     )
                 )
             else:
@@ -52,8 +69,21 @@ def convert_nodes(
                         type=type.get("node_type"),
                         name=n8n_node.name,
                         label=n8n_node.name,
+                        position_x=position_x,
+                        position_y=position_y
                     )
                 )
+        else:
+            # For any node type not found in the dictionary, create a basic node
+            nodes.append(
+                NodeDefinition(
+                    type=NodeType.BASIC,
+                    name=n8n_node.name,
+                    label=n8n_node.name,
+                    position_x=position_x,
+                    position_y=position_y
+                )
+            )
 
     return nodes, tools
 

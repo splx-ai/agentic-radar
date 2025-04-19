@@ -155,10 +155,18 @@ def n8n(
             help="Only generate reports for workflows that contain LangChain nodes",
         ),
     ] = False,
+    use_n8n_positions: Annotated[
+        bool,
+        typer.Option(
+            "--use-n8n-positions",
+            help="Use position data from n8n workflows to maintain the original layout",
+        ),
+    ] = False,
 ):
     print(f"Connected-only mode: {'Enabled' if connected_only else 'Disabled'}")
     print(f"LangChain-only mode: {'Enabled' if langchain_only else 'Disabled'}")
-    analyze_and_generate_report("n8n", N8nAnalyzer(connected_only=connected_only, langchain_only=langchain_only))
+    print(f"Use n8n positions: {'Enabled' if use_n8n_positions else 'Disabled'}")
+    analyze_and_generate_report("n8n", N8nAnalyzer(connected_only=connected_only, langchain_only=langchain_only, use_n8n_positions=use_n8n_positions))
 
 
 @app.command("openai-agents", help="Scan code written with OpenAI Agents SDK")
