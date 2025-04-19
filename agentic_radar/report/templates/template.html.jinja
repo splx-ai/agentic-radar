@@ -407,11 +407,9 @@ const __INLINE_DATA = {{graph}};
     ;
     graph.d3Force('center', null);
     graph.onEngineStop(() => {
-        // Only zoom to fit if no positions were defined
-        const hasPositions = nodes.some(node => node.fx !== undefined || node.fy !== undefined);
-        if (!hasPositions) {
-            graph.zoomToFit(1000, 16);
-        }
+        // Always zoom to fit the graph regardless of whether positions are defined
+        // This ensures the camera centers on all nodes when using n8n positions
+        graph.zoomToFit(1000, 16);
     });
 </script>
 </body>
