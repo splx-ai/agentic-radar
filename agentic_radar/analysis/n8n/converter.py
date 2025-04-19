@@ -33,8 +33,8 @@ def convert_nodes(
         position_y = None
         if n8n_node.position and len(n8n_node.position) >= 2 and use_n8n_positions:
             # Scale down position values to reduce distance between nodes
-            position_x = n8n_node.position[0] / 3
-            position_y = n8n_node.position[1] / 3
+            position_x = n8n_node.position[0] / 5
+            position_y = n8n_node.position[1] / 5
         elif n8n_node.position and len(n8n_node.position) >= 2:
             # When not using scaled positions, still store the original positions
             position_x = None
