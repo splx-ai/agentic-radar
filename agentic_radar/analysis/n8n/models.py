@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, Field
 
@@ -7,6 +7,7 @@ class N8nNode(BaseModel):
     type: str = Field(..., description="Type of the node")
     name: str = Field(..., description="Name of the node")
     id: str = Field(..., description="Id of the node")
+    position: Optional[List[float]] = Field(default=None, description="Position of the node [x, y]")
 
 
 class N8nConnection(BaseModel):

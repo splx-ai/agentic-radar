@@ -6,8 +6,18 @@ from .models import N8nConnection, N8nNode
 def parse_n8n_nodes(nodes_list: List[Dict]) -> List[N8nNode]:
     n8n_nodes = []
     for node in nodes_list:
+        # Skip sticky notes as they don't contribute to execution flow, they are just for styling
+        if node.get("type") == "n8n-nodes-base.stickyNote":
+            continue
+            
+        position = node.get("position") if "position" in node else None
         n8n_nodes.append(
-            N8nNode(id=node["id"], name=node["name"], type=node["type"].lower())
+            N8nNode(
+                id=node["id"], 
+                name=node["name"], 
+                type=node["type"].lower(),
+                position=position
+            )
         )
 
     return n8n_nodes
