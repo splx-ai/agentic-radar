@@ -371,6 +371,7 @@ const __INLINE_DATA = {{graph}};
                     </table>
                 </div>
             {% endif %}
+        {% if tools | map(attribute='vulnerabilities') | map('length') | sum > 0 %}
         <div style="margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
             <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
                 <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Tool Vulnerabilities</div>
@@ -427,6 +428,7 @@ const __INLINE_DATA = {{graph}};
                 {% endif %}
                 {% endfor %}
             </div>
+            {% endif %}
             {% set non_guardrail_agents = agents | selectattr("is_guardrail", "equalto", False) | list %}
             {% if non_guardrail_agents %}
             <div style="margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 20px; display: flex">
