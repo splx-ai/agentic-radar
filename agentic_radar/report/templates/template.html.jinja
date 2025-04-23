@@ -17,6 +17,62 @@ const __INLINE_DATA = {{graph}};
     display: flex;
 }
 
+.copy-btn {
+    background-color: #e7e7e7;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 2px 3px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: 5px;
+    line-height: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    min-height: 20px;
+}
+
+.copy-btn:hover {
+    background-color: #d4d4d4;
+}
+
+.copy-btn:active {
+    background-color: #c0c0c0;
+}
+
+.copy-btn svg {
+    vertical-align: middle;
+    pointer-events: none;
+}
+
+.copy-btn.copied .copy-icon-svg {
+    display: none; /* Hide the copy icon */
+}
+.copy-btn.copied .check-icon-svg {
+    display: inline-block !important;
+    stroke: green;
+}
+
+.copy-btn:disabled {
+    cursor: default;
+    opacity: 0.6;
+}
+
+.cell-content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+}
+
+.copy-text {
+    flex-grow: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -295,13 +351,31 @@ const __INLINE_DATA = {{graph}};
                             <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Agent Name</th>
                             <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">LLM Model</th>
                             <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">System Prompt</th>
+                            {% if enhanced_prompts|length > 0 %}
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Enhanced System Prompt</th>
+                            {% endif %}
                         </tr>
                         {% for agent in agents %}
                         <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
                             <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.name|e}}</td>
                             <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.llm|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.system_prompt|e}}</td>
-                        </tr>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; text-align: left;">{{agent.system_prompt|e}}</td>
+                            {% if enhanced_prompts|length > 0 %}
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">
+                                <div class="cell-content-wrapper">
+                                    <span class="copy-text">{{enhanced_prompts.get(agent.name, agent.system_prompt)|e}}</span>
+                                    <button class="copy-btn" data-copy-value="{{enhanced_prompts.get(agent.name, agent.system_prompt)|e}}" title="Copy">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-icon-svg">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon-svg" style="display: none;"> <!-- Initially hidden, green stroke -->
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                            {% endif %}
                         {% endfor %}
                     </table>
                 </div>
@@ -399,6 +473,61 @@ const __INLINE_DATA = {{graph}};
     graph.onEngineStop(() => {
         graph.zoomToFit(1000, 16)
     });
+</script>
+
+<script>
+// Script for copy button functionality
+document.addEventListener('click', function(event) {
+    // Use closest to find the button, starting from the actual click target
+    const button = event.target.closest('.copy-btn');
+
+    // 1. Check if we found a button element with the correct class
+    if (!button || !button.classList.contains('copy-btn')) {
+        return; // Exit if it's not our button or its descendant
+    }
+
+    // 2. Check if the button is disabled
+    if (button.disabled) {
+        return; // Exit if already processing
+    }
+
+
+    // 3. Check if the data attribute exists and has a value
+    const textToCopy = button.dataset.copyValue;
+    if (typeof textToCopy === 'undefined' || textToCopy === null) {
+         console.error("Error: data-copy-value attribute is missing or null on button:", button);
+         return; // Exit if no value to copy
+    }
+
+    // Disable the button immediately
+    button.disabled = true;
+
+    // 4. Check if clipboard API is available
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+        console.error("Clipboard API (writeText) is not available. Requires HTTPS or localhost.");
+        alert("Copying is not supported in this browser or context (requires HTTPS).");
+        button.disabled = false; // Re-enable since we can't proceed
+        return;
+    }
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        // Success feedback: Swap icons using CSS class
+        button.classList.add('copied');
+
+        // Hide check and show copy icon again after delay
+        setTimeout(() => {
+            button.classList.remove('copied');
+            button.disabled = false;
+        }, 1500);
+
+    }).catch(err => {
+        console.error('FAILURE: Could not copy text:', err.name, err.message, err); // DEBUG: Log specific error name and message
+
+        // Error handling - Re-enable button immediately on failure
+        button.classList.remove('copied'); // Ensure icon is reset
+        button.disabled = false;
+    });
+});
 </script>
 </body>
 </html>
