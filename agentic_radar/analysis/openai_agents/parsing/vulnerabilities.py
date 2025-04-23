@@ -1,8 +1,12 @@
-from ..models import Guardrail, Agent, AgentVulnerability
-
 import ast
 import json
+
 import openai
+
+from ..models import Agent, AgentVulnerability, Guardrail
+from typing import Literal
+
+MitigationLevel = Literal["None", "Partial", "Full"]
 
 GUARDRAILS_SYSTEM_PROMPT = """# Role Description
 You are a security analyst for systems using AI agents.
@@ -125,13 +129,15 @@ def promptify_guardrail(guardrail: Guardrail) -> str:
 """
     
     else:
-        guardrail_text+=f"""-Guardrail type: Python function
+        if guardrail._guardrail_function_def:
+            guardrail_text+=f"""-Guardrail type: Python function
 -Guardrail function definition: {ast.unparse(guardrail._guardrail_function_def)}
 """
     
     return guardrail_text
 
 def get_agent_vulnerabilities(agent_assignments: dict[str, Agent], guardrails: dict[str, Guardrail]) -> None:
+
     client = openai.AzureOpenAI(api_key="",
                                 azure_endpoint="",
                                 api_version="")
@@ -140,10 +146,10 @@ def get_agent_vulnerabilities(agent_assignments: dict[str, Agent], guardrails: d
             continue
         agent_guardrails = []
         for guardrail_name in agent.guardrails["output"]:
-            if (value := guardrails.get(guardrail_name, False)):
+            if (value := guardrails.get(guardrail_name)):
                 agent_guardrails.append(value)
         for guardrail_name in agent.guardrails["input"]:
-            if (value := guardrails.get(guardrail_name, False)):
+            if (value := guardrails.get(guardrail_name)):
                 agent_guardrails.append(value)
         agent_guardrails_prompt = "List of security guardrails:"
         for i, agent_guardrail in enumerate(agent_guardrails):
@@ -161,7 +167,9 @@ def get_agent_vulnerabilities(agent_assignments: dict[str, Agent], guardrails: d
             response_format = {"type": "json_object"}
         )
 
-        guardrails_response = json.loads(response.choices[0].message.content)
+        content = response.choices[0].message.content or "{}"
+
+        guardrails_response = json.loads(content)
 
         response = client.chat.completions.create(
             messages = [
@@ -172,11 +180,13 @@ def get_agent_vulnerabilities(agent_assignments: dict[str, Agent], guardrails: d
             response_format = {"type": "json_object"}
         )
 
-        instructions_response = json.loads(response.choices[0].message.content)
+        content = response.choices[0].message.content or "{}"
+
+        instructions_response = json.loads(content)
 
         for vulnerability in guardrails_response:
+            mitigation_level: MitigationLevel = "None"
             if vulnerability in instructions_response:
-                mitigation_level = "None"
                 if guardrails_response[vulnerability]["mitigated"] and instructions_response[vulnerability]["mitigated"]:
                     mitigation_level = "Full"
                 elif guardrails_response[vulnerability]["mitigated"] or instructions_response[vulnerability]["mitigated"]:
@@ -192,7 +202,6 @@ def get_agent_vulnerabilities(agent_assignments: dict[str, Agent], guardrails: d
                 agent.vulnerabilities.append(agent_vulnerability)
             
             else:
-                mitigation_level = "None"
                 if guardrails_response[vulnerability]["mitigated"]:
                     mitigation_level = "Full"
                 

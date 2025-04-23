@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, List, Optional, Literal
+from typing import Dict, List, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -62,8 +62,8 @@ class Agent(BaseModel):
     name: str
     llm: str
     system_prompt: str
-    is_guardrail: bool
-    vulnerabilities: list[AgentVulnerabilityDefinition]
+    is_guardrail: bool = False
+    vulnerabilities: list[AgentVulnerabilityDefinition] = Field(default_factory=list)
 
 
 class GraphDefinition(BaseModel):

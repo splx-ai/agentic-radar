@@ -1,9 +1,8 @@
 import ast
-
 from enum import Enum
-from typing import Optional, Literal, Union
+from typing import Literal, Optional, Union
 
-from pydantic import BaseModel, PrivateAttr, Field
+from pydantic import BaseModel, Field, PrivateAttr
 
 
 class Tool(BaseModel):
@@ -29,7 +28,7 @@ class Guardrail(BaseModel):
     placement: Literal['input', 'output']
     uses_agent: bool
     guardrail_function_name: str
-    _guardrail_function_def: Union[ast.FunctionDef, ast.AsyncFunctionDef] = PrivateAttr(default=None)
+    _guardrail_function_def: Optional[Union[ast.FunctionDef, ast.AsyncFunctionDef]] = PrivateAttr(default=None)
     agent_instructions: Optional[str] = None
     agent_name: Optional[str] = None
 

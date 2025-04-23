@@ -7,8 +7,8 @@ from agentic_radar.analysis.openai_agents.parsing import (
     collect_guardrails,
     collect_mcp_servers,
     collect_tool_assignments,
+    get_agent_vulnerabilities,
     load_predefined_tools,
-    get_agent_vulnerabilities
 )
 from agentic_radar.analysis.openai_agents.tool_categorizer.categorizer import (
     load_tool_categories,
