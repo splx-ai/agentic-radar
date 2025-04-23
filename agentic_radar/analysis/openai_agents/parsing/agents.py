@@ -1,10 +1,11 @@
 import ast
 
 from pydantic import ValidationError
+from typing import Union
 
 from ...utils import walk_python_files
 from ..exceptions import InvalidAgentConstructorError, InvalidHandoffDefinitionError
-from ..models import Agent, MCPServerInfo, Tool, Guardrail
+from ..models import Agent, MCPServerInfo, Tool
 from .ast_utils import (
     get_keyword_arg_value,
     get_nth_arg_value,
@@ -131,8 +132,8 @@ class AgentsVisitor(ast.NodeVisitor):
 
         return tools
     
-    def _extract_agent_guardrails(self, agent_node: ast.Call) -> list[str]:
-        def extract_guardrail_names(node: ast.AST) -> list[str]:
+    def _extract_agent_guardrails(self, agent_node: ast.Call) -> dict[str,list[str]]:
+        def extract_guardrail_names(node: Union[ast.AST, None]) -> list[str]:
             if node is None:
                 return []
             elif isinstance(node, ast.List):

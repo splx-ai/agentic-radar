@@ -1,8 +1,8 @@
 from .agents import collect_agent_assignments
+from .guardrails import collect_guardrails
 from .mcp import collect_mcp_servers
 from .predefined_tools import load_predefined_tools
 from .tools import collect_tool_assignments
-from .guardrails import collect_guardrails
 from .vulnerabilities import get_agent_vulnerabilities
 
 __all__ = [

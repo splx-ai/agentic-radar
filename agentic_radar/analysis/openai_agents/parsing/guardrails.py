@@ -2,13 +2,9 @@ import ast
 from typing import Union
 
 from ...utils import walk_python_files
-from ..models import Guardrail, Agent
+from ..models import Agent, Guardrail
 from .ast_utils import (
     find_decorator_by_name,
-    get_simple_identifier_name,
-    get_string_keyword_arg,
-    is_function_call,
-    is_simple_identifier,
 )
 
 
@@ -70,14 +66,16 @@ class GuardrailsVisitor(ast.NodeVisitor):
 
         guardrail_name = node.name
 
-        self.guardrails[guardrail_name] = Guardrail(
+        guardrail = Guardrail(
             name=guardrail_name,
             placement="input" if input_guardrail_decorator is not None else "output",
             uses_agent=False,
             guardrail_function_name=guardrail_name,
-            _guardrail_function_def=node,
             agent_instructions=None
         )
+
+        guardrail._guardrail_function_def = node
+        self.guardrails[guardrail_name] = guardrail
 
 def analyze_guardrail(guardrail_name: str, guardrail: Guardrail, functions: dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]], agent_assignments: dict[str, Agent]) -> None:
     # Check if the guardrail function has Runner.run in it, as this indicates that an agent is used
@@ -93,7 +91,9 @@ def analyze_guardrail(guardrail_name: str, guardrail: Guardrail, functions: dict
                     call.func.attr == "run"):
                     if call.args:
                         self.found = True
-                        self.starting_agent = call.args[0].id
+                        first_arg = call.args[0]
+                        if isinstance(first_arg, ast.Name):
+                            self.starting_agent = first_arg.id
 
         def visit_Assign(self, node: ast.Assign):
             if isinstance(node.value, ast.Await) and isinstance(node.value.value, ast.Call):
