@@ -1,10 +1,11 @@
 import json
 
-from agentic_radar.analysis.openai_agents.models import Agent, Tool
+from agentic_radar.analysis.openai_agents.models import Agent, Tool, Guardrail
 from agentic_radar.graph import (
     Agent as ReportAgent,
 )
 from agentic_radar.graph import (
+    AgentVulnerabilityDefinition,
     EdgeDefinition,
     GraphDefinition,
     NodeDefinition,
@@ -17,6 +18,7 @@ def create_graph_definition(
     graph_name: str,
     agent_assignments: dict[str, Agent],
     tool_categories: dict[str, ToolType],
+    guardrails: dict[str, Guardrail]
 ) -> GraphDefinition:
     nodes = []
     edges = []
@@ -69,6 +71,12 @@ def create_graph_definition(
                 graph_mcp_server_nodes.add(name)
 
             edges.append(EdgeDefinition(start=agent.name, end=name, condition="mcp"))
+        
+        for guardrail_name, guardrail in guardrails.items():
+            if guardrail.uses_agent:
+                if guardrail_name in agent.guardrails["input"] or guardrail_name in agent.guardrails["output"]:
+                    if (guardrail_agent:=agent_assignments.get(guardrail.agent_name, False)):
+                        edges.append(EdgeDefinition(start=agent.name, end=guardrail_agent.name))
 
     nodes, edges = _add_start_end_nodes(nodes=nodes, edges=edges)
 
@@ -77,6 +85,14 @@ def create_graph_definition(
             name=agent.name,
             llm=agent.model or "gpt-4o",
             system_prompt=agent.instructions or "",
+            is_guardrail=agent.is_guardrail,
+            vulnerabilities=[
+                AgentVulnerabilityDefinition(
+                    name=vulnerability.name,
+                    mitigation_level=vulnerability.mitigation_level,
+                    guardrail_explanation=vulnerability.guardrail_explanation,
+                    instruction_explanation=vulnerability.instruction_explanation
+                ) for vulnerability in agent.vulnerabilities]
         )
         for agent in agent_assignments.values()
     ]

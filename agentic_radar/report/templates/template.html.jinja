@@ -306,6 +306,7 @@ const __INLINE_DATA = {{graph}};
                     </table>
                 </div>
             {% endif %}
+
                 <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
                     <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
                         <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Tools</div>
@@ -345,6 +346,38 @@ const __INLINE_DATA = {{graph}};
                         {% endfor %}
                     </table>
                 </div>
+            {% endif %}
+            {% set non_guardrail_agents = agents | selectattr("is_guardrail", "equalto", False) | list %}
+            {% if non_guardrail_agents %}
+            <div style="margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 20px; display: flex">
+                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px;">Agent Vulnerability Mitigations</div>
+                <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
+                <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid; border-spacing:0">
+                    <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
+                        <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">Agent Name</th>
+                        <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">Vulnerability</th>
+                        <th style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">Mitigation Level*</th>
+                    </tr>
+                    {% for agent in non_guardrail_agents %}
+                        {% set num_vulns = agent.vulnerabilities | length %}
+                        {% for v in agent.vulnerabilities %}
+                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
+                            {% if loop.first %}
+                            <td rowspan="{{num_vulns}}" style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; vertical-align: top">{{ agent.name|e }}</td>
+                            {% endif %}
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{ v.name|e }}</td>
+                            {% set color = 'green' if v.mitigation_level == 'Full' else 'orange' if v.mitigation_level == 'Partial' else 'red' %}
+                            <td style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid; color: {{ color }}">{{ v.mitigation_level|e }}</td>
+
+                        </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </table>
+                <div style="margin-top: 8px; font-size: 10px; font-family: Inter; color: #555;">
+                    <strong>*The "Mitigation Level"</strong> column shows to what extent a vulnerability is mitigated. "Full" indicates that both a system prompt instruction and a guardrail are in place.
+                    "Partial" indicates that one of the two is in place. "None" indicates that neither one is in place. (This applies to all vulnerabilities except for the "Input Length Limit", in which case only the guardrail is taken into account).
+                </div>
+            </div>
             {% endif %}
             </div>
         </div>
