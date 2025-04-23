@@ -157,7 +157,7 @@ Options:
   -o, --output-file TEXT          Where should the output report be stored
                                   [env var: AGENTIC_RADAR_OUTPUT_FILE;
                                   default: report_20250311_122338.html]
-  --enhance-prompts               Enhance detected system prompts. [env var: AGENTIC_RADAR_ENHANCE_PROMPTS] 
+  --enhance-prompts               Enhance detected system prompts. Requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY. You can set it in .env file or as an environment variable. [env var: AGENTIC_RADAR_ENHANCE_PROMPTS] 
   --version
   --install-completion [bash|zsh|fish|powershell|pwsh]
                                   Install completion for the specified shell.

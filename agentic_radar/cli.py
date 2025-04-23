@@ -74,7 +74,7 @@ def _main(
         bool,
         typer.Option(
             "--enhance-prompts",
-            help="Enhance detected system prompts.",
+            help="Enhance detected system prompts. Requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY. You can set it in .env file or as an environment variable.",
             is_flag=True,
             envvar="AGENTIC_RADAR_ENHANCE_PROMPTS",
         ),
@@ -113,6 +113,12 @@ def analyze_and_generate_report(framework: str, analyzer: Analyzer):
     map_vulnerabilities(graph)
 
     if args.enhance_prompts:
+        if not os.getenv("OPENAI_API_KEY") and not os.getenv("AZURE_OPENAI_API_KEY"):
+            print(
+                "Enhancing system prompts requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY. "
+                "You can set it in .env file or as an environment variable."
+            )
+            raise typer.Exit(code=1)
         print("Enhancing system prompts")
         pipeline = PromptEnhancingPipeline([OpenAIGeneratorStep()])
         enhanced_prompts = enhance_prompts(graph.agents, pipeline)
