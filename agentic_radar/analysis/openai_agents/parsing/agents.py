@@ -1,7 +1,7 @@
 import ast
+from typing import Union
 
 from pydantic import ValidationError
-from typing import Union
 
 from ...utils import walk_python_files
 from ..exceptions import InvalidAgentConstructorError, InvalidHandoffDefinitionError

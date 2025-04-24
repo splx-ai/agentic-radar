@@ -1,11 +1,11 @@
 import ast
 import json
+import os
+from typing import Literal
 
 import openai
-import os
 
 from ..models import Agent, AgentVulnerability, Guardrail
-from typing import Literal
 
 MitigationLevel = Literal["None", "Partial", "Full"]
 
