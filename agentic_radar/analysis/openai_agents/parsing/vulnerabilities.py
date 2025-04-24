@@ -145,7 +145,7 @@ def get_agent_vulnerabilities(agent_assignments: dict[str, Agent], guardrails: d
         client = (
                 openai.AzureOpenAI() if "AZURE_OPENAI_API_KEY" in os.environ else openai.OpenAI()
             )
-    except:
+    except openai.OpenAIError as e:
         print("Analysis stopped because the OpenAI client could not be initialized")
         return
     
