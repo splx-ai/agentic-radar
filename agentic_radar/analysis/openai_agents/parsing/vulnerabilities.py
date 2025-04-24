@@ -2,6 +2,7 @@ import ast
 import json
 
 import openai
+import os
 
 from ..models import Agent, AgentVulnerability, Guardrail
 from typing import Literal
@@ -138,9 +139,9 @@ def promptify_guardrail(guardrail: Guardrail) -> str:
 
 def get_agent_vulnerabilities(agent_assignments: dict[str, Agent], guardrails: dict[str, Guardrail]) -> None:
 
-    client = openai.AzureOpenAI(api_key="",
-                                azure_endpoint="",
-                                api_version="")
+    client = (
+            openai.AzureOpenAI() if "AZURE_OPENAI_API_KEY" in os.environ else openai.OpenAI()
+        )
     for agent_name, agent in agent_assignments.items():
         if agent.is_guardrail:
             continue
