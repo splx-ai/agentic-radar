@@ -210,7 +210,7 @@ def get_agent_vulnerabilities(agent_assignments: dict[str, Agent], guardrails: d
                     name=vulnerability,
                     mitigation_level=mitigation_level,
                     guardrail_explanation=guardrails_response[vulnerability]["explanation"],
-                    instruction_explanation="Not applicable."
+                    instruction_explanation=""
                 )
 
                 agent.vulnerabilities.append(agent_vulnerability)
