@@ -139,9 +139,16 @@ def promptify_guardrail(guardrail: Guardrail) -> str:
 
 def get_agent_vulnerabilities(agent_assignments: dict[str, Agent], guardrails: dict[str, Guardrail]) -> None:
 
-    client = (
-            openai.AzureOpenAI() if "AZURE_OPENAI_API_KEY" in os.environ else openai.OpenAI()
-        )
+    print("Analyzing Agent vulnerabilities and mitigations")
+
+    try:
+        client = (
+                openai.AzureOpenAI() if "AZURE_OPENAI_API_KEY" in os.environ else openai.OpenAI()
+            )
+    except:
+        print("Analysis stopped because the OpenAI client could not be initialized")
+        return
+    
     for agent_name, agent in agent_assignments.items():
         if agent.is_guardrail:
             continue
