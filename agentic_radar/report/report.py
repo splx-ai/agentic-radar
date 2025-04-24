@@ -1,4 +1,5 @@
 import datetime
+import json
 import os
 from typing import Dict, List, Optional
 
@@ -68,6 +69,10 @@ def generate(graph: GraphDefinition, out_file: str):
         for node in graph.nodes
         if node.node_type == NodeType.MCP_SERVER
     ]
+
+    with open(os.path.join(os.path.dirname(__file__), "templates", "assets", "vulnerabilities.json")) as f:
+        vulnerability_definitions = json.load(f)
+
     template.stream(
         **ReportData(
             project_name=graph.name,
@@ -91,5 +96,6 @@ def generate(graph: GraphDefinition, out_file: str):
             force_graph_dependency_path=str(
                 resources.files(__package__) / "templates" / "assets" / "force-graph.js"
             ),
-        ).model_dump()
+        ).model_dump(),
+        vulnerability_definitions = vulnerability_definitions
     ).dump(out_file)

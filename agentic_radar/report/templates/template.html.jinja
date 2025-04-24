@@ -430,7 +430,7 @@ const __INLINE_DATA = {{graph}};
             </div>
             {% endif %}
             {% set non_guardrail_agents = agents | selectattr("is_guardrail", "equalto", False) | list %}
-            {% if non_guardrail_agents %}
+            {% if non_guardrail_agents | map(attribute='vulnerabilities') | map('length') | sum > 0 %}
             <div style="margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 20px; display: flex">
                 <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px;">Agent Vulnerability Mitigations</div>
                 <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
@@ -462,6 +462,28 @@ const __INLINE_DATA = {{graph}};
                     <strong>*The "Mitigation Level"</strong> column shows to what extent a vulnerability is mitigated. "Full" indicates that both a system prompt instruction and a guardrail are in place.
                     "Partial" indicates that one of the two is in place. "None" indicates that neither one is in place. (This applies to all vulnerabilities except for the "Input Length Limit", in which case only the guardrail is taken into account).
                 </div>
+            </div>
+            <div style="margin-top: 40px;">
+                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700;">Agent Vulnerability Explanations</div>
+                <hr style="width: 100%; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
+                <table style="width: 100%; border-collapse: collapse; border: 0.5px solid #D4D4D4; font-family: Inter; font-size: 10px;">
+                    <tr style="background: #F5F5F5; font-weight: 600;">
+                        <th style="padding: 6px; border: 0.5px solid #D4D4D4;">Agent Vulnerability</th>
+                        <th style="padding: 6px; border: 0.5px solid #D4D4D4;">Framework Mapping</th>
+                        <th style="padding: 6px; border: 0.5px solid #D4D4D4;">Description</th>
+                    </tr>
+                    {% for name, details in vulnerability_definitions.items() %}
+                    <tr>
+                        <td style="padding: 6px; border: 0.5px solid #D4D4D4;">{{ name }}</td>
+                        <td style="padding: 6px; border: 0.5px solid #D4D4D4;">
+                            {% for framework, mapping in details.mapping.items() %}
+                                <div><strong>{{ framework }}:</strong><br><span style="white-space: pre-wrap;">{{ mapping }}</span></div>
+                            {% endfor %}
+                        </td>
+                        <td style="padding: 6px; border: 0.5px solid #D4D4D4;">{{ details.description }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
             </div>
             {% endif %}
             </div>
