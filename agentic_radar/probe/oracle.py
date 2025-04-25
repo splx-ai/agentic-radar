@@ -1,10 +1,8 @@
 import os
+from functools import lru_cache
 
-from dotenv import load_dotenv
 from openai import AsyncAzureOpenAI, AsyncOpenAI
 from pydantic import BaseModel
-
-load_dotenv()
 
 
 class OracleEvaluation(BaseModel):
@@ -12,7 +10,10 @@ class OracleEvaluation(BaseModel):
     explanation: str
 
 
-client = AsyncAzureOpenAI() if "AZURE_OPENAI_API_KEY" in os.environ else AsyncOpenAI()
+@lru_cache()
+def get_client():
+    return AsyncAzureOpenAI() if "AZURE_OPENAI_API_KEY" in os.environ else AsyncOpenAI()
+
 
 SYSTEM_PROMPT = """
 You are an expert security evaluator. Given an input prompt, an agent's output, and a test explanation,
@@ -44,7 +45,7 @@ Test Explanation:
 {probe_explanation}
 """
 
-    response = await client.chat.completions.create(
+    response = await get_client().chat.completions.create(
         model="gpt-4o",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
