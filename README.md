@@ -77,6 +77,7 @@
       <a href="#advanced-features-">Advanced Features</a>
       <ul>
         <li><a href="#prompt-enhancement">Prompt Enhancement</a></li>
+        <li><a href="#-probe-vulnerabilities-in-agentic-workflows">Probe Vulnerabilities in Agentic Workflows</a></li>
       </ul>
     </li>
     <li><a href="#roadmap-">Roadmap</a></li>
@@ -144,34 +145,50 @@ pip install agentic-radar[crewai]
 > This will install the `crewai-tools` package which is only supported on Python versions >= 3.10 and < 3.13.
 > If you are using a different python version, the tool descriptions will be less detailed or entirely missing.
 
+#### OpenAI Agents Installation
+
+For 
+
 ## Usage
 
-Run `agentic-radar --help` for more info:
-```
-Usage: agentic-radar [OPTIONS] COMMAND [ARGS]...
+Agentic Radar now supports two main commands:
 
-Options:
-  -i, --input-dir TEXT            Path to the directory where all the code is
-                                  [env var: AGENTIC_RADAR_INPUT_DIRECTORY;
-                                  default: .]
-  -o, --output-file TEXT          Where should the output report be stored
-                                  [env var: AGENTIC_RADAR_OUTPUT_FILE;
-                                  default: report_20250311_122338.html]
-  --enhance-prompts               Enhance detected system prompts. Requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY. You can set it in .env file or as an environment variable. [env var: AGENTIC_RADAR_ENHANCE_PROMPTS] 
-  --version
-  --install-completion [bash|zsh|fish|powershell|pwsh]
-                                  Install completion for the specified shell.
-  --show-completion [bash|zsh|fish|powershell|pwsh]
-                                  Show completion for the specified shell, to
-                                  copy it or customize the installation.
-  --help                          Show this message and exit.
+### 1. `scan`
+Scan code for agentic workflows and generate a report.
 
-Commands:
-  langgraph       Scan code written with LangGraph
-  crewai          Scan code written with CrewAI
-  n8n             Scan a n8n workflow configuration JSON
-  openai-agents   Scan code written with OpenAI Agents SDK 
+```shell
+agentic-radar scan [OPTIONS] FRAMEWORK:{langgraph|crewai|n8n|openai-agents}
 ```
+
+**Arguments:**
+- `framework` *(required)*: Framework to scan. Must be one of `langgraph`, `crewai`, `n8n`, or `openai-agents`.
+
+**Options:**
+- `-i, --input-dir TEXT` — Path to the directory where all the code is located.  
+  _(default: `.`)_
+- `-o, --output-file TEXT` — Where the output report should be stored.  
+  _(default: e.g., `report_20250425_214811.html`)_
+- `--enhance-prompts` — Enhance detected system prompts (requires `OPENAI_API_KEY` or `AZURE_OPENAI_API_KEY`).
+- `--help` — Show help message and exit.
+
+---
+
+### 2. `probe`
+Test agents in an agentic workflow for various vulnerabilities.
+Requires OPENAI_API_KEY set as environment variable.
+
+```shell
+agentic-radar probe [OPTIONS] FRAMEWORK:{langgraph|crewai|n8n|openai-agents} ENTRYPOINT_SCRIPT_WITH_ARGS
+```
+
+**Arguments:**
+- `framework` *(required)*: Framework of the agentic workflow to test. Must be one of `langgraph`, `crewai`, `n8n`, or `openai-agents`.
+- `entrypoint_script_with_args` *(required)*: Path to the entrypoint script that runs the agentic workflow, along with any necessary arguments, for example:  
+  `"myscript.py --arg1 value1 --arg2 value2"`
+
+**Options:**
+- `--help` — Show help message and exit.
+
 
 ## Advanced Features ✨
 
@@ -197,6 +214,53 @@ basic/lifecycle_example -o report.html openai-agents
 
 4. Inspect enhanced system prompts in the generated report:
 <img src="docs/prompt_enhancement.png"/>
+
+### 🔍 Probe Vulnerabilities in Agentic Workflows
+
+Agentic Radar now supports probing your agent workflows at **runtime** to identify critical vulnerabilities through simulated adversarial inputs.
+
+This includes automated testing for:
+  - Prompt Injection
+  - PII Leakage
+  - Harmful Content Generation
+  - Fake News Generation
+
+Currently supported for:
+- OpenAI Agents ✅ (more frameworks coming soon)
+
+#### 🛠 How It Works
+
+The probe command launches your agentic workflow with a test suite of probes designed to simulate malicious or adversarial inputs. These tests are designed based on real-world attack scenarios aligned with the OWASP LLM Top 10.
+
+> [!NOTE]  
+> This feature requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY set as an environment variable. You can set it via command line or inside a .env file.
+
+Probe is run like:
+```sh
+agentic-radar probe <framework> "<path/to/the/workflow/main.py any-necessary-args>"
+```
+
+For example:
+```sh
+agentic-radar probe openai-agents "examples/openai-agents/basic/lifecycle_example.py"
+```
+
+Probe injects itself into the agentic workflow provided by user, detects necessary information and runs the prepared tests.
+
+#### 📊 Rich Test Results
+
+All probe results are printed in a visually rich table format directly in the terminal.
+Each row shows:
+  - Agent name
+  - Type of probe
+  - Injected input
+  - Agent output
+  - ✅ Whether the test passed or failed
+  - 🛑 A short explanation of the result
+
+This makes it easy to spot vulnerabilities at a glance—especially in multi-agent systems.
+
+  <img src="docs/probe_results.png" alt="Probe Results Example" />
 
 ## Roadmap 📈
 

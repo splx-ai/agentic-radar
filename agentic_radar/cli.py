@@ -177,7 +177,8 @@ def analyze_and_generate_report(
 
 
 @app.command(
-    "probe", help="Test agents in an agentic workflow for various vulnerabilities"
+    "probe",
+    help="Test agents in an agentic workflow for various vulnerabilities. Requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY set as an environment variable.",
 )
 def probe(
     framework: Annotated[
