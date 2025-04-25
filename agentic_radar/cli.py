@@ -20,6 +20,7 @@ from agentic_radar.analysis import (
 from agentic_radar.graph import Agent
 from agentic_radar.mapper import map_vulnerabilities
 from agentic_radar.probe import (
+    FakeNewsProbe,
     HarmfulContentProbe,
     OpenAIAgentsLauncher,
     PIILeakageProbe,
@@ -200,7 +201,12 @@ def probe(
         raise typer.Exit(code=1)
 
     print(f"Probing {entrypoint_script} for {framework} agents")
-    probes = [PromptInjectionProbe(), PIILeakageProbe(), HarmfulContentProbe()]
+    probes = [
+        PromptInjectionProbe(),
+        PIILeakageProbe(),
+        HarmfulContentProbe(),
+        FakeNewsProbe(),
+    ]
     if framework == AgenticFramework.openai_agents:
         launcher = OpenAIAgentsLauncher(entrypoint_script, extra_args, probes)
     else:
