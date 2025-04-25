@@ -147,7 +147,10 @@ pip install agentic-radar[crewai]
 
 #### OpenAI Agents Installation
 
-For 
+If you want to use Probe to test your OpenAI Agents workflows, you can install the `openai-agents` extra:
+```sh
+pip install agentic-radar[openai-agents]
+```
 
 ## Usage
 
