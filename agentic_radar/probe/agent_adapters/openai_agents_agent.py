@@ -1,5 +1,8 @@
-from agents import Agent as OriginalAgent
-from agents import Runner
+try:
+    from agents import Agent as OriginalAgent
+    from agents import Runner
+except ImportError:
+    pass
 
 from ..agent import Agent
 
