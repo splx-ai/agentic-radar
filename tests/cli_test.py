@@ -36,7 +36,7 @@ def params(request, tmp_path: pathlib.Path):
 )
 def test_langgraph(params):
     i, o = params
-    result = runner.invoke(app, ["-i", i, "-o", o, "langgraph"])
+    result = runner.invoke(app, ["scan", "langgraph", "-i", i, "-o", o])
     assert result.exit_code == 0
     assert o in result.stdout
 
@@ -51,7 +51,7 @@ def test_langgraph(params):
 )
 def test_crewai(params):
     i, o = params
-    result = runner.invoke(app, ["-i", i, "-o", o, "crewai"])
+    result = runner.invoke(app, ["scan", "crewai", "-i", i, "-o", o])
     assert result.exit_code == 0
     assert o in result.stdout
 
@@ -66,7 +66,7 @@ def test_crewai(params):
 )
 def test_n8n(params):
     i, o = params
-    result = runner.invoke(app, ["-i", i, "-o", o, "n8n"])
+    result = runner.invoke(app, ["scan", "n8n", "-i", i, "-o", o])
     assert result.exit_code == 0
     assert o in result.stdout
 
@@ -80,6 +80,6 @@ def test_n8n(params):
 )
 def test_openai_agents(params):
     i, o = params
-    result = runner.invoke(app, ["-i", i, "-o", o, "openai-agents"])
+    result = runner.invoke(app, ["scan", "openai-agents", "-i", i, "-o", o])
     assert result.exit_code == 0
     assert o in result.stdout

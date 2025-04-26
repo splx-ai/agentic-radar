@@ -3,7 +3,7 @@ from agentic_radar.graph import Agent
 from .pipeline import PromptEnhancingPipeline
 
 
-def enhance_prompts(
+def enhance_agent_prompts(
     agents: list[Agent], pipeline: PromptEnhancingPipeline
 ) -> dict[str, str]:
     """Enhance the system prompts of the agents.
