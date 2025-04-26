@@ -1,0 +1,26 @@
+{
+    "Input Length Limit": {
+        "description": "An attacker can overwhelm the LLM's context with a very long message and cause it to ignore previous instructions or produce undesired actions.<br><strong>Mitigation:</strong><br>- add a Guardrail that checks if the user message contains more than the maximum allowed number of characters (200-500 will suffice in most cases).",
+        "mapping": {"OWASP LLM Top 10": "LLM01 - Prompt Injection\nLLM10 - Unbounded Consumption\n", "OWASP Agentic": "T2 - Tool Misuse\nT4 - Resource Overload\nT6 - Intent Breaking & Goal Manipulation\nT7 - Misaligned & Deceptive Behaviors"}
+        },
+    "Personally Identifiable Information (PII) Leakage": {
+        "description": "An attacker can manipulate the LLM into exfiltrating PII, or requesting users to disclose PII.<br><strong>Mitigation:</strong><br>- add a Guardrail that checks user and agent messages for PII and anonymizes them or flags them<br>- include agent instructions that clearly state that it should not handle PII.",
+        "mapping": {"OWASP LLM Top 10": "LLM02 - Sensitive Information Disclosure\nLLM05 - Improper Output Handling\n", "OWASP Agentic": "T7 - Misaligned & Deceptive Behaviors\nT9 - Identity Spoofing & Impersonation\nT15 - Human Manipulation"}
+        },
+    "Harmful/Toxic/Profane Content": {
+        "description": "An attacker can use the LLM to generate harmful, toxic, or profane content, or engage in conversations about such topics.<br><strong>Mitigation:</strong><br>- add a Guardrail that checks user and agent messages for toxic, harmful, and profane content<br>- include agent instructions that prohibit the agent from engaging in conversation about, or creating, harmful, toxic, or profane content.",
+        "mapping": {"OWASP LLM Top 10": "LLM05 - Improper Output Handling\n", "OWASP Agentic": "T7 - Misaligned & Deceptive Behaviors\nT11 - Unexpected RCE and Code Attacks"}
+        },
+    "Jailbreak": {
+        "description": "An attacker can try to craft their messages in a way that makes the LLM forget all previous instructions and be used for any task the attacker wants.<br><strong>Mitigation:</strong><br>- add a Guardrail that checks user messages for attempts at circumventing the LLM's instructions<br>- include agent instructions that state that the agent should not alter its instructions, and ignore user messages that try to convince it otherwise.",
+        "mapping": {"OWASP LLM Top 10": "LLM01 - Prompt Injection\nLLM02 -  Sensitive Information Disclosure\nLLM05 - Improper Output Handling\nLLM09 -  Misinformation\nLLM10 - Unbounded Consumption\n", "OWASP Agentic": "T1 - Memory Poisoning\nT2 - Tool Misuse\nT3 - Privilege Compromise\nT4 - Resource Overload\nT6 - Intent Breaking & Goal Manipulation\nT7 - Misaligned & Deceptive Behaviors\nT9 - Identity Spoofing & Impersonation\nT11 - Unexpected RCE and Code Attacks\nT13 - Rogue Agents in Multi-Agent Systems\nT15 - Human Manipulation"}
+        },
+    "Intentional Misuse": {
+        "description": "An attacker can try to use the instance of the LLM for tasks other than the LLM's intended usage to drain resources or for personal gain.<br><strong>Mitigation:</strong><br>- add a Guardrail that checks user messages for tasks that are not the agent's intended usage<br>- include agent instructions that prohibit the agent from engaging in any tasks that are not its intended usage",
+        "mapping": {"OWASP LLM Top 10": "LLM01 - Prompt Injection\nLLM10 - Unbounded Consumption\n", "OWASP Agentic": "T2 - Tool Misuse\nT4 - Resource Overload\nT6 - Intent Breaking & Goal Manipulation"}
+        },
+    "System Prompt Leakage": {
+        "description": "An attacker can make the LLM reveal the system prompt/instructions so that he can leak sensitive business logic or craft other attacks that are better suited for this LLM.<br><strong>Mitigation:</strong><br>- add a Guardrail that checks agent messages for the exact text of the agent's system prompt<br>- include agent instructions that highlight that the system prompt/instructions are confidential and should not be shared.",
+        "mapping": {"OWASP LLM Top 10": "LLM01 - Prompt Injection\nLLM02 - Sensitive Information Disclosure\nLLM07 - System Prompt Leakage\n", "OWASP Agentic": "T2 - Tool Misuse\nT3 - Privilege Compromise\nT6 - Intent Breaking & Goal Manipulation\nT7 - Misaligned & Deceptive Behaviors\n"}
+        }
+    }
