@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.0](https://github.com/splx-ai/agentic-radar/compare/v0.7.0...v0.8.0) (2025-04-26)
+
+
+### Features
+
+* **agent-vulnerability:** OpenAI Agents Improvements ([95bb67f](https://github.com/splx-ai/agentic-radar/commit/95bb67f0b4c7844c2d82985aa2ad67cca59d3c82))
+* **probe:** Init Agentic Probe ([2e72045](https://github.com/splx-ai/agentic-radar/commit/2e72045703edae9cd97cf3b092a4599680901ad5))
+
 ## [0.7.0](https://github.com/splx-ai/agentic-radar/compare/v0.6.0...v0.7.0) (2025-04-23)
 
 
