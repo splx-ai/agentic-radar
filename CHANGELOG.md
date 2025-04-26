@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/splx-ai/agentic-radar/compare/v0.8.0...v0.9.0) (2025-04-26)
+
+
+### Features
+
+* **bump:** Release 0.8.1 ([#74](https://github.com/splx-ai/agentic-radar/issues/74)) ([e6c538f](https://github.com/splx-ai/agentic-radar/commit/e6c538fea22067961e870c17f7bb0858362c870f))
+
 ## [0.8.0](https://github.com/splx-ai/agentic-radar/compare/v0.7.0...v0.8.0) (2025-04-26)
 
 
