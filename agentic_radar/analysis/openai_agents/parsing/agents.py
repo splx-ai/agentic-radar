@@ -1,4 +1,5 @@
 import ast
+from typing import Union
 
 from pydantic import ValidationError
 
@@ -84,6 +85,8 @@ class AgentsVisitor(ast.NodeVisitor):
             model = get_string_keyword_arg(agent_node, "model")
             mcp_servers = self._extract_agent_mcp_servers(agent_node)
 
+            guardrails = self._extract_agent_guardrails(agent_node)
+
             return Agent(
                 name=name,
                 tools=tools,
@@ -91,6 +94,7 @@ class AgentsVisitor(ast.NodeVisitor):
                 instructions=instructions,
                 model=model,
                 mcp_servers=mcp_servers,
+                guardrails=guardrails
             )
         except (ValueError, ValidationError, ValueError) as e:
             raise InvalidAgentConstructorError from e
@@ -127,6 +131,26 @@ class AgentsVisitor(ast.NodeVisitor):
                 )
 
         return tools
+    
+    def _extract_agent_guardrails(self, agent_node: ast.Call) -> dict[str,list[str]]:
+        def extract_guardrail_names(node: Union[ast.AST, None]) -> list[str]:
+            if node is None:
+                return []
+            elif isinstance(node, ast.List):
+                return [
+                    elt.id if isinstance(elt, ast.Name) else elt.attr if isinstance(elt, ast.Attribute) else None
+                    for elt in node.elts
+                    if isinstance(elt, (ast.Name, ast.Attribute))
+                ]
+            return []
+
+        input_guardrails_node = get_keyword_arg_value(agent_node, "input_guardrails")
+        output_guardrails_node = get_keyword_arg_value(agent_node, "output_guardrails")
+
+        return {
+            "input": extract_guardrail_names(input_guardrails_node),
+            "output": extract_guardrail_names(output_guardrails_node),
+        }
 
     def _extract_agent_handoffs(self, agent_node: ast.Call) -> list[str]:
         handoffs_node = get_keyword_arg_value(agent_node, "handoffs")

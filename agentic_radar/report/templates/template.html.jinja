@@ -286,6 +286,94 @@ const __INLINE_DATA = {{graph}};
                 </div>
         <div style="margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
             <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
+                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Nodes Overview</div>
+                <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
+                </div>
+            </div>
+        </div>
+            {% if agents %}
+              <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
+                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Agents</div>
+                    </div>
+                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
+                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Agent Name</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">LLM Model</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">System Prompt</th>
+                            {% if enhanced_prompts|length > 0 %}
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Enhanced System Prompt</th>
+                            {% endif %}
+                        </tr>
+                        {% for agent in agents %}
+                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.name|e}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.llm|e}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; text-align: left;">{{agent.system_prompt|e}}</td>
+                            {% if enhanced_prompts|length > 0 %}
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">
+                                <div class="cell-content-wrapper">
+                                    <span class="copy-text">{{enhanced_prompts.get(agent.name, agent.system_prompt)|e}}</span>
+                                    <button class="copy-btn" data-copy-value="{{enhanced_prompts.get(agent.name, agent.system_prompt)|e}}" title="Copy">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-icon-svg">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon-svg" style="display: none;"> <!-- Initially hidden, green stroke -->
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+
+                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
+                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Tools</div>
+                    </div>
+                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
+                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Name</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Category</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Description</th>
+                            <th style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">Number of Vulnerabilities</th>
+                        </tr>
+                        {% for tool in tools %}
+                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.name|e}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.category|e}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.description|e}}</td>
+                            <td style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">{{tool.vulnerabilities | length}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% if mcp_servers %}
+                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
+                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">MCP Servers</div>
+                    </div>
+                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
+                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Name</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Parameters</th>
+                        </tr>
+                        {% for mcp_server in mcp_servers %}
+                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{mcp_server.name|e}}</td>
+                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{mcp_server.description|safe}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+        {% if tools | map(attribute='vulnerabilities') | map('length') | sum > 0 %}
+        <div style="margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
+            <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
                 <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Tool Vulnerabilities</div>
                 <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
                 {% for tool in tools %}
@@ -340,87 +428,66 @@ const __INLINE_DATA = {{graph}};
                 {% endif %}
                 {% endfor %}
             </div>
-        </div>
-            {% if agents %}
-              <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Agents</div>
-                    </div>
-                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
-                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Agent Name</th>
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">LLM Model</th>
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">System Prompt</th>
-                            {% if enhanced_prompts|length > 0 %}
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Enhanced System Prompt</th>
-                            {% endif %}
-                        </tr>
-                        {% for agent in agents %}
-                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.name|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.llm|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; text-align: left;">{{agent.system_prompt|e}}</td>
-                            {% if enhanced_prompts|length > 0 %}
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">
-                                <div class="cell-content-wrapper">
-                                    <span class="copy-text">{{enhanced_prompts.get(agent.name, agent.system_prompt)|e}}</span>
-                                    <button class="copy-btn" data-copy-value="{{enhanced_prompts.get(agent.name, agent.system_prompt)|e}}" title="Copy">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-icon-svg">
-                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon-svg" style="display: none;"> <!-- Initially hidden, green stroke -->
-                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                            {% endif %}
-                        {% endfor %}
-                    </table>
-                </div>
             {% endif %}
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Tools</div>
-                    </div>
-                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
+            {% set non_guardrail_agents = agents | selectattr("is_guardrail", "equalto", False) | list %}
+            {% if non_guardrail_agents | map(attribute='vulnerabilities') | map('length') | sum > 0 %}
+            <div style="margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 20px; display: flex">
+                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px;">Agent Vulnerability Mitigations</div>
+                <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
+                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid; border-spacing:0">
                         <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Name</th>
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Category</th>
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Description</th>
-                            <th style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">Number of Vulnerabilities</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">Agent Name</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">Vulnerability</th>
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">Mitigation Level*</th>
+                            <th style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">Explanation</th>
                         </tr>
-                        {% for tool in tools %}
-                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.name|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.category|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.description|e}}</td>
-                            <td style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">{{tool.vulnerabilities | length}}</td>
-                        </tr>
+                        {% for agent in non_guardrail_agents %}
+                            {% set num_vulns = agent.vulnerabilities | length %}
+                            {% for v in agent.vulnerabilities %}
+                            <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
+                                {% if loop.first %}
+                                <td rowspan="{{num_vulns}}" style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; vertical-align: top">{{ agent.name|e }}</td>
+                                {% endif %}
+                                <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{ v.name|e }}</td>
+                                {% set color = 'green' if v.mitigation_level == 'Full' else 'orange' if v.mitigation_level == 'Partial' else 'red' %}
+                                <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; color: {{ color }}">{{ v.mitigation_level|e }}</td>
+                                <td style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">
+                                    {{ (v.guardrail_explanation ~ ' ' ~ v.instruction_explanation)|e }}
+                                </td>
+                            </tr>
+                            {% endfor %}
                         {% endfor %}
                     </table>
+                <div style="margin-top: 8px; font-size: 10px; font-family: Inter; color: #555;">
+                    <strong>*The "Mitigation Level"</strong> column shows to what extent a vulnerability is mitigated. "Full" indicates that both a system prompt instruction and a guardrail are in place.
+                    "Partial" indicates that one of the two is in place. "None" indicates that neither one is in place. (This applies to all vulnerabilities except for the "Input Length Limit", in which case only the guardrail is taken into account).
                 </div>
-            {% if mcp_servers %}
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">MCP Servers</div>
-                    </div>
-                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
-                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Name</th>
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Parameters</th>
-                        </tr>
-                        {% for mcp_server in mcp_servers %}
-                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{mcp_server.name|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{mcp_server.description|safe}}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
+            </div>
+            <div style="margin-top: 40px;">
+                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700;">Agent Vulnerability Explanations</div>
+                <hr style="width: 100%; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
+                <table style="width: 100%; border-collapse: collapse; border: 0.5px solid #D4D4D4; font-family: Inter; font-size: 10px;">
+                    <tr style="background: #F5F5F5; font-weight: 600;">
+                        <th style="padding: 6px; border: 0.5px solid #D4D4D4; width: 20%;">Agent Vulnerability</th>
+                        <th style="padding: 6px; border: 0.5px solid #D4D4D4; width: 20%;">Framework Mapping</th>
+                        <th style="padding: 6px; border: 0.5px solid #D4D4D4; width: 60%;">Description</th>
+                    </tr>
+                    {% for name, details in vulnerability_definitions.items() %}
+                    <tr>
+                        <td style="padding: 6px; border: 0.5px solid #D4D4D4; vertical-align: top;">{{ name }}</td>
+                        <td style="padding: 6px; border: 0.5px solid #D4D4D4; vertical-align: top;">
+                            {% for framework, mapping in details.mapping.items() %}
+                                <div><strong>{{ framework }}:</strong><br><span style="white-space: pre-wrap;">{{ mapping }}</span></div>
+                            {% endfor %}
+                        </td>
+                        <td style="padding: 6px; border: 0.5px solid #D4D4D4; vertical-align: top;">{{ details.description|safe }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
             {% endif %}
             </div>
+        </div>
         </div>
     </div>
 </div>
