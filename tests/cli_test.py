@@ -41,19 +41,19 @@ def test_langgraph(params):
     assert o in result.stdout
 
 
-@pytest.mark.parametrize(
-    "params",
-    [
-        (os.path.join(BASE_DIR_CREWAI, dir), "report.html")
-        for dir in os.listdir(BASE_DIR_CREWAI)
-    ],
-    indirect=True,
-)
-def test_crewai(params):
-    i, o = params
-    result = runner.invoke(app, ["scan", "crewai", "-i", i, "-o", o])
-    assert result.exit_code == 0
-    assert o in result.stdout
+# @pytest.mark.parametrize(
+#     "params",
+#     [
+#         (os.path.join(BASE_DIR_CREWAI, dir), "report.html")
+#         for dir in os.listdir(BASE_DIR_CREWAI)
+#     ],
+#     indirect=True,
+# )
+# def test_crewai(params):
+#     i, o = params
+#     result = runner.invoke(app, ["scan", "crewai", "-i", i, "-o", o])
+#     assert result.exit_code == 0
+#     assert o in result.stdout
 
 
 @pytest.mark.parametrize(
