@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1](https://github.com/splx-ai/agentic-radar/compare/v0.9.0...v0.9.1) (2025-04-26)
+
+
+### Features
+
+* **bump:** Temp add openai-agents dependency ([#76](https://github.com/splx-ai/agentic-radar/issues/76)) ([fc5cac2](https://github.com/splx-ai/agentic-radar/commit/fc5cac2a2cdc32ccb6fa5d6f53941a946efb17f7))
+
 ## [0.9.0](https://github.com/splx-ai/agentic-radar/compare/v0.8.0...v0.9.0) (2025-04-26)
 
 
