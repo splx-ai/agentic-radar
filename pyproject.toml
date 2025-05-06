@@ -26,16 +26,7 @@ dependencies = [
     "openai (>=1.73.0,<2.0.0)",
     "dotenv (>=0.9.9,<0.10.0)",
     "rich (>=13.7.0,<14.0.0)",
-    "openai-agents (>=0.0.13,<0.0.14)",
 ]
-
-[project.optional-dependencies]
-crewai = [
-    "crewai-tools (>=0.38.1) ; python_version >= '3.10' and python_version < '3.13'"
-    ]
-langgraph = []
-all = []
-openai-agents = ["openai-agents (>=0.0.13,<0.0.14)"]
 
 [project.urls]
 Homepage = "https://github.com/splx-ai/agentic-radar"
