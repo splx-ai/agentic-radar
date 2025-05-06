@@ -6,6 +6,7 @@ from ...graph import GraphDefinition, NodeType, ToolType
 from ...graph import NodeDefinition as Node
 from .custom_tools import get_all_custom_tools_from_directory
 from .graph import parse_all_graph_instances_in_directory
+from .mcp import get_all_mcp_servers_from_directory
 from .predefined_tools import get_all_predefined_tools_from_directory
 from .utils import build_global_registry
 
@@ -25,6 +26,8 @@ class LangGraphAnalyzer(Analyzer):
         predefined_tools = get_all_predefined_tools_from_directory(root_directory)
 
         custom_tools = get_all_custom_tools_from_directory(root_directory)
+
+        mcp_servers = get_all_mcp_servers_from_directory(root_directory)
 
         all_graphs = parse_all_graph_instances_in_directory(
             root_directory,
@@ -84,6 +87,13 @@ class LangGraphAnalyzer(Analyzer):
                     vulnerabilities=[],  # TODO Add vulnerability mapping
                 )
             )
+        
+        for mcp_server_name, mcp_server_description in mcp_servers.items():
+            nodes.append(Node(
+                type=NodeType.MCP_SERVER,
+                name=mcp_server_name,
+                description=mcp_server_description
+            ))
 
         return GraphDefinition(
             name=Path(root_directory).name, nodes=nodes, edges=edges, tools=tools
