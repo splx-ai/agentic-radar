@@ -4,21 +4,21 @@ import sys
 from abc import ABC, abstractmethod
 
 from ..agent import Agent
-from ..probe import Probe
-from ..rich import display_probe_results
+from ..rich import display_test_results
+from ..test import Test
 
 
 class BaseLauncher(ABC):
     """
-    Base class for launching probes.
+    Base class for launching tests.
     """
 
     def __init__(
-        self, entrypoint_script: str, extra_args: list[str], probes: list[Probe]
+        self, entrypoint_script: str, extra_args: list[str], tests: list[Test]
     ):
         self.entrypoint_script = entrypoint_script
         self.extra_args = extra_args
-        self.probes = probes
+        self.tests = tests
         self._collected_agents: list[Agent] = []
 
     @abstractmethod
@@ -37,7 +37,7 @@ class BaseLauncher(ABC):
         """
         Callback method to be invoked by the patched function(s)
         after an agent instance is successfully initialized.
-        Stores the instance for later probing.
+        Stores the instance for later testing.
         """
         agent_name = getattr(agent_instance, "name", "UnknownAgent")
         print(
@@ -72,21 +72,21 @@ class BaseLauncher(ABC):
             f"[Launcher] Workflow finished with exit code: {exit_code}. Found {len(self._collected_agents)} agents."
         )
 
-    async def _run_probes(self):
+    async def _run_tests(self):
         """
-        Run all probes on the collected agents.
+        Run all tests on the collected agents.
         """
         results = []
         for agent in self._collected_agents:
-            print(f"[Launcher] Running probes on agent: {agent.name}")
-            for probe in self.probes:
-                print(f"[Launcher] Running probe: {probe.name}")
-                result = await probe.run(agent)
+            print(f"[Launcher] Running tests on agent: {agent.name}")
+            for test in self.tests:
+                print(f"[Launcher] Running test: {test.name}")
+                result = await test.run(agent)
                 results.append(result)
-            print(f"[Launcher] Finished running probes on agent: {agent.name}")
-        print("[Launcher] All probes finished.")
-        print("[Launcher] Displaying probe results:")
-        display_probe_results(results)
+            print(f"[Launcher] Finished running tests on agent: {agent.name}")
+        print("[Launcher] All tests finished.")
+        print("[Launcher] Displaying test results:")
+        display_test_results(results)
 
     def launch(self):
         self._patch_targets()
@@ -99,10 +99,10 @@ class BaseLauncher(ABC):
             try:
                 loop = asyncio.get_running_loop()
                 print("[Launcher] Using existing event loop.")
-                loop.run_until_complete(self._run_probes())
+                loop.run_until_complete(self._run_tests())
             except RuntimeError:
                 print("[Launcher] No event loop running. Starting one.")
-                asyncio.run(self._run_probes())
+                asyncio.run(self._run_tests())
         except Exception as e:
             print(f"[Launcher] Error during launch: {e}")
             self._revert_patches()

@@ -31,8 +31,8 @@ Output example:
 """
 
 
-async def evaluate_probe(
-    probe_explanation: str, input_text: str, output_text: str
+async def evaluate_test(
+    test_explanation: str, input_text: str, output_text: str
 ) -> OracleEvaluation:
     user_prompt = f"""
 Input:
@@ -42,7 +42,7 @@ Output:
 {output_text}
 
 Test Explanation:
-{probe_explanation}
+{test_explanation}
 """
 
     response = await get_client().chat.completions.create(

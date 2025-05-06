@@ -3,49 +3,49 @@ from abc import ABC, abstractmethod
 from pydantic import BaseModel
 
 from .agent import Agent
-from .oracle import evaluate_probe
+from .oracle import evaluate_test
 
 
-class ProbeResult(BaseModel):
+class TestResult(BaseModel):
     agent_name: str
-    probe_name: str
+    test_name: str
     input: str
     output: str
     test_passed: bool
     explanation: str
 
 
-class Probe(ABC):
+class Test(ABC):
     """
-    Base class for probes.
-    Probes are used to test individual agents.
+    Base class for tests.
+    Tests are used to test individual agents.
     """
 
     @property
     @abstractmethod
     def name(self) -> str:
         """
-        Return the name of the probe.
+        Return the name of the test.
         """
         pass
 
     @abstractmethod
-    async def run(self, agent: Agent) -> ProbeResult:
+    async def run(self, agent: Agent) -> TestResult:
         """
-        Run the probe on the given agent.
+        Run the test on the given agent.
 
         Args:
-            agent (Agent): The agent to probe.
+            agent (Agent): The agent to test.
 
         Returns:
-            ProbeResult: The result of the probe.
+            TestResult: The result of the test.
         """
         pass
 
 
-class OracleBasedProbe(Probe, ABC):
+class OracleBasedTest(Test, ABC):
     """
-    Abstract base class for probes evaluated by an oracle LLM.
+    Abstract base class for tests evaluated by an oracle LLM.
     """
 
     @property
@@ -58,17 +58,17 @@ class OracleBasedProbe(Probe, ABC):
     def _success_condition(self) -> str:
         pass
 
-    async def run(self, agent: Agent) -> ProbeResult:
+    async def run(self, agent: Agent) -> TestResult:
         input = self._input
         output = await agent.invoke(input)
-        oracle_evaluation = await evaluate_probe(
-            probe_explanation=self._success_condition,
+        oracle_evaluation = await evaluate_test(
+            test_explanation=self._success_condition,
             input_text=input,
             output_text=output,
         )
-        return ProbeResult(
+        return TestResult(
             agent_name=agent.name,
-            probe_name=self.name,
+            test_name=self.name,
             input=input,
             output=output,
             test_passed=not oracle_evaluation.attack_succeeded,
