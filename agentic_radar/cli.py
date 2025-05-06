@@ -31,7 +31,6 @@ from agentic_radar.report import (
 from agentic_radar.test import (
     FakeNewsTest,
     HarmfulContentTest,
-    OpenAIAgentsLauncher,
     PIILeakageTest,
     PromptInjectionTest,
     Test,
@@ -210,6 +209,16 @@ def test(
         FakeNewsTest(),
     ]
     if framework == AgenticFramework.openai_agents:
+        try:
+            import agents  # noqa: F401
+        except ImportError:
+            print(
+                "The OpenAI Agents library is not installed. Please install it using 'pip install openai-agents'."
+            )
+            raise typer.Exit(code=1)
+
+        from agentic_radar.test import OpenAIAgentsLauncher
+
         launcher = OpenAIAgentsLauncher(entrypoint_script, extra_args, tests)
     else:
         print(f"Unsupported framework: {framework}")
