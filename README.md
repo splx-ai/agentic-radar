@@ -72,16 +72,22 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
+      <li>
+      <a href="#advanced-installation">Advanced Installation</a>
+      <ul>
+        <li><a href="#crewai-installation">CrewAI Installation</a></li>
+        <li><a href="#openai-agents-installation">OpenAI Agents Installation</a></li>
+      </ul>
+    </li>
     <li><a href="#usage">Usage</a></li>
     <li>
       <a href="#advanced-features-">Advanced Features</a>
       <ul>
-        <li><a href="#prompt-enhancement">Prompt Enhancement</a></li>
-        <li><a href="#-probe-vulnerabilities-in-agentic-workflows">Probe Vulnerabilities in Agentic Workflows</a></li>
+        <li><a href="#agentic-prompt-enhancement">Agentic Prompt Enhancement</a></li>
+        <li><a href="#-test-for-vulnerabilities-in-agentic-workflows">Test for Vulnerabilities in Agentic Workflows</a></li>
       </ul>
     </li>
     <li><a href="#roadmap-">Roadmap</a></li>
-    <li><a href="#demo-">Demo</a></li>
     <li><a href="#blog-tutorials-">Blog Tutorials</a></li>
     <li><a href="#community-">Community</a></li>
     <li><a href="#frequently-asked-questions-">Frequently Asked Questions</a></li>
@@ -103,22 +109,13 @@ It allows users to create a security report for agentic systems, including:
 
 The comprehensive HTML report summarizes all findings and allows for easy reviewing and sharing.
 
+**[View Full Report Example Here](./docs/demo_report.html)**
+
+
 **Agentic Radar** includes mapping of detected vulnerabilities to well-known security frameworks 🛡️.
 + [OWASP Top 10 LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 
 + [OWASP Agentic AI – Threats and Mitigations](https://genaisecurityproject.com/resource/agentic-ai-threats-and-mitigations)
-
-**Why Use It?** 🔎
-
-Agentic systems have complex workflows and often interact with multiple tools, making transparency and security assessment challenging. This tool simplifies the process by offering a structured view of workflows, tools, and potential risks.
-
-
-**Detailed Report**
-
-<p align="center">
-  <img src="https://github.com/splx-ai/agentic-radar/raw/main/docs/report_part1.png" width="390" height="650" style="margin-right: 50px;" >  
-  <img src="https://github.com/splx-ai/agentic-radar/raw/main/docs/report_part2.png" width="390" height="650"/>
-</p>
 
 ## Getting Started 🚀
 
@@ -134,9 +131,17 @@ pip install agentic-radar
 agentic-radar --version
 ```
 
-#### CrewAI Installation
+Some features require extra installations, depending on the targeted agentic framework. See more [below](#advanced-installation).
 
-For better tool descriptions in CrewAI, you can install the `crewai` extra:
+## Advanced Installation
+### CrewAI Installation
+
+CrewAI extras are needed when using one of the following features in combination with CrewAI:
+
+- [Agentic Radar Test](#-test-for-vulnerabilities-in-agentic-workflows)
+- Descriptions for predefined tools
+
+You can install Agentic Radar with extra CrewAI dependencies by running:
 ```sh
 pip install agentic-radar[crewai]
 ```
@@ -145,9 +150,13 @@ pip install agentic-radar[crewai]
 > This will install the `crewai-tools` package which is only supported on Python versions >= 3.10 and < 3.13.
 > If you are using a different python version, the tool descriptions will be less detailed or entirely missing.
 
-#### OpenAI Agents Installation
+### OpenAI Agents Installation
 
-If you want to use Probe to test your OpenAI Agents workflows, you can install the `openai-agents` extra:
+OpenAI Agents extras are needed when using one of the following features in combination with OpenAI Agents:
+
+- [Agentic Radar Test](#-test-for-vulnerabilities-in-agentic-workflows)
+
+You can install Agentic Radar with extra OpenAI Agents dependencies by running:
 ```sh
 pip install agentic-radar[openai-agents]
 ```
@@ -159,68 +168,54 @@ Agentic Radar now supports two main commands:
 ### 1. `scan`
 Scan code for agentic workflows and generate a report.
 
-```shell
+```sh
 agentic-radar scan [OPTIONS] FRAMEWORK:{langgraph|crewai|n8n|openai-agents}
 ```
 
-**Arguments:**
-- `framework` *(required)*: Framework to scan. Must be one of `langgraph`, `crewai`, `n8n`, or `openai-agents`.
+<img src="https://github.com/splx-ai/agentic-radar/raw/main/docs/demo.gif"/>
 
-**Options:**
-- `-i, --input-dir TEXT` — Path to the directory where all the code is located.  
-  _(default: `.`)_
-- `-o, --output-file TEXT` — Where the output report should be stored.  
-  _(default: e.g., `report_20250425_214811.html`)_
-- `--enhance-prompts` — Enhance detected system prompts (requires `OPENAI_API_KEY` or `AZURE_OPENAI_API_KEY`).
-- `--help` — Show help message and exit.
+
 
 ---
 
-### 2. `probe`
+### 2. `test`
 Test agents in an agentic workflow for various vulnerabilities.
 Requires OPENAI_API_KEY set as environment variable.
 
-```shell
-agentic-radar probe [OPTIONS] FRAMEWORK:{langgraph|crewai|n8n|openai-agents} ENTRYPOINT_SCRIPT_WITH_ARGS
+```sh
+agentic-radar test [OPTIONS] FRAMEWORK:{openai-agents} ENTRYPOINT_SCRIPT_WITH_ARGS
 ```
 
-**Arguments:**
-- `framework` *(required)*: Framework of the agentic workflow to test. Must be one of `langgraph`, `crewai`, `n8n`, or `openai-agents`.
-- `entrypoint_script_with_args` *(required)*: Path to the entrypoint script that runs the agentic workflow, along with any necessary arguments, for example:  
-  `"myscript.py --arg1 value1 --arg2 value2"`
-
-**Options:**
-- `--help` — Show help message and exit.
+See more about this feature [here](#-test-for-vulnerabilities-in-agentic-workflows).
 
 
 ## Advanced Features ✨
 
-### Prompt Enhancement
+### Agentic Prompt Enhancement
 
 Prompt Enhancement automatically improves detected system prompts in your agentic workflow and displays them in the report. It transforms simple agent instructions into high-quality structured system prompts which follow best prompt engineering practices.
+
+> [!NOTE]  
+> This feature uses LLMs, so OPENAI_API_KEY environment variable needs to be set before running the command.
 
 > [!NOTE]  
 > Currently supported frameworks (with more to come): OpenAI Agents, CrewAI
 
 It is quite straightforward to use:
-1. Copy `.env.example` to `.env` file by running:
-```sh
-cp .env.example .env
-```
-2. Store your OpenAI API key and other necessary information in the `.env` file.
+1. Set your OPENAI_API_KEY environment variable by running `export OPENAI_API_KEY=<api_key>`.
 
-3. Run Agentic Radar with the `--enhance-prompts` flag, for example:
+2. Run Agentic Radar with the `--enhance-prompts` flag, for example:
 ```sh
-agentic-radar --enhance-prompts -i examples/openai-agents/
-basic/lifecycle_example -o report.html openai-agents
+agentic-radar scan openai-agents --enhance-prompts -i examples/openai-agents/
+basic/lifecycle_example -o report.html
 ```
 
-4. Inspect enhanced system prompts in the generated report:
+3. Inspect enhanced system prompts in the generated report:
 <img src="docs/prompt_enhancement.png"/>
 
-### 🔍 Probe Vulnerabilities in Agentic Workflows
+### 🔍 Test for Vulnerabilities in Agentic Workflows
 
-Agentic Radar now supports probing your agent workflows at **runtime** to identify critical vulnerabilities through simulated adversarial inputs.
+Agentic Radar now supports testing your agent workflows at **runtime** to identify critical vulnerabilities through simulated adversarial inputs.
 
 This includes automated testing for:
   - Prompt Injection
@@ -233,29 +228,29 @@ Currently supported for:
 
 #### 🛠 How It Works
 
-The probe command launches your agentic workflow with a test suite of probes designed to simulate malicious or adversarial inputs. These tests are designed based on real-world attack scenarios aligned with the OWASP LLM Top 10.
+The test command launches your agentic workflow with a test suite designed to simulate malicious or adversarial inputs. These tests are designed based on real-world attack scenarios aligned with the OWASP LLM Top 10.
 
 > [!NOTE]  
 > This feature requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY set as an environment variable. You can set it via command line or inside a .env file.
 
-Probe is run like:
+Test is run like:
 ```sh
-agentic-radar probe <framework> "<path/to/the/workflow/main.py any-necessary-args>"
+agentic-radar test <framework> "<path/to/the/workflow/main.py any-necessary-args>"
 ```
 
 For example:
 ```sh
-agentic-radar probe openai-agents "examples/openai-agents/basic/lifecycle_example.py"
+agentic-radar test openai-agents "examples/openai-agents/basic/lifecycle_example.py"
 ```
 
-Probe injects itself into the agentic workflow provided by user, detects necessary information and runs the prepared tests.
+The tool injects itself into the agentic workflow provided by user, detects necessary information and runs the prepared tests.
 
 #### 📊 Rich Test Results
 
-All probe results are printed in a visually rich table format directly in the terminal.
+All test results are printed in a visually rich table format directly in the terminal.
 Each row shows:
   - Agent name
-  - Type of probe
+  - Type of test
   - Injected input
   - Agent output
   - ✅ Whether the test passed or failed
@@ -263,45 +258,27 @@ Each row shows:
 
 This makes it easy to spot vulnerabilities at a glance—especially in multi-agent systems.
 
-  <img src="docs/probe_results.png" alt="Probe Results Example" />
+  <img src="docs/test_results.png" alt="Test Results Example" />
 
 ## Roadmap 📈
 
-Planned features (in no particular order)
+This matrix shows which agentic frameworks support all the Agentic Radar features. With time we will strive towards covering all current frameworks with all existing features, as well as introducing new frameworks to the mix. 
 
-- [ ] Framework Support
-  - [x] [LangGraph](https://github.com/langchain-ai/langgraph)
-  - [x] [CrewAI](https://github.com/crewAIInc/crewAI)
-  - [x] [n8n](https://github.com/n8n-io/n8n)
-  - [x] [OpenAI Agents](https://github.com/openai/openai-agents-python)
-  - [ ] [LlamaIndex](https://github.com/run-llama/llama_index)
-  - [ ] [Swarm](https://github.com/openai/swarm)
-  - [ ] [PydanticAI](https://github.com/pydantic/pydantic-ai)
-  - [ ] [AutoGen](https://github.com/microsoft/autogen)
-  - [ ] [Dify](https://github.com/langgenius/dify)
-- [x] CI
-  - [x] Code style checks
-  - [x] Automated releases to PyPi
-- [x] Improve report design
-  - [x] Improve SVG scaling
+| Feature       | Scan        | MCP Detection        | Prompt Enhancement | Agentic Test
+|----------------|-------------|-------------|-------------|-------------|
+| OpenAI Agents  | ✅          | ✅          | ✅          |     ✅         |
+| CrewAI         | ✅          | ❌         | ✅          |      ❌        |
+| n8n            | ✅          | ❌          | ❌          |     ❌        |
+| LangGraph      | ✅          | ✅          | ❌          |     ❌         |
 
-## Demo 🎥
-
-<img src="https://github.com/splx-ai/agentic-radar/raw/main/docs/demo.gif"/>
-
-<br>
-
-**[Demo Google Colab Notebook](https://colab.research.google.com/drive/1AAN23QAMsm0C7KGRmSSw7G2WFatzIa46?usp=sharing) 📘**
-
-Designed for AI engineers and security researchers, this demo showcases how to integrate **Agentic Radar** into your development workflow. ⚙️ 
-
-It helps you understand agentic system behavior, visualize security risks, and enhance AI transparency in your applications. 🚀
+Are there some features you would like to see happen first? Vote anonymously [here](https://strawpoll.com/w4nWWMqqlnA) or [open a GitHub Issue](https://github.com/splx-ai/agentic-radar/issues/new/choose).
 
 ## Blog Tutorials 💡
 
 - [CrewAI](https://splx.ai/blog/enhancing-ai-transparency-scanning-crewai-workflows-with-agentic-radar)
 - [n8n](https://splx.ai/blog/scanning-n8n-workflows-with-agentic-radar)
 - [OpenAI Agents](https://splx.ai/blog/openai-agents-sdk-transparent-workflows-with-agentic-radar)
+- [MCP Server Detection](https://splx.ai/blog/agentic-radar-now-detects-mcp-servers-in-agentic-workflows)
 
 ## Community 🤝
 
