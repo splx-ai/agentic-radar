@@ -40,7 +40,7 @@ class Test(ABC):
 
 
 @dataclass
-class OracleBasedTest(Test, ABC):
+class OracleBasedTest(Test):
     """
     Test evaluated by an oracle LLM.
     """
