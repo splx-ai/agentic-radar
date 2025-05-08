@@ -19,13 +19,6 @@ from agentic_radar.analysis import (
 )
 from agentic_radar.graph import Agent
 from agentic_radar.mapper import map_vulnerabilities
-from agentic_radar.probe import (
-    FakeNewsProbe,
-    HarmfulContentProbe,
-    OpenAIAgentsLauncher,
-    PIILeakageProbe,
-    PromptInjectionProbe,
-)
 from agentic_radar.prompt_enhancer.enhancer import enhance_agent_prompts
 from agentic_radar.prompt_enhancer.pipeline import PromptEnhancingPipeline
 from agentic_radar.prompt_enhancer.steps import OpenAIGeneratorStep
@@ -34,6 +27,13 @@ from agentic_radar.report import (
     GraphDefinition,
     NodeDefinition,
     generate,
+)
+from agentic_radar.test import (
+    FakeNewsTest,
+    HarmfulContentTest,
+    PIILeakageTest,
+    PromptInjectionTest,
+    Test,
 )
 from agentic_radar.utils import sanitize_graph
 
@@ -177,10 +177,10 @@ def analyze_and_generate_report(
 
 
 @app.command(
-    "probe",
+    "test",
     help="Test agents in an agentic workflow for various vulnerabilities. Requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY set as an environment variable.",
 )
-def probe(
+def test(
     framework: Annotated[
         AgenticFramework,
         typer.Argument(
@@ -201,15 +201,25 @@ def probe(
         print(f"Entrypoint script '{entrypoint_script}' does not exist.")
         raise typer.Exit(code=1)
 
-    print(f"Probing {entrypoint_script} for {framework} agents")
-    probes = [
-        PromptInjectionProbe(),
-        PIILeakageProbe(),
-        HarmfulContentProbe(),
-        FakeNewsProbe(),
+    print(f"Testing {entrypoint_script} for {framework} agents")
+    tests: list[Test] = [
+        PromptInjectionTest(),
+        PIILeakageTest(),
+        HarmfulContentTest(),
+        FakeNewsTest(),
     ]
     if framework == AgenticFramework.openai_agents:
-        launcher = OpenAIAgentsLauncher(entrypoint_script, extra_args, probes)
+        try:
+            import agents  # noqa: F401
+        except ImportError:
+            print(
+                "The OpenAI Agents library is not installed. Please install it using 'pip install openai-agents'."
+            )
+            raise typer.Exit(code=1)
+
+        from agentic_radar.test import OpenAIAgentsLauncher
+
+        launcher = OpenAIAgentsLauncher(entrypoint_script, extra_args, tests)
     else:
         print(f"Unsupported framework: {framework}")
         raise typer.Exit(code=1)

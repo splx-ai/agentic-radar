@@ -2,6 +2,7 @@ import functools
 import sys
 
 from ..agent_adapters import OpenAIAgentsAgent
+from ..test import Test
 from .base_launcher import BaseLauncher
 
 
@@ -11,8 +12,10 @@ class OpenAIAgentsLauncher(BaseLauncher):
     It patches the Agent constructor method to register the agents and run methods to terminate the workflow early.
     """
 
-    def __init__(self, entrypoint_script: str, extra_args: list[str], probes: list):
-        super().__init__(entrypoint_script, extra_args, probes)
+    def __init__(
+        self, entrypoint_script: str, extra_args: list[str], tests: list[Test]
+    ):
+        super().__init__(entrypoint_script, extra_args, tests)
 
     def _patch_targets(self) -> None:
         try:
