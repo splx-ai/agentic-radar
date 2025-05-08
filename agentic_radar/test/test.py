@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
 from pydantic import BaseModel
 
@@ -15,19 +16,14 @@ class TestResult(BaseModel):
     explanation: str
 
 
+@dataclass
 class Test(ABC):
     """
     Base class for tests.
     Tests are used to test individual agents.
     """
 
-    @property
-    @abstractmethod
-    def name(self) -> str:
-        """
-        Return the name of the test.
-        """
-        pass
+    name: str
 
     @abstractmethod
     async def run(self, agent: Agent) -> TestResult:
@@ -43,26 +39,21 @@ class Test(ABC):
         pass
 
 
+@dataclass
 class OracleBasedTest(Test, ABC):
     """
-    Abstract base class for tests evaluated by an oracle LLM.
+    Test evaluated by an oracle LLM.
     """
 
-    @property
-    @abstractmethod
-    def _input(self) -> str:
-        pass
-
-    @property
-    @abstractmethod
-    def _success_condition(self) -> str:
-        pass
+    name: str
+    input: str
+    success_condition: str
 
     async def run(self, agent: Agent) -> TestResult:
-        input = self._input
+        input = self.input
         output = await agent.invoke(input)
         oracle_evaluation = await evaluate_test(
-            test_explanation=self._success_condition,
+            test_explanation=self.success_condition,
             input_text=input,
             output_text=output,
         )

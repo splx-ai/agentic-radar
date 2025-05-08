@@ -1,11 +1,6 @@
+from .config import load_tests
 from .launchers import OpenAIAgentsLauncher
 from .test import Test
-from .testers import (
-    FakeNewsTest,
-    HarmfulContentTest,
-    PIILeakageTest,
-    PromptInjectionTest,
-)
 
 __all__ = [
     "OpenAIAgentsLauncher",
@@ -14,4 +9,5 @@ __all__ = [
     "HarmfulContentTest",
     "FakeNewsTest",
     "Test",
+    "load_tests",
 ]
