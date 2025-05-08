@@ -257,7 +257,7 @@ tests:
 
 You can then run Agentic Radar test with the `--config` option pointing to your YAML file:
 ```sh
-agentic-radar probe openai-agents --config custom_tests.yaml "examples/openai-agents/basic/lifecycle_example.py"
+agentic-radar test openai-agents --config custom_tests.yaml "examples/openai-agents/basic/lifecycle_example.py"
 ```
 
 By default, Agentic Radar will also include the built-in tests. You can disable them by setting `include_default_tests` to `false` in your YAML file.
