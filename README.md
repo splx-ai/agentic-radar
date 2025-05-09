@@ -172,10 +172,6 @@ Scan code for agentic workflows and generate a report.
 agentic-radar scan [OPTIONS] FRAMEWORK:{langgraph|crewai|n8n|openai-agents}
 ```
 
-<img src="https://github.com/splx-ai/agentic-radar/raw/main/docs/demo.gif"/>
-
-
-
 ---
 
 ### 2. `test`
