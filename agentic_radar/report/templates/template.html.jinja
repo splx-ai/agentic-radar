@@ -301,8 +301,8 @@ const __INLINE_DATA = {{graph}};
                             <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Agent Name</th>
                             <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">LLM Model</th>
                             <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">System Prompt</th>
-                            {% if enhanced_prompts|length > 0 %}
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Enhanced System Prompt</th>
+                            {% if hardened_prompts|length > 0 %}
+                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Hardened System Prompt</th>
                             {% endif %}
                         </tr>
                         {% for agent in agents %}
@@ -310,11 +310,11 @@ const __INLINE_DATA = {{graph}};
                             <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.name|e}}</td>
                             <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.llm|e}}</td>
                             <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; text-align: left;">{{agent.system_prompt|e}}</td>
-                            {% if enhanced_prompts|length > 0 %}
+                            {% if hardened_prompts|length > 0 %}
                             <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">
                                 <div class="cell-content-wrapper">
-                                    <span class="copy-text">{{enhanced_prompts.get(agent.name, agent.system_prompt)|e}}</span>
-                                    <button class="copy-btn" data-copy-value="{{enhanced_prompts.get(agent.name, agent.system_prompt)|e}}" title="Copy">
+                                    <span class="copy-text">{{hardened_prompts.get(agent.name, agent.system_prompt)|e}}</span>
+                                    <button class="copy-btn" data-copy-value="{{hardened_prompts.get(agent.name, agent.system_prompt)|e}}" title="Copy">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-icon-svg">
                                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>

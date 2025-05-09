@@ -83,7 +83,7 @@
     <li>
       <a href="#advanced-features-">Advanced Features</a>
       <ul>
-        <li><a href="#agentic-prompt-enhancement">Agentic Prompt Enhancement</a></li>
+        <li><a href="#agentic-prompt-hardening">Agentic Prompt Hardening</a></li>
         <li><a href="#-test-for-vulnerabilities-in-agentic-workflows">Test for Vulnerabilities in Agentic Workflows</a></li>
       </ul>
     </li>
@@ -187,12 +187,9 @@ See more about this feature [here](#-test-for-vulnerabilities-in-agentic-workflo
 
 ## Advanced Features ✨
 
-### Agentic Prompt Enhancement
+### Agentic Prompt Hardening
 
-Prompt Enhancement automatically improves detected system prompts in your agentic workflow and displays them in the report. It transforms simple agent instructions into high-quality structured system prompts which follow best prompt engineering practices.
-
-> [!NOTE]  
-> This feature uses LLMs, so OPENAI_API_KEY environment variable needs to be set before running the command.
+Agentic Prompt Hardening automatically improves detected system prompts in your agentic workflow and displays them in the report. It transforms simple agent instructions into high-quality structured system prompts which follow best prompt engineering practices.
 
 > [!NOTE]  
 > Currently supported frameworks (with more to come): OpenAI Agents, CrewAI
@@ -200,14 +197,14 @@ Prompt Enhancement automatically improves detected system prompts in your agenti
 It is quite straightforward to use:
 1. Set your OPENAI_API_KEY environment variable by running `export OPENAI_API_KEY=<api_key>`.
 
-2. Run Agentic Radar with the `--enhance-prompts` flag, for example:
+2. Run Agentic Radar with the `--harden-prompts` flag, for example:
 ```sh
-agentic-radar scan openai-agents --enhance-prompts -i examples/openai-agents/
+agentic-radar scan openai-agents --harden-prompts -i examples/openai-agents/
 basic/lifecycle_example -o report.html
 ```
 
-3. Inspect enhanced system prompts in the generated report:
-<img src="docs/prompt_enhancement.png"/>
+4. Inspect hardened system prompts in the generated report:
+<img src="docs/prompt_hardening.png"/>
 
 ### 🔍 Test for Vulnerabilities in Agentic Workflows
 
@@ -285,7 +282,7 @@ If you like what you see, give us a star! It keeps us inspired to improve and in
 ## Frequently Asked Questions ❓
 
 **Q: Is my source code being shared or is everything running locally?**  
-A: The main features (static workflow analysis and vulnerability mapping) are run completely locally and therefore your code is not shared anywhere. For optional advanced features, LLM's might be used. Eg. when using [Prompt Enhancement](#prompt-enhancement), detected system prompts can get sent to LLM for analysis.
+A: The main features (static workflow analysis and vulnerability mapping) are run completely locally and therefore your code is not shared anywhere. For optional advanced features, LLM's might be used. Eg. when using [Prompt Hardening](#prompt-hardening), detected system prompts can get sent to LLM for analysis.
 
 ## Contributing 💻 
 

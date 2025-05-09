@@ -46,7 +46,7 @@ class ReportData(BaseModel):
     agents: List[Agent]
     tools: List[Tool]
     mcp_servers: List[MCPServer]
-    enhanced_prompts: Dict[str, str]
+    hardened_prompts: Dict[str, str]
     scanner_version: str
 
     force_graph_dependency_path: str
@@ -70,7 +70,11 @@ def generate(graph: GraphDefinition, out_file: str):
         if node.node_type == NodeType.MCP_SERVER
     ]
 
-    with open(os.path.join(os.path.dirname(__file__), "templates", "assets", "vulnerabilities.json")) as f:
+    with open(
+        os.path.join(
+            os.path.dirname(__file__), "templates", "assets", "vulnerabilities.json"
+        )
+    ) as f:
         vulnerability_definitions = json.load(f)
 
     template.stream(
@@ -91,11 +95,11 @@ def generate(graph: GraphDefinition, out_file: str):
             agents=agents,
             tools=tools,
             mcp_servers=mcp_servers,
-            enhanced_prompts=graph.enhanced_prompts,
+            hardened_prompts=graph.hardened_prompts,
             scanner_version=__version__,
             force_graph_dependency_path=str(
                 resources.files(__package__) / "templates" / "assets" / "force-graph.js"
             ),
         ).model_dump(),
-        vulnerability_definitions = vulnerability_definitions
+        vulnerability_definitions=vulnerability_definitions,
     ).dump(out_file)

@@ -2,7 +2,7 @@ import os
 
 from openai import AzureOpenAI, OpenAI
 
-from ..pipeline import PromptEnhancingStep
+from ..pipeline import PromptHardeningStep
 
 META_PROMPT = """
 Given a task description or existing prompt, produce a detailed system prompt to guide a language model in completing the task effectively.
@@ -51,7 +51,7 @@ The final prompt you output should adhere to the following structure below. Do n
 """.strip()
 
 
-class OpenAIGeneratorStep(PromptEnhancingStep):
+class OpenAIGeneratorStep(PromptHardeningStep):
     """
     Step for improving a given system prompt using OpenAI's metaprompt.
     """
@@ -61,7 +61,7 @@ class OpenAIGeneratorStep(PromptEnhancingStep):
             AzureOpenAI() if "AZURE_OPENAI_API_KEY" in os.environ else OpenAI()
         )
 
-    def enhance(self, system_prompt: str) -> str:
+    def harden(self, system_prompt: str) -> str:
         completion = self.client.chat.completions.create(
             model="gpt-4o",
             messages=[
