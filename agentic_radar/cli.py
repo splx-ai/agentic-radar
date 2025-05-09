@@ -19,9 +19,9 @@ from agentic_radar.analysis import (
 )
 from agentic_radar.graph import Agent
 from agentic_radar.mapper import map_vulnerabilities
-from agentic_radar.prompt_enhancer.enhancer import enhance_agent_prompts
-from agentic_radar.prompt_enhancer.pipeline import PromptEnhancingPipeline
-from agentic_radar.prompt_enhancer.steps import OpenAIGeneratorStep
+from agentic_radar.prompt_hardening.harden import harden_agent_prompts
+from agentic_radar.prompt_hardening.pipeline import PromptHardeningPipeline
+from agentic_radar.prompt_hardening.steps import OpenAIGeneratorStep
 from agentic_radar.report import (
     EdgeDefinition,
     GraphDefinition,
@@ -87,13 +87,13 @@ def scan(
             envvar="AGENTIC_RADAR_OUTPUT_FILE",
         ),
     ] = f"report_{datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d_%H%M%S')}.html",
-    enhance_prompts: Annotated[
+    harden_prompts: Annotated[
         bool,
         typer.Option(
-            "--enhance-prompts",
-            help="Enhance detected system prompts. Requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY. You can set it in .env file or as an environment variable.",
+            "--harden-prompts",
+            help="Harden detected system prompts. Requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY. You can set it in .env file or as an environment variable.",
             is_flag=True,
-            envvar="AGENTIC_RADAR_ENHANCE_PROMPTS",
+            envvar="AGENTIC_RADAR_HARDEN_PROMPTS",
         ),
     ] = False,
 ):
@@ -119,7 +119,7 @@ def scan(
         analyzer=analyzer,
         input_directory=input_directory,
         output_file=output_file,
-        enhance_prompts=enhance_prompts,
+        harden_prompts=harden_prompts,
     )
 
 
@@ -128,7 +128,7 @@ def analyze_and_generate_report(
     analyzer: Analyzer,
     input_directory: str,
     output_file: str,
-    enhance_prompts: bool,
+    harden_prompts: bool,
 ):
     print(f"Analyzing {input_directory} for {framework} graphs")
     graph = analyzer.analyze(input_directory)
@@ -143,18 +143,18 @@ def analyze_and_generate_report(
     print("Mapping vulnerabilities")
     map_vulnerabilities(graph)
 
-    if enhance_prompts:
+    if harden_prompts:
         if not os.getenv("OPENAI_API_KEY") and not os.getenv("AZURE_OPENAI_API_KEY"):
             print(
-                "Enhancing system prompts requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY. "
+                "Hardening system prompts requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY. "
                 "You can set it in .env file or as an environment variable."
             )
             raise typer.Exit(code=1)
-        print("Enhancing system prompts")
-        pipeline = PromptEnhancingPipeline([OpenAIGeneratorStep()])
-        enhanced_prompts = enhance_agent_prompts(graph.agents, pipeline)
+        print("Hardening system prompts")
+        pipeline = PromptHardeningPipeline([OpenAIGeneratorStep()])
+        hardened_prompts = harden_agent_prompts(graph.agents, pipeline)
     else:
-        enhanced_prompts = {}
+        hardened_prompts = {}
 
     pydot_graph = GraphDefinition(
         framework=framework,
@@ -169,7 +169,7 @@ def analyze_and_generate_report(
         tools=[
             NodeDefinition.model_validate(t, from_attributes=True) for t in graph.tools
         ],
-        enhanced_prompts=enhanced_prompts,
+        hardened_prompts=hardened_prompts,
     )
     print("Generating report")
     generate(pydot_graph, output_file)
