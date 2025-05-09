@@ -109,7 +109,7 @@ It allows users to create a security report for agentic systems, including:
 
 The comprehensive HTML report summarizes all findings and allows for easy reviewing and sharing.
 
-**[View Full Report Example Here](./docs/demo_report.html)**
+**[View Full Report Example Here](https://agentic-radar.neocities.org/)**
 
 
 **Agentic Radar** includes mapping of detected vulnerabilities to well-known security frameworks 🛡️.
