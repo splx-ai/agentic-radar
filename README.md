@@ -257,7 +257,7 @@ This makes it easy to spot vulnerabilities at a glance—especially in multi-age
 
 This matrix shows which agentic frameworks support all the Agentic Radar features. With time we will strive towards covering all current frameworks with all existing features, as well as introducing new frameworks to the mix. 
 
-| Feature       | Scan        | MCP Detection        | Prompt Enhancement | Agentic Test
+| Feature       | Scan        | MCP Detection        | Prompt Hardening | Agentic Test
 |----------------|-------------|-------------|-------------|-------------|
 | OpenAI Agents  | ✅          | ✅          | ✅          |     ✅         |
 | CrewAI         | ✅          | ❌         | ✅          |      ❌        |
