@@ -282,7 +282,7 @@ If you like what you see, give us a star! It keeps us inspired to improve and in
 ## Frequently Asked Questions ❓
 
 **Q: Is my source code being shared or is everything running locally?**  
-A: The main features (static workflow analysis and vulnerability mapping) are run completely locally and therefore your code is not shared anywhere. For optional advanced features, LLM's might be used. Eg. when using [Prompt Hardening](#prompt-hardening), detected system prompts can get sent to LLM for analysis.
+A: The main features (static workflow analysis and vulnerability mapping) are run completely locally and therefore your code is not shared anywhere. For optional advanced features, LLM's might be used. Eg. when using [Prompt Hardening](#agentic-prompt-hardening), detected system prompts can get sent to LLM for analysis.
 
 ## Contributing 💻 
 
