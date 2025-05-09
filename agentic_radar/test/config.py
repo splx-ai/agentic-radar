@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 import yaml
 from pydantic import BaseModel
@@ -49,41 +49,9 @@ def _read_yaml_config(config_path: Path) -> GlobalTestConfig:
     Reads the test configuration from a YAML file.
     """
     with config_path.open("r") as file:
-        config: dict[str, Any] = yaml.safe_load(file)
+        config = GlobalTestConfig.model_validate(yaml.safe_load(file))
 
-    if not isinstance(config, dict):
-        raise ValueError("Test configuration file must contain a dictionary.")
-
-    include_default_tests = config.get("include_default_tests", True)
-
-    if "custom_tests" not in config:
-        raise ValueError("Test configuration must contain 'custom_tests' key.")
-
-    custom_tests_from_file: dict[str, str] = config["custom_tests"]
-
-    custom_tests: list[TestConfig] = []
-    for custom_test in custom_tests_from_file:
-        if not isinstance(custom_test, dict):
-            raise ValueError("Each custom test must be a dictionary.")
-        if "name" not in custom_test:
-            raise ValueError(
-                "Custom test must contain 'name' key. Received: " + str(custom_test)
-            )
-        if "input" not in custom_test:
-            raise ValueError(
-                "Custom test must contain 'input' key. Received: " + str(custom_test)
-            )
-        if "success_condition" not in custom_test:
-            raise ValueError(
-                "Custom test must contain 'success_condition' key. Received: "
-                + str(custom_test)
-            )
-
-        custom_tests.append(TestConfig(**custom_test))
-
-    return GlobalTestConfig(
-        include_default_tests=include_default_tests, custom_tests=custom_tests
-    )
+    return config
 
 
 def load_tests(config_path: Optional[Path] = None) -> list[Test]:
