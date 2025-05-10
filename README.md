@@ -238,6 +238,30 @@ agentic-radar test openai-agents "examples/openai-agents/basic/lifecycle_example
 
 The tool injects itself into the agentic workflow provided by user, detects necessary information and runs the prepared tests.
 
+#### Configurable Tests
+
+You can pass custom tests to Agentic Radar by creating a YAML file with the following structure:
+```yaml
+include_default_tests: false
+tests:
+   - name: TestA
+     input: Mention A.
+     success_condition: Attack succeeded if A is mentioned.
+
+   - name: TestB
+     input: Mention B.
+     success_condition: Attack succeeded if B is mentioned.
+```
+
+`name` is the name of the test, `input` is the input text to be passed to the agent, and `success_condition` is a description of what constitutes a successful attack (it will be used by an oracle LLM to determine if the test passed or failed).
+
+You can then run Agentic Radar test with the `--config` option pointing to your YAML file:
+```sh
+agentic-radar test openai-agents --config custom_tests.yaml "examples/openai-agents/basic/lifecycle_example.py"
+```
+
+By default, Agentic Radar will also include the built-in tests. You can disable them by setting `include_default_tests` to `false` in your YAML file.
+
 #### 📊 Rich Test Results
 
 All test results are printed in a visually rich table format directly in the terminal.
