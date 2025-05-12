@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.10.0](https://github.com/splx-ai/agentic-radar/compare/v0.9.1...v0.10.0) (2025-05-12)
+
+
+### Features
+
+* add initial commit for MCP support in LangGraph ([#78](https://github.com/splx-ai/agentic-radar/issues/78)) ([5573d83](https://github.com/splx-ai/agentic-radar/commit/5573d834fcaa5f7c3b68f5ba58c8b0e36540eead))
+* **prompt-hardening:** add pii protection step ([#85](https://github.com/splx-ai/agentic-radar/issues/85)) ([574c859](https://github.com/splx-ai/agentic-radar/commit/574c8596bc86830dc546f7d69003b3c7395f2821))
+* **radar-test:** add optional config to tests ([#83](https://github.com/splx-ai/agentic-radar/issues/83)) ([2d3c61e](https://github.com/splx-ai/agentic-radar/commit/2d3c61ebdcc94ad9870e00b8145ff00ad1fcd2bc))
+* rename probe to test ([#80](https://github.com/splx-ai/agentic-radar/issues/80)) ([153a418](https://github.com/splx-ai/agentic-radar/commit/153a4180c8073f0020c73174408bdd1bec767bdb))
+* rename prompt enhancement to prompt hardening ([#84](https://github.com/splx-ai/agentic-radar/issues/84)) ([fcb941f](https://github.com/splx-ai/agentic-radar/commit/fcb941f44a31e9eed008f060d067cd0ecd3778f9))
+
 ## [0.9.1](https://github.com/splx-ai/agentic-radar/compare/v0.9.0...v0.9.1) (2025-04-26)
 
 
