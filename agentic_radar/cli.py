@@ -21,7 +21,7 @@ from agentic_radar.graph import Agent
 from agentic_radar.mapper import map_vulnerabilities
 from agentic_radar.prompt_hardening.harden import harden_agent_prompts
 from agentic_radar.prompt_hardening.pipeline import PromptHardeningPipeline
-from agentic_radar.prompt_hardening.steps import OpenAIGeneratorStep
+from agentic_radar.prompt_hardening.steps import OpenAIGeneratorStep, PIIProtectionStep
 from agentic_radar.report import (
     EdgeDefinition,
     GraphDefinition,
@@ -151,7 +151,7 @@ def analyze_and_generate_report(
             )
             raise typer.Exit(code=1)
         print("Hardening system prompts")
-        pipeline = PromptHardeningPipeline([OpenAIGeneratorStep()])
+        pipeline = PromptHardeningPipeline([OpenAIGeneratorStep(), PIIProtectionStep()])
         hardened_prompts = harden_agent_prompts(graph.agents, pipeline)
     else:
         hardened_prompts = {}
