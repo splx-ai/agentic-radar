@@ -3,10 +3,12 @@ import os
 import shlex
 import time
 from enum import Enum
+from pathlib import Path
 from typing import Optional
 
 import typer
 from dotenv import load_dotenv
+from pydantic import ValidationError
 from typing_extensions import Annotated
 
 from agentic_radar import __version__
@@ -28,13 +30,7 @@ from agentic_radar.report import (
     NodeDefinition,
     generate,
 )
-from agentic_radar.test import (
-    FakeNewsTest,
-    HarmfulContentTest,
-    PIILeakageTest,
-    PromptInjectionTest,
-    Test,
-)
+from agentic_radar.test import Test, load_tests
 from agentic_radar.utils import sanitize_graph
 
 load_dotenv()
@@ -193,6 +189,15 @@ def test(
             help='Path to the entrypoint script which runs the agentic workflow, along with any arguments necessary to run it, eg. "myscript.py --arg1 value1 --arg2 value2"',
         ),
     ],
+    config: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--config",
+            "-c",
+            help="Path to the YAML file containing the Agentic Radar Test configuration. If not provided, the default test suite will be used.",
+            envvar="AGENTIC_RADAR_TEST_CONFIG_FILE",
+        ),
+    ] = None,
 ):
     split_args = shlex.split(entrypoint_script_with_args)
     entrypoint_script = split_args[0]
@@ -202,12 +207,12 @@ def test(
         raise typer.Exit(code=1)
 
     print(f"Testing {entrypoint_script} for {framework} agents")
-    tests: list[Test] = [
-        PromptInjectionTest(),
-        PIILeakageTest(),
-        HarmfulContentTest(),
-        FakeNewsTest(),
-    ]
+    try:
+        tests: list[Test] = load_tests(config_path=config)
+    except (ValidationError, ValueError) as e:
+        print(f"Error loading tests: {e}")
+        raise typer.Exit(code=1)
+    print(f"Loaded {len(tests)} tests")
     if framework == AgenticFramework.openai_agents:
         try:
             import agents  # noqa: F401
