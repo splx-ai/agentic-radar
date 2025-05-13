@@ -36,7 +36,7 @@ jobs:
       - name: Install dependencies
         if: ${{ steps.release.outputs.release_created }}
         run: | 
-          poetry install
+          poetry install --all-extras
 
       - name: Run tests
         if: ${{ steps.release.outputs.release_created }}
