@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/splx-ai-agentic-radar-badge.png)](https://mseep.ai/app/splx-ai-agentic-radar)
+
 <div align="center">
 
 
