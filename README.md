@@ -296,6 +296,7 @@ Are there some features you would like to see happen first? Vote anonymously [he
 - [n8n](https://splx.ai/blog/scanning-n8n-workflows-with-agentic-radar)
 - [OpenAI Agents](https://splx.ai/blog/openai-agents-sdk-transparent-workflows-with-agentic-radar)
 - [MCP Server Detection](https://splx.ai/blog/agentic-radar-now-detects-mcp-servers-in-agentic-workflows)
+- [Agentic Prompt Hardening](https://splx.ai/blog/agentic-radar-now-scans-and-hardens-system-prompts-in-agentic-workflows)
 
 ## Community 🤝
 
