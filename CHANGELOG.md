@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/splx-ai/agentic-radar/compare/v0.10.0...v0.10.1) (2025-05-23)
+
+
+### Bug Fixes
+
+* missing dependencies regarding pyyaml and openai-agents ([#90](https://github.com/splx-ai/agentic-radar/issues/90)) ([16e3f5b](https://github.com/splx-ai/agentic-radar/commit/16e3f5b35b743569a02143ab8339094255bcd884))
+
 ## [0.10.0](https://github.com/splx-ai/agentic-radar/compare/v0.9.1...v0.10.0) (2025-05-12)
 
 
