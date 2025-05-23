@@ -26,11 +26,19 @@ jobs:
         if: runner.os != 'Windows'
         run: curl -sSL https://install.python-poetry.org | python3 -
 
-      - name: Install dependencies
+      - name: Install basic dependencies
+        run: |
+          poetry install
+
+      - name: Run tests with basic dependencies
+        run: |
+          poetry run python -m pytest -v -s
+
+      - name: Install extra dependencies
         run: | 
           poetry install --all-extras
 
-      - name: Run tests
+      - name: Run tests with extra dependencies
         run: |
           poetry run python -m pytest -v -s
 

@@ -561,7 +561,7 @@ description = "The Real First Universal Charset Detector. Open, modern and activ
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and (extra == \"openai-agents\" or extra == \"crewai\") and python_version < \"3.13\" or extra == \"openai-agents\""
+markers = "(extra == \"crewai\" or extra == \"openai-agents\") and python_version >= \"3.10\" and python_version < \"3.13\" or extra == \"openai-agents\""
 files = [
     {file = "charset_normalizer-3.4.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:7c48ed483eb946e6c04ccbe02c6b4d1d48e51944b6db70f697e089c193404941"},
     {file = "charset_normalizer-3.4.2-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b2d318c11350e10662026ad0eb71bb51c7812fc8590825304ae0bdd4ac283acd"},
@@ -793,7 +793,7 @@ files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
 ]
-markers = {main = "platform_system == \"Windows\" or extra == \"openai-agents\" or python_version >= \"3.10\" and (extra == \"openai-agents\" or extra == \"crewai\") and os_name == \"nt\" and python_version < \"3.13\" or python_version >= \"3.10\" and (extra == \"openai-agents\" or extra == \"crewai\") and sys_platform == \"win32\" and python_version < \"3.13\"", dev = "sys_platform == \"win32\""}
+markers = {main = "(platform_system == \"Windows\" or python_version >= \"3.10\" or extra == \"openai-agents\") and (platform_system == \"Windows\" or extra == \"openai-agents\" or extra == \"crewai\" or python_version == \"3.10\") and (platform_system == \"Windows\" or os_name == \"nt\" or sys_platform == \"win32\" or extra == \"openai-agents\") and (python_version < \"3.13\" or platform_system == \"Windows\" or extra == \"openai-agents\") and (platform_system == \"Windows\" or extra == \"crewai\" or extra == \"openai-agents\")", dev = "sys_platform == \"win32\""}
 
 [[package]]
 name = "coloredlogs"
@@ -1553,7 +1553,7 @@ description = "Lightweight in-process concurrent programming"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and extra == \"crewai\" and (platform_machine == \"aarch64\" or platform_machine == \"ppc64le\" or platform_machine == \"x86_64\" or platform_machine == \"amd64\" or platform_machine == \"AMD64\" or platform_machine == \"win32\" or platform_machine == \"WIN32\") and python_version < \"3.13\""
+markers = "python_version >= \"3.10\" and (platform_machine == \"aarch64\" or platform_machine == \"ppc64le\" or platform_machine == \"x86_64\" or platform_machine == \"amd64\" or platform_machine == \"AMD64\" or platform_machine == \"win32\" or platform_machine == \"WIN32\") and extra == \"crewai\" and python_version < \"3.13\""
 files = [
     {file = "greenlet-3.2.1-cp310-cp310-macosx_11_0_universal2.whl", hash = "sha256:777c1281aa7c786738683e302db0f55eb4b0077c20f1dc53db8852ffaea0a6b0"},
     {file = "greenlet-3.2.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3059c6f286b53ea4711745146ffe5a5c5ff801f62f6c56949446e0f6461f8157"},
@@ -3926,8 +3926,8 @@ files = [
 
 [package.dependencies]
 numpy = [
-    {version = ">=1.23.2", markers = "python_version == \"3.11\""},
     {version = ">=1.22.4", markers = "python_version < \"3.11\""},
+    {version = ">=1.23.2", markers = "python_version == \"3.11\""},
     {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
 ]
 python-dateutil = ">=2.8.2"
@@ -4023,7 +4023,7 @@ description = "Pexpect allows easy control of interactive console applications."
 optional = true
 python-versions = "*"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and extra == \"crewai\" and sys_platform != \"win32\" and sys_platform != \"emscripten\" and python_version < \"3.13\""
+markers = "python_version >= \"3.10\" and sys_platform != \"win32\" and sys_platform != \"emscripten\" and extra == \"crewai\" and python_version < \"3.13\""
 files = [
     {file = "pexpect-4.9.0-py2.py3-none-any.whl", hash = "sha256:7236d1e080e4936be2dc3e326cec0af72acf9212a7e1d060210e70a47e253523"},
     {file = "pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f"},
@@ -4387,7 +4387,7 @@ description = "Run a subprocess in a pseudo terminal"
 optional = true
 python-versions = "*"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and extra == \"crewai\" and sys_platform != \"win32\" and sys_platform != \"emscripten\" and python_version < \"3.13\""
+markers = "python_version >= \"3.10\" and sys_platform != \"win32\" and sys_platform != \"emscripten\" and extra == \"crewai\" and python_version < \"3.13\""
 files = [
     {file = "ptyprocess-0.7.0-py2.py3-none-any.whl", hash = "sha256:4b41f3967fce3af57cc7e94b888626c18bf37a083e3651ca8feeb66d492fef35"},
     {file = "ptyprocess-0.7.0.tar.gz", hash = "sha256:5c5d0a3b48ceee0b48485e0c26037c0acd7d29765ca3fbb5cb3831d347423220"},
@@ -4793,7 +4793,7 @@ description = "A python implementation of GNU readline."
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and extra == \"crewai\" and sys_platform == \"win32\" and python_version < \"3.13\""
+markers = "python_version >= \"3.10\" and sys_platform == \"win32\" and extra == \"crewai\" and python_version < \"3.13\""
 files = [
     {file = "pyreadline3-3.5.4-py3-none-any.whl", hash = "sha256:eaf8e6cc3c49bcccf145fc6067ba8643d1df34d604a1ec0eccbf7a18e6d3fae6"},
     {file = "pyreadline3-3.5.4.tar.gz", hash = "sha256:8d57d53039a1c75adba8e50dd3d992b28143480816187ea5efbd5c78e6c885b7"},
@@ -4988,7 +4988,7 @@ description = "Python for Window Extensions"
 optional = true
 python-versions = "*"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and extra == \"crewai\" and (sys_platform == \"win32\" or platform_system == \"Windows\") and python_version < \"3.13\""
+markers = "python_version >= \"3.10\" and (sys_platform == \"win32\" or platform_system == \"Windows\") and extra == \"crewai\" and python_version < \"3.13\""
 files = [
     {file = "pywin32-310-cp310-cp310-win32.whl", hash = "sha256:6dd97011efc8bf51d6793a82292419eba2c71cf8e7250cfac03bba284454abc1"},
     {file = "pywin32-310-cp310-cp310-win_amd64.whl", hash = "sha256:c3e78706e4229b915a0821941a84e7ef420bf2b77e08c9dae3c76fd03fd2ae3d"},
@@ -5070,7 +5070,6 @@ files = [
     {file = "PyYAML-6.0.2-cp39-cp39-win_amd64.whl", hash = "sha256:39693e1f8320ae4f43943590b49779ffb98acb81f788220ea932a6b6c51004d8"},
     {file = "pyyaml-6.0.2.tar.gz", hash = "sha256:d584d9ec91ad65861cc08d42e834324ef890a082e591037abe114850ff7bbc3e"},
 ]
-markers = {main = "python_version >= \"3.10\" and extra == \"crewai\" and python_version < \"3.13\""}
 
 [[package]]
 name = "qdrant-client"
@@ -5231,7 +5230,7 @@ description = "Python HTTP for Humans."
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and (extra == \"openai-agents\" or extra == \"crewai\") and python_version < \"3.13\" or extra == \"openai-agents\""
+markers = "(extra == \"crewai\" or extra == \"openai-agents\") and python_version >= \"3.10\" and python_version < \"3.13\" or extra == \"openai-agents\""
 files = [
     {file = "requests-2.32.3-py3-none-any.whl", hash = "sha256:70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6"},
     {file = "requests-2.32.3.tar.gz", hash = "sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760"},
@@ -5930,7 +5929,7 @@ testing = ["black (==22.3)", "datasets", "numpy", "pytest", "requests", "ruff"]
 name = "tomli"
 version = "2.2.1"
 description = "A lil' TOML parser"
-optional = true
+optional = false
 python-versions = ">=3.8"
 groups = ["main", "dev"]
 files = [
@@ -6066,7 +6065,7 @@ description = "Typing stubs for requests"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and (extra == \"openai-agents\" or extra == \"crewai\") and python_version < \"3.13\" or extra == \"openai-agents\""
+markers = "(extra == \"crewai\" or extra == \"openai-agents\") and python_version >= \"3.10\" and python_version < \"3.13\" or extra == \"openai-agents\""
 files = [
     {file = "types_requests-2.32.0.20250328-py3-none-any.whl", hash = "sha256:72ff80f84b15eb3aa7a8e2625fffb6a93f2ad5a0c20215fc1dcfa61117bcb2a2"},
     {file = "types_requests-2.32.0.20250328.tar.gz", hash = "sha256:c9e67228ea103bd811c96984fac36ed2ae8da87a36a633964a21f199d60baf32"},
@@ -6139,7 +6138,7 @@ description = "HTTP library with thread-safe connection pooling, file post, and 
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and (extra == \"openai-agents\" or extra == \"crewai\") and python_version < \"3.13\" or extra == \"openai-agents\""
+markers = "(extra == \"crewai\" or extra == \"openai-agents\") and python_version >= \"3.10\" and python_version < \"3.13\" or extra == \"openai-agents\""
 files = [
     {file = "urllib3-2.4.0-py3-none-any.whl", hash = "sha256:4e16665048960a0900c702d4a66415956a584919c03361cac9f1df5c5dd7e813"},
     {file = "urllib3-2.4.0.tar.gz", hash = "sha256:414bc6535b787febd7567804cc015fee39daab8ad86268f1310a9250697de466"},
@@ -6187,7 +6186,7 @@ description = "The lightning-fast ASGI server."
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and sys_platform != \"emscripten\" and (extra == \"crewai\" or extra == \"openai-agents\") and (python_version < \"3.13\" or extra == \"openai-agents\")"
+markers = "python_version >= \"3.10\" and (extra == \"crewai\" or extra == \"openai-agents\") and (sys_platform != \"emscripten\" or extra == \"crewai\") and (python_version < \"3.13\" or sys_platform != \"emscripten\") and (python_version < \"3.13\" or extra == \"openai-agents\")"
 files = [
     {file = "uvicorn-0.34.2-py3-none-any.whl", hash = "sha256:deb49af569084536d269fe0a6d67e3754f104cf03aba7c11c40f01aadf33c403"},
     {file = "uvicorn-0.34.2.tar.gz", hash = "sha256:0e929828f6186353a80b58ea719861d2629d766293b6d19baf086ba31d4f3328"},
@@ -6215,7 +6214,7 @@ description = "Fast implementation of asyncio event loop on top of libuv"
 optional = true
 python-versions = ">=3.8.0"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and extra == \"crewai\" and sys_platform != \"win32\" and sys_platform != \"cygwin\" and platform_python_implementation != \"PyPy\" and python_version < \"3.13\""
+markers = "python_version >= \"3.10\" and sys_platform != \"win32\" and sys_platform != \"cygwin\" and platform_python_implementation != \"PyPy\" and extra == \"crewai\" and python_version < \"3.13\""
 files = [
     {file = "uvloop-0.21.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:ec7e6b09a6fdded42403182ab6b832b71f4edaf7f37a9a0e371a01db5f0cb45f"},
     {file = "uvloop-0.21.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:196274f2adb9689a289ad7d65700d37df0c0930fd8e4e743fa4834e850d7719d"},
@@ -6830,4 +6829,4 @@ openai-agents = ["openai-agents"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9"
-content-hash = "95847d7df0a0b2f3321101c7af6343a5e57b9e59e014d57bcff7049962d7260e"
+content-hash = "8e4805f745cdb156688a134ef9e05ead547a626264c42168e5eadac400017a46"
