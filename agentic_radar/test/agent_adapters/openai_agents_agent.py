@@ -10,7 +10,7 @@ from ..agent import Agent
 class OpenAIAgentsAgent(Agent):
     """OpenAI Agents Adapter for Agentic Radar."""
 
-    def __init__(self, agent: OriginalAgent) -> None:
+    def __init__(self, agent: "OriginalAgent") -> None:
         """
         Initialize the OpenAI Agents adapter.
 
