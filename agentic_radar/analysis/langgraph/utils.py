@@ -4,6 +4,30 @@ import os
 from typing import Dict, Tuple, Union
 
 
+def get_source_from_file(filepath: str) -> str:
+    """
+    Return the source code from a .py or .ipynb file as a single string.
+    """
+    if filepath.endswith(".py"):
+        with open(filepath, "r", encoding="utf-8") as f:
+            return f.read()
+    elif filepath.endswith(".ipynb"):
+        with open(filepath, "r", encoding="utf-8") as f:
+            notebook = json.load(f)
+            source = ""
+            for cell in notebook.get("cells", []):
+                if cell.get("cell_type") == "code":
+                    if isinstance(cell["source"], list):
+                        source += "".join(cell["source"])
+                    else:
+                        source += cell["source"]
+            return source
+    else:
+        raise ValueError(
+            f"Unsupported file type: {filepath}. Only .py and .ipynb are supported."
+        )
+
+
 def build_global_registry(
     root_dir: str,
 ) -> Tuple[
@@ -72,21 +96,12 @@ def parse_for_top_level_defs(
     local_functions: Dict[str, Union[ast.FunctionDef, ast.AsyncFunctionDef]] = {}
     local_variables: Dict[str, Union[ast.List, ast.Dict]] = {}
 
-    source = ""
-    if filepath.endswith(".py"):
-        with open(filepath, "r", encoding="utf-8") as f:
-            source = f.read()
-    elif filepath.endswith(".ipynb"):
-        with open(filepath, "r", encoding="utf-8") as f:
-            notebook = json.load(f)
-            for cell in notebook["cells"]:
-                if cell["cell_type"] == "code":
-                    for row in cell["source"]:
-                        source += row
+    source = get_source_from_file(filepath)
     try:
         tree = ast.parse(source, filename=filepath)
     except Exception as e:
         print(f"Cannot parse Python module: {filepath}. Error: {e}")
+        return local_functions, local_variables
 
     class TopLevelCollector(ast.NodeVisitor):
         def visit_FunctionDef(self, node: ast.FunctionDef):
