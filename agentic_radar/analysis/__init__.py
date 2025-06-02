@@ -1,4 +1,5 @@
 from .analyze import Analyzer
+from .autogen import AutogenAgentChatAnalyzer
 from .crewai import CrewAIAnalyzer
 from .langgraph import LangGraphAnalyzer
 from .n8n import N8nAnalyzer
@@ -10,4 +11,5 @@ __all__ = [
     "CrewAIAnalyzer",
     "N8nAnalyzer",
     "OpenAIAgentsAnalyzer",
+    "AutogenAgentChatAnalyzer",
 ]

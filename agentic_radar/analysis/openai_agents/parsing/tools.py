@@ -1,15 +1,15 @@
 import ast
 from typing import Union
 
-from ...utils import walk_python_files
-from ..models import Tool
-from .ast_utils import (
+from ...ast_utils import (
     find_decorator_by_name,
     get_simple_identifier_name,
     get_string_keyword_arg,
     is_function_call,
     is_simple_identifier,
 )
+from ...utils import walk_python_files
+from ..models import Tool
 
 
 class ToolsVisitor(ast.NodeVisitor):
