@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.11.0](https://github.com/splx-ai/agentic-radar/compare/v0.10.1...v0.11.0) (2025-06-03)
+
+
+### Features
+
+* Autogen AgentChat scan support ([#95](https://github.com/splx-ai/agentic-radar/issues/95)) ([13edf17](https://github.com/splx-ai/agentic-radar/commit/13edf17ff90c24e8887e014b4419f25a296f5d0f))
+* **langgraph:** implement simple heuristic for detecting agents ([#92](https://github.com/splx-ai/agentic-radar/issues/92)) ([aa4e86a](https://github.com/splx-ai/agentic-radar/commit/aa4e86aaa9294feb4d8a7a1f482473a785655ed0))
+
 ## [0.10.1](https://github.com/splx-ai/agentic-radar/compare/v0.10.0...v0.10.1) (2025-05-23)
 
 
