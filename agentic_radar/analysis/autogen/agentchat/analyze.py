@@ -32,9 +32,3 @@ class AutogenAgentChatAnalyzer(Analyzer):
         graph = create_graph_definition(Path(root_directory).name, teams)
 
         return graph
-
-
-if __name__ == "__main__":
-    root_dir = "examples/autogen/agentchat/literature_review"
-    analyzer = AutogenAgentChatAnalyzer()
-    analyzer.analyze(root_dir)
