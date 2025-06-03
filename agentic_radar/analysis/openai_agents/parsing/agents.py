@@ -3,10 +3,7 @@ from typing import Union
 
 from pydantic import ValidationError
 
-from ...utils import walk_python_files
-from ..exceptions import InvalidAgentConstructorError, InvalidHandoffDefinitionError
-from ..models import Agent, MCPServerInfo, Tool
-from .ast_utils import (
+from ...ast_utils import (
     get_keyword_arg_value,
     get_nth_arg_value,
     get_simple_identifier_name,
@@ -14,6 +11,9 @@ from .ast_utils import (
     is_function_call,
     is_simple_identifier,
 )
+from ...utils import walk_python_files
+from ..exceptions import InvalidAgentConstructorError, InvalidHandoffDefinitionError
+from ..models import Agent, MCPServerInfo, Tool
 
 
 class AgentsVisitor(ast.NodeVisitor):
@@ -94,7 +94,7 @@ class AgentsVisitor(ast.NodeVisitor):
                 instructions=instructions,
                 model=model,
                 mcp_servers=mcp_servers,
-                guardrails=guardrails
+                guardrails=guardrails,
             )
         except (ValueError, ValidationError, ValueError) as e:
             raise InvalidAgentConstructorError from e
@@ -131,14 +131,18 @@ class AgentsVisitor(ast.NodeVisitor):
                 )
 
         return tools
-    
-    def _extract_agent_guardrails(self, agent_node: ast.Call) -> dict[str,list[str]]:
+
+    def _extract_agent_guardrails(self, agent_node: ast.Call) -> dict[str, list[str]]:
         def extract_guardrail_names(node: Union[ast.AST, None]) -> list[str]:
             if node is None:
                 return []
             elif isinstance(node, ast.List):
                 return [
-                    elt.id if isinstance(elt, ast.Name) else elt.attr if isinstance(elt, ast.Attribute) else None
+                    elt.id
+                    if isinstance(elt, ast.Name)
+                    else elt.attr
+                    if isinstance(elt, ast.Attribute)
+                    else None
                     for elt in node.elts
                     if isinstance(elt, (ast.Name, ast.Attribute))
                 ]

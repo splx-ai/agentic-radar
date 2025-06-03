@@ -143,7 +143,7 @@ CrewAI extras are needed when using one of the following features in combination
 
 You can install Agentic Radar with extra CrewAI dependencies by running:
 ```sh
-pip install agentic-radar[crewai]
+pip install "agentic-radar[crewai]"
 ```
 
 > [!WARNING]
@@ -158,7 +158,7 @@ OpenAI Agents extras are needed when using one of the following features in comb
 
 You can install Agentic Radar with extra OpenAI Agents dependencies by running:
 ```sh
-pip install agentic-radar[openai-agents]
+pip install "agentic-radar[openai-agents]"
 ```
 
 ## Usage
@@ -169,7 +169,12 @@ Agentic Radar now supports two main commands:
 Scan code for agentic workflows and generate a report.
 
 ```sh
-agentic-radar scan [OPTIONS] FRAMEWORK:{langgraph|crewai|n8n|openai-agents}
+agentic-radar scan [OPTIONS] FRAMEWORK:{langgraph|crewai|n8n|openai-agents|autogen}
+```
+
+Example:
+```sh
+agentic-radar scan langgraph -i path/to/langgraph/example/folder -o report.html
 ```
 
 ---
@@ -182,6 +187,11 @@ Requires OPENAI_API_KEY set as environment variable.
 agentic-radar test [OPTIONS] FRAMEWORK:{openai-agents} ENTRYPOINT_SCRIPT_WITH_ARGS
 ```
 
+Example:
+```sh
+agentic-radar test openai-agents "path/to/openai-agents/example.py"
+```
+
 See more about this feature [here](#-test-for-vulnerabilities-in-agentic-workflows).
 
 
@@ -192,7 +202,7 @@ See more about this feature [here](#-test-for-vulnerabilities-in-agentic-workflo
 Agentic Prompt Hardening automatically improves detected system prompts in your agentic workflow and displays them in the report. It transforms simple agent instructions into high-quality structured system prompts which follow best prompt engineering practices.
 
 > [!NOTE]  
-> Currently supported frameworks (with more to come): OpenAI Agents, CrewAI
+> Currently supported frameworks (with more to come): OpenAI Agents, CrewAI, Autogen
 
 It is quite straightforward to use:
 1. Set your OPENAI_API_KEY environment variable by running `export OPENAI_API_KEY=<api_key>`.
@@ -287,6 +297,7 @@ This matrix shows which agentic frameworks support all the Agentic Radar feature
 | CrewAI         | ✅          | ❌         | ✅          |      ❌        |
 | n8n            | ✅          | ❌          | ❌          |     ❌        |
 | LangGraph      | ✅          | ✅          | ❌          |     ❌         |
+| Autogen     | ✅          | ❌          | ✅          |     ❌         |
 
 Are there some features you would like to see happen first? Vote anonymously [here](https://strawpoll.com/w4nWWMqqlnA) or [open a GitHub Issue](https://github.com/splx-ai/agentic-radar/issues/new/choose).
 

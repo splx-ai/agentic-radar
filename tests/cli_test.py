@@ -18,6 +18,7 @@ BASE_DIR_LANGGRAPH = "examples/langgraph"
 BASE_DIR_CREWAI = "examples/crewai"
 BASED_DIR_N8N = "examples/n8n"
 BASE_DIR_OPENAI_AGENTS = "examples/openai-agents"
+BASE_DIR_AUTOGEN = "examples/autogen/agentchat"
 
 
 @pytest.fixture()
@@ -81,5 +82,19 @@ def test_n8n(params):
 def test_openai_agents(params):
     i, o = params
     result = runner.invoke(app, ["scan", "openai-agents", "-i", i, "-o", o])
+    assert result.exit_code == 0
+    assert o in result.stdout
+
+@pytest.mark.parametrize(
+    "params",
+    [
+        (os.path.join(BASE_DIR_AUTOGEN, dir), "report.html")
+        for dir in os.listdir(BASE_DIR_AUTOGEN)
+    ],
+    indirect=True,
+)
+def test_autogen(params):
+    i, o = params
+    result = runner.invoke(app, ["scan", "autogen", "-i", i, "-o", o])
     assert result.exit_code == 0
     assert o in result.stdout

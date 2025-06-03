@@ -1,5 +1,9 @@
 import ast
-from typing import Optional, Union
+from typing import Generator, Optional, Union
+
+from pydantic import BaseModel
+
+from agentic_radar.analysis.utils import walk_python_files
 
 
 def get_nth_arg_value(call_node: ast.Call, n: int) -> ast.AST:
@@ -181,3 +185,96 @@ def get_string_keyword_arg(node: ast.Call, keyword_name: str) -> Optional[str]:
         raise ValueError(f"Keyword argument '{keyword_name}' must be a string constant")
 
     return keyword_value.value
+
+
+class SimpleFunctionCallAssignment(BaseModel):
+    """
+    Represents a simple function call assignment in Python code.
+    Example of a simple function call assignment:
+    ```python
+    my_var = my_function(arg1, arg2, kwarg1=value1, kwarg2=value2)
+    ```
+    """
+
+    target: str
+    function_name: str
+    args: list[Union[str, int, float, bool, list, None]]
+    kwargs: dict[str, Union[str, int, float, bool, list, None]]
+
+    def __str__(self) -> str:
+        args_str = ", ".join(repr(arg) for arg in self.args)
+        kwargs_str = ", ".join(f"{k}={v!r}" for k, v in self.kwargs.items())
+        return f"{self.target} = {self.function_name}({args_str}, {kwargs_str})"
+
+    def resolve_arg_or_kwarg(self, index: int, key: str):
+        """
+        Resolve the value of an argument or keyword argument by index or key.
+        Tries to return the value of the positional argument at given index first,
+        then the keyword argument at the given key.
+        If neither is found, returns None.
+
+        Args:
+            index (int): The index of the positional argument to resolve.
+            key (str): The key of the keyword argument to resolve.
+
+        Returns:
+            Union[str, int, float, bool, None]: The resolved value, or None if not found.
+        """
+        if key in self.kwargs:
+            return self.kwargs[key]
+        if 0 <= index < len(self.args):
+            return self.args[index]
+        return None
+
+
+def parse_simple_function_call_assignment(
+    node: ast.AST
+) -> Optional[SimpleFunctionCallAssignment]:
+    """
+    Check if the node is a simple function call assignment and extract its details.
+    Identifiers are converted to strings, and constants are converted to their values.
+
+    Args:
+        node (ast.AST): The AST node to check.
+
+    Returns:
+        Optional[SimpleFunctionCallAssignment]: An instance of SimpleFunctionCallAssignment if the node matches,
+        otherwise None.
+    """
+    if isinstance(node, ast.Assign) and len(node.targets) == 1:
+        target = node.targets[0]
+        if isinstance(target, ast.Name) and isinstance(node.value, ast.Call):
+            if not is_simple_identifier(node.value.func):
+                return None
+            function_name = get_simple_identifier_name(node.value.func)
+
+            def extract_value(val: ast.AST) -> Union[str, int, float, bool, list, None]:
+                if isinstance(val, ast.Constant):
+                    return val.value
+                elif is_simple_identifier(val):
+                    return get_simple_identifier_name(val)
+                elif isinstance(val, (ast.List, ast.Tuple)):
+                    return [extract_value(item) for item in val.elts]
+                else:
+                    return None
+
+            args = [extract_value(arg) for arg in node.value.args]
+            kwargs = {
+                kw.arg: extract_value(kw.value) for kw in node.value.keywords if kw.arg
+            }
+            return SimpleFunctionCallAssignment(
+                target=target.id, function_name=function_name, args=args, kwargs=kwargs
+            )
+    return None
+
+
+def walk_and_parse_python_files(
+    root_dir: str
+) -> Generator[tuple[str, ast.AST], None, None]:
+    for file_path in walk_python_files(root_dir):
+        with open(file_path, "r", encoding="utf-8") as f:
+            try:
+                tree = ast.parse(f.read(), filename=file_path)
+                yield file_path, tree
+            except Exception:
+                continue

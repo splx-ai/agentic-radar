@@ -14,6 +14,7 @@ from typing_extensions import Annotated
 from agentic_radar import __version__
 from agentic_radar.analysis import (
     Analyzer,
+    AutogenAgentChatAnalyzer,
     CrewAIAnalyzer,
     LangGraphAnalyzer,
     N8nAnalyzer,
@@ -43,6 +44,7 @@ class AgenticFramework(str, Enum):
     crewai = "crewai"
     n8n = "n8n"
     openai_agents = "openai-agents"
+    autogen = "autogen"
 
 
 @app.callback(invoke_without_command=True)
@@ -106,6 +108,8 @@ def scan(
         analyzer = N8nAnalyzer()
     elif framework == AgenticFramework.openai_agents:
         analyzer = OpenAIAgentsAnalyzer()
+    elif framework == AgenticFramework.autogen:
+        analyzer = AutogenAgentChatAnalyzer()
     else:
         print(f"Unsupported framework: {framework}")
         raise typer.Exit(code=1)
