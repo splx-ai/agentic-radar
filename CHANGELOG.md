@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://github.com/splx-ai/agentic-radar/compare/v0.11.0...v0.11.1) (2025-06-03)
+
+
+### Bug Fixes
+
+* set font color in report tables to black ([#96](https://github.com/splx-ai/agentic-radar/issues/96)) ([a81c92b](https://github.com/splx-ai/agentic-radar/commit/a81c92b3188fc5644a589eb7d722e0bc123cd8a6))
+
 ## [0.11.0](https://github.com/splx-ai/agentic-radar/compare/v0.10.1...v0.11.0) (2025-06-03)
 
 
