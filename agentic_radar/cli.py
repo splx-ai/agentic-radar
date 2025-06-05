@@ -94,10 +94,29 @@ def scan(
             envvar="AGENTIC_RADAR_HARDEN_PROMPTS",
         ),
     ] = False,
+    export_graph: Annotated[
+        bool,
+        typer.Option(
+            "--export-graph",
+            help="Export the graph in JSON format and exit. The output file is specified by the --output-file or -o flag.",
+            is_flag=True,
+            envvar="AGENTIC_RADAR_EXPORT_GRAPH",
+        ),
+    ] = False,
 ):
     if not os.path.isdir(input_directory):
         print(f"Input directory '{input_directory}' does not exist.")
         raise typer.Exit(code=1)
+
+    # Validate output_file extension
+    if export_graph:
+        if not output_file.endswith(".json"):
+            print("Error: --output-file must end with .json when using --export-graph")
+            raise typer.Exit(code=1)
+    else:
+        if not output_file.endswith(".html"):
+            print("Error: --output-file must end with .html")
+            raise typer.Exit(code=1)
 
     analyzer: Analyzer
     if framework == AgenticFramework.langgraph:
@@ -120,6 +139,7 @@ def scan(
         input_directory=input_directory,
         output_file=output_file,
         harden_prompts=harden_prompts,
+        export_graph=export_graph,
     )
 
 
@@ -129,6 +149,7 @@ def analyze_and_generate_report(
     input_directory: str,
     output_file: str,
     harden_prompts: bool,
+    export_graph: bool = False,
 ):
     print(f"Analyzing {input_directory} for {framework} graphs")
     graph = analyzer.analyze(input_directory)
@@ -139,6 +160,12 @@ def analyze_and_generate_report(
         )
         raise typer.Exit(code=1)
     sanitize_graph(graph)
+
+    if export_graph:
+        with open(output_file, "w") as f:
+            f.write(graph.model_dump_json(indent=2))
+        print(f"Graph exported to {output_file}")
+        raise typer.Exit(code=0)
 
     print("Mapping vulnerabilities")
     map_vulnerabilities(graph)
