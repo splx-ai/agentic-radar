@@ -88,7 +88,7 @@
       </ul>
     </li>
     <li><a href="#roadmap-">Roadmap</a></li>
-    <li><a href="#blog-tutorials-">Blog Tutorials</a></li>
+    <li><a href="#blogs-and-tutorials-">Blogs and Tutorials</a></li>
     <li><a href="#community-">Community</a></li>
     <li><a href="#frequently-asked-questions-">Frequently Asked Questions</a></li>
     <li><a href="#contributing-">Contributing</a></li>
@@ -301,11 +301,12 @@ This matrix shows which agentic frameworks support all the Agentic Radar feature
 
 Are there some features you would like to see happen first? Vote anonymously [here](https://strawpoll.com/w4nWWMqqlnA) or [open a GitHub Issue](https://github.com/splx-ai/agentic-radar/issues/new/choose).
 
-## Blog Tutorials 💡
+## Blogs and Tutorials 💡
 
 - [CrewAI](https://splx.ai/blog/enhancing-ai-transparency-scanning-crewai-workflows-with-agentic-radar)
 - [n8n](https://splx.ai/blog/scanning-n8n-workflows-with-agentic-radar)
 - [OpenAI Agents](https://splx.ai/blog/openai-agents-sdk-transparent-workflows-with-agentic-radar)
+- [Autogen](https://colab.research.google.com/drive/14IeJv08lzBsLlEO9cKoHloDioWMWGf5Q)
 - [MCP Server Detection](https://splx.ai/blog/agentic-radar-now-detects-mcp-servers-in-agentic-workflows)
 - [Agentic Prompt Hardening](https://splx.ai/blog/agentic-radar-now-scans-and-hardens-system-prompts-in-agentic-workflows)
 
