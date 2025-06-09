@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/splx-ai/agentic-radar/compare/v0.11.1...v0.12.0) (2025-06-09)
+
+
+### Features
+
+* Export Graph as JSON ([#99](https://github.com/splx-ai/agentic-radar/issues/99)) ([30f6c89](https://github.com/splx-ai/agentic-radar/commit/30f6c89ad86340c4d825cd9f193046ebc82badae))
+
 ## [0.11.1](https://github.com/splx-ai/agentic-radar/compare/v0.11.0...v0.11.1) (2025-06-03)
 
 
