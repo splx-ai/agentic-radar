@@ -94,6 +94,15 @@ def scan(
             envvar="AGENTIC_RADAR_HARDEN_PROMPTS",
         ),
     ] = False,
+    export_graph_json: Annotated[
+        bool,
+        typer.Option(
+            "--export-graph-json",
+            help="Export the graph in JSON format and exit. The output file is specified by the --output-file or -o flag. If the output file ends with .html, it will be replaced with .json.",
+            is_flag=True,
+            envvar="AGENTIC_RADAR_EXPORT_GRAPH_JSON",
+        ),
+    ] = False,
 ):
     if not os.path.isdir(input_directory):
         print(f"Input directory '{input_directory}' does not exist.")
@@ -120,6 +129,7 @@ def scan(
         input_directory=input_directory,
         output_file=output_file,
         harden_prompts=harden_prompts,
+        export_graph_json=export_graph_json,
     )
 
 
@@ -129,6 +139,7 @@ def analyze_and_generate_report(
     input_directory: str,
     output_file: str,
     harden_prompts: bool,
+    export_graph_json: bool = False,
 ):
     print(f"Analyzing {input_directory} for {framework} graphs")
     graph = analyzer.analyze(input_directory)
@@ -139,6 +150,13 @@ def analyze_and_generate_report(
         )
         raise typer.Exit(code=1)
     sanitize_graph(graph)
+
+    if export_graph_json:
+        output_file = output_file.replace(".html", ".json")
+        with open(output_file, "w") as f:
+            f.write(graph.model_dump_json(indent=2))
+        print(f"Graph exported to {output_file}")
+        raise typer.Exit(code=0)
 
     print("Mapping vulnerabilities")
     map_vulnerabilities(graph)
