@@ -66,6 +66,9 @@
       <a href="#description-">Description</a>
     </li>
     <li>
+      <a href="#agentic-visualizer-">Agentic Visualizer</a>
+    </li>
+    <li>
       <a href="#getting-started-">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
@@ -118,7 +121,7 @@ The comprehensive HTML report summarizes all findings and allows for easy review
 
 + [OWASP Agentic AI – Threats and Mitigations](https://genaisecurityproject.com/resource/agentic-ai-threats-and-mitigations)
 
-## Agentic Visualizer
+## Agentic Visualizer 🎆
 
 If you only care about visualization, try out the [Agentic Visualizer](https://agentic-visualizer.splx.ai/).
 
