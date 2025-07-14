@@ -1,0 +1,64 @@
+name: Automatic Agentic Radar
+
+on:
+  push:
+
+jobs:
+  run-agentic-radar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Extract framework from commit message
+        id: detect_framework
+        run: |
+          COMMIT_MSG=$(git log --format=%B -n 1 ${{ github.sha }})
+          FRAMEWORK="unknown"
+          for word in "crewai" "langgraph" "n8n" "openai-agents" "autogen"; do
+            if echo "$COMMIT_MSG" | grep -iq "$word"; then
+              FRAMEWORK="$word"
+              break
+            fi
+          done
+          echo "Detected framework: $FRAMEWORK"
+          echo "FRAMEWORK=$FRAMEWORK" >> $GITHUB_ENV
+
+      - name: Set up Python 3.10
+        if: ${{ env.FRAMEWORK != 'unknown' }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Cache venv
+        if: ${{ env.FRAMEWORK != 'unknown' }}
+        id: cache-venv
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-agentic-radar-v1
+
+      - name: Install Agentic Radar
+        if: ${{ env.FRAMEWORK != 'unknown' && steps.cache-venv.outputs.cache-hit != 'true' }}
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install agentic-radar[crewai,openai-agents]
+      
+      - name: Run Agentic Radar
+        id: agentic_radar
+        if: ${{ env.FRAMEWORK != 'unknown' }}
+        run: |
+          source .venv/bin/activate
+          agentic-radar scan $FRAMEWORK -o report.html
+        continue-on-error: true
+        
+      - name: Upload report.html
+        id: upload_artifact
+        if: ${{ env.FRAMEWORK != 'unknown' && steps.agentic_radar.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: agentic-radar-report
+          path: report.html
