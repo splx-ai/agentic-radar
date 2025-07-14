@@ -85,6 +85,7 @@
       <ul>
         <li><a href="#agentic-prompt-hardening">Agentic Prompt Hardening</a></li>
         <li><a href="#-test-for-vulnerabilities-in-agentic-workflows">Test for Vulnerabilities in Agentic Workflows</a></li>
+        <li><a href="#cicd-workflow">CI/CD Workflow</a></li>
       </ul>
     </li>
     <li><a href="#roadmap-">Roadmap</a></li>
@@ -116,6 +117,14 @@ The comprehensive HTML report summarizes all findings and allows for easy review
 + [OWASP Top 10 LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 
 + [OWASP Agentic AI – Threats and Mitigations](https://genaisecurityproject.com/resource/agentic-ai-threats-and-mitigations)
+
+## Agentic Visualizer
+
+If you only care about visualization, try out the [Agentic Visualizer](https://agentic-visualizer.splx.ai/).
+
+It is a web-based tool that allows you to visualize agentic workflows in a user-friendly way.
+
+
 
 ## Getting Started 🚀
 
@@ -286,6 +295,12 @@ Each row shows:
 This makes it easy to spot vulnerabilities at a glance—especially in multi-agent systems.
 
   <img src="docs/test_results.png" alt="Test Results Example" />
+
+### CI/CD Workflow
+
+To integrate Agentic Radar into your CI/CD pipeline, you can use the [provided GitHub Actions workflow example](https://github.com/splx-ai/agentic-radar/blob/main/examples/github_workflow/auto-agentic-radar.yaml). Just paste the YAML to the `.github/workflows` directory of your repository. 
+
+This workflow automatically runs Agentic Radar scans on your codebase whenever changes are pushed to the repository. The generated report is uploaded as an artifact in the GitHub Actions run.
 
 ## Roadmap 📈
 
