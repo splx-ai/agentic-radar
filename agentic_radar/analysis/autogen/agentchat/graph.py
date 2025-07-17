@@ -7,6 +7,7 @@ from agentic_radar.graph import (
     ToolType,
 )
 
+from .models import Agent as AutogenAgent
 from .models import Team, TeamType
 
 
@@ -88,11 +89,53 @@ def get_selector_team_edges(team: Team) -> list[EdgeDefinition]:
     return edges
 
 
-def create_graph_definition(name: str, teams: list[Team]):
-    nodes = []
-    edges = []
-    agents = []
-    tools = []
+def _add_agent_node(
+    agent: AutogenAgent,
+    nodes: list[NodeDefinition],
+    edges: list[EdgeDefinition],
+    tools: list[NodeDefinition],
+    agents: list[Agent],
+) -> NodeDefinition:
+    agent_node = NodeDefinition(
+        name=agent.name,
+        type=NodeType.AGENT,
+        label=agent.name,
+    )
+    nodes.append(agent_node)
+
+    if agent.tools:
+        for tool in agent.tools:
+            tool_node = NodeDefinition(
+                name=tool.name,
+                label=tool.name,
+                description=tool.description,
+                type=NodeType.CUSTOM_TOOL,
+                category=ToolType.DEFAULT,
+            )
+            nodes.append(tool_node)
+            edges.append(
+                EdgeDefinition(start=agent.name, end=tool.name, condition="uses_tool")
+            )
+            tools.append(tool_node)
+
+    agents.append(
+        Agent(
+            name=agent.name,
+            llm=agent.llm,
+            system_prompt=agent.system_prompt,
+        )
+    )
+
+    return agent_node
+
+
+def create_graph_definition(
+    name: str, teams: list[Team], teamless_agents: list[AutogenAgent]
+) -> GraphDefinition:
+    nodes: list[NodeDefinition] = []
+    edges: list[EdgeDefinition] = []
+    agents: list[Agent] = []
+    tools: list[NodeDefinition] = []
 
     start_node = NodeDefinition(
         name="START",
@@ -112,33 +155,7 @@ def create_graph_definition(name: str, teams: list[Team]):
             continue
 
         for agent in team.members:
-            agents.append(
-                Agent(name=agent.name, llm=agent.llm, system_prompt=agent.system_prompt)
-            )
-
-            agent_node = NodeDefinition(
-                name=agent.name,
-                type=NodeType.AGENT,
-                label=agent.name,
-            )
-
-            nodes.append(agent_node)
-
-            for tool in agent.tools:
-                tool_node = NodeDefinition(
-                    name=tool.name,
-                    label=tool.name,
-                    description=tool.description,
-                    type=NodeType.CUSTOM_TOOL,
-                    category=ToolType.DEFAULT,
-                )
-                tools.append(tool_node)
-                nodes.append(tool_node)
-                edges.append(
-                    EdgeDefinition(
-                        start=agent.name, end=tool.name, condition="uses_tool"
-                    )
-                )
+            _add_agent_node(agent, nodes, edges, tools, agents)
 
         if team.type == TeamType.SWARM:
             edges.extend(get_swarm_team_edges(team))
@@ -158,6 +175,21 @@ def create_graph_definition(name: str, teams: list[Team]):
             edges.extend(get_selector_team_edges(team))
         else:
             raise ValueError(f"Unknown team type: {team.type}")
+
+    for agent in teamless_agents:
+        agent_node = _add_agent_node(agent, nodes, edges, tools, agents)
+        edges.append(
+            EdgeDefinition(
+                start="START",
+                end=agent_node.name,
+            )
+        )
+        edges.append(
+            EdgeDefinition(
+                start=agent_node.name,
+                end="END",
+            )
+        )
 
     graph_definition = GraphDefinition(
         name=name,

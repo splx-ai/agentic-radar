@@ -29,6 +29,13 @@ class AutogenAgentChatAnalyzer(Analyzer):
             trees, model_clients, function_tools, all_functions
         )
         teams = find_teams(trees, agent_assignments)
-        graph = create_graph_definition(Path(root_directory).name, teams)
+
+        agents_with_team = set([member for team in teams for member in team.members])
+        teamless_agents = [
+            a for a in agent_assignments.values() if a.name not in agents_with_team
+        ]
+        graph = create_graph_definition(
+            Path(root_directory).name, teams, teamless_agents
+        )
 
         return graph
