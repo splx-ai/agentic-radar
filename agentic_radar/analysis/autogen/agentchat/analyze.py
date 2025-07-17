@@ -30,7 +30,9 @@ class AutogenAgentChatAnalyzer(Analyzer):
         )
         teams = find_teams(trees, agent_assignments)
 
-        agents_with_team = set([member for team in teams for member in team.members])
+        agents_with_team = set(
+            [member.name for team in teams for member in team.members]
+        )
         teamless_agents = [
             a for a in agent_assignments.values() if a.name not in agents_with_team
         ]
