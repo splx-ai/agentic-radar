@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.13.0](https://github.com/splx-ai/agentic-radar/compare/v0.12.0...v0.13.0) (2025-07-17)
+
+
+### Features
+
+* add GitHub workflow example YAML ([#101](https://github.com/splx-ai/agentic-radar/issues/101)) ([e3be24f](https://github.com/splx-ai/agentic-radar/commit/e3be24fa9f9df0ce55d57e21815d521347a6de5b))
+
+
+### Bug Fixes
+
+* **autogen:** show teamless agents in the report ([#103](https://github.com/splx-ai/agentic-radar/issues/103)) ([22d79bf](https://github.com/splx-ai/agentic-radar/commit/22d79bf1fd26e1d27e1b9b6e6c60f5568f3e6658))
+
 ## [0.12.0](https://github.com/splx-ai/agentic-radar/compare/v0.11.1...v0.12.0) (2025-06-09)
 
 
