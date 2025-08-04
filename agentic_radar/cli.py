@@ -55,7 +55,7 @@ def version_callback(
     ] = None,
 ):
     if version:
-        print(f"SplxAI Agentic Radar Version: {__version__}")
+        print(f"SPLX Agentic Radar Version: {__version__}")
         raise typer.Exit()
 
 

@@ -86,8 +86,10 @@ table, th, td {
 
 <body>
 <div class="main">
-<div style="width: 100%; height: 160px; text-align: center; justify-content: center; align-self: stretch; position: relative; background: linear-gradient(360deg, #002134 0%, #000407 100%)">
-    {% include 'assets/cover.svg' %}
+<div style="width: 100%; height: 160px; display: flex; align-items: center; justify-content: center; align-self: stretch; position: relative; background: #0E1418;">
+    <div style="transform: scale(1.5); display: flex; align-items: center; justify-content: center;">   
+        {% include 'assets/cover.svg' %}
+    </div>
 </div>
     <div style="width:100%; background: white; flex-direction: column; justify-content: flex-start; margin-top: 20px; gap: 20px; align-items: flex-start; display: flex">
         <div style="width: 100%; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
@@ -236,10 +238,10 @@ table, th, td {
                             <rect width="40" height="40" rx="20" fill="url(#paint0_linear_4895_70604)"/>
                             <path d="M11 20C11 21.1819 11.2328 22.3522 11.6851 23.4442C12.1374 24.5361 12.8003 25.5282 13.636 26.364C14.4718 27.1997 15.4639 27.8626 16.5558 28.3149C17.6478 28.7672 18.8181 29 20 29M11 20C11 18.8181 11.2328 17.6478 11.6851 16.5558C12.1374 15.4639 12.8003 14.4718 13.636 13.636C14.4718 12.8003 15.4639 12.1374 16.5558 11.6851C17.6478 11.2328 18.8181 11 20 11M11 20H15M20 29C21.1819 29 22.3522 28.7672 23.4442 28.3149C24.5361 27.8626 25.5282 27.1997 26.364 26.364C27.1997 25.5282 27.8626 24.5361 28.3149 23.4442C28.7672 22.3522 29 21.1819 29 20M20 29V26M29 20C29 18.8181 28.7672 17.6478 28.3149 16.5558C27.8626 15.4639 27.1997 14.4718 26.364 13.636C25.5282 12.8003 24.5361 12.1374 23.4442 11.6851C22.3522 11.2328 21.1819 11 20 11M29 20H26M20 11V15M20 20V20.01" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <defs>
-                            <linearGradient id="paint0_linear_4895_70604" x1="36.5779" y1="4.53249" x2="13.8706" y2="43.8339" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#BC00FF"/>
-                            <stop offset="0.508871" stop-color="#49BAEA"/>
-                            <stop offset="1" stop-color="#AFFF00"/>
+                            <linearGradient id="paint0_linear_4895_70604" x1="0%" y1="100%" x2="100%" y2="0%" gradientUnits="userSpaceOnUse">
+                                <stop offset="0.1132" stop-color="#2AF5D8"/>
+                                <stop offset="0.5041" stop-color="#2A90F4"/>
+                                <stop offset="0.8876" stop-color="#9281FF"/>
                             </linearGradient>
                             </defs>
                             </svg>
@@ -255,10 +257,10 @@ table, th, td {
                             <rect x="0.666672" width="40" height="40" rx="20" fill="url(#paint0_linear_4895_70615)"/>
                             <path d="M20.6667 10V12M17.6667 20V29M23.6667 20V29M13.6667 24L17.6667 22M23.6667 22L27.6667 24M17.6667 26H23.6667M18.6667 16V16.01M22.6667 16V16.01M14.6667 14C14.6667 13.4696 14.8774 12.9609 15.2525 12.5858C15.6275 12.2107 16.1362 12 16.6667 12H24.6667C25.1971 12 25.7058 12.2107 26.0809 12.5858C26.456 12.9609 26.6667 13.4696 26.6667 14V18C26.6667 18.5304 26.456 19.0391 26.0809 19.4142C25.7058 19.7893 25.1971 20 24.6667 20H16.6667C16.1362 20 15.6275 19.7893 15.2525 19.4142C14.8774 19.0391 14.6667 18.5304 14.6667 18V14Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <defs>
-                            <linearGradient id="paint0_linear_4895_70615" x1="37.2446" y1="4.53249" x2="14.5373" y2="43.8339" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#BC00FF"/>
-                            <stop offset="0.508871" stop-color="#49BAEA"/>
-                            <stop offset="1" stop-color="#AFFF00"/>
+                            <linearGradient id="paint0_linear_4895_70615" x1="0%" y1="100%" x2="100%" y2="0%" gradientUnits="userSpaceOnUse">
+                                <stop offset="0.1132" stop-color="#2AF5D8"/>
+                                <stop offset="0.5041" stop-color="#2A90F4"/>
+                                <stop offset="0.8876" stop-color="#9281FF"/>
                             </linearGradient>
                             </defs>
                             </svg>
@@ -274,10 +276,10 @@ table, th, td {
                             <rect x="0.333313" width="40" height="40" rx="20" fill="url(#paint0_linear_4895_70620)"/>
                             <path d="M15.3333 18H18.3333V15L14.8333 11.5C15.9529 10.9652 17.2108 10.7908 18.4337 11.0006C19.6566 11.2104 20.7844 11.7942 21.6617 12.6715C22.5391 13.5489 23.1229 14.6767 23.3327 15.8996C23.5425 17.1225 23.368 18.3803 22.8333 19.5L28.8333 25.5C29.2311 25.8978 29.4546 26.4374 29.4546 27C29.4546 27.5626 29.2311 28.1022 28.8333 28.5C28.4355 28.8978 27.8959 29.1213 27.3333 29.1213C26.7707 29.1213 26.2311 28.8978 25.8333 28.5L19.8333 22.5C18.7137 23.0347 17.4558 23.2092 16.2329 22.9994C15.01 22.7895 13.8822 22.2058 13.0049 21.3284C12.1275 20.451 11.5438 19.3233 11.3339 18.1004C11.1241 16.8775 11.2986 15.6196 11.8333 14.5L15.3333 18Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <defs>
-                            <linearGradient id="paint0_linear_4895_70620" x1="36.9112" y1="4.53249" x2="14.204" y2="43.8339" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#BC00FF"/>
-                            <stop offset="0.508871" stop-color="#49BAEA"/>
-                            <stop offset="1" stop-color="#AFFF00"/>
+                            <linearGradient id="paint0_linear_4895_70620" x1="0%" y1="100%" x2="100%" y2="0%" gradientUnits="userSpaceOnUse">
+                                <stop offset="0.1132" stop-color="#2AF5D8"/>
+                                <stop offset="0.5041" stop-color="#2A90F4"/>
+                                <stop offset="0.8876" stop-color="#9281FF"/>
                             </linearGradient>
                             </defs>
                             </svg>
