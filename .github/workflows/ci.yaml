@@ -46,4 +46,12 @@ jobs:
         run: | 
           poetry run ruff check
           poetry run mypy agentic_radar
-        
+
+      - name: Quick security scan
+        uses: aquasecurity/trivy-action@v0.32.0
+        with:
+          scan-type: 'fs'
+          scan-ref: 'poetry.lock'
+          format: 'table'
+          severity: 'CRITICAL'
+          exit-code: '1'  # Fail CI on critical vulnerabilities

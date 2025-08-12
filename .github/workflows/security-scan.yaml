@@ -1,0 +1,214 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+env:
+  POETRY_VERSION: 2.0.1
+
+jobs:
+  trivy-scan:
+    name: Trivy Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner in filesystem mode
+      uses: aquasecurity/trivy-action@v0.32.0
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        severity: 'CRITICAL,HIGH,MEDIUM'
+        exit-code: '0'  # Don't fail the build, just report
+        
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3.29.9
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+        
+    - name: Run Trivy vulnerability scanner for summary
+      uses: aquasecurity/trivy-action@v0.32.0
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'table'
+        severity: 'CRITICAL,HIGH'
+        exit-code: '1'  # Fail on critical/high severity issues
+        
+  dependency-scan:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install poetry
+      run: curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
+      
+    - name: Install dependencies
+      run: |
+        poetry install --no-dev
+        
+    - name: Run Trivy on Poetry lock file
+      uses: aquasecurity/trivy-action@v0.32.0
+      with:
+        scan-type: 'fs'
+        scan-ref: 'poetry.lock'
+        format: 'json'
+        output: 'dependency-results.json'
+        severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+        
+    - name: Upload dependency scan results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: dependency-scan-results
+        path: dependency-results.json
+        retention-days: 30
+        
+  config-scan:
+    name: Configuration Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy config scan
+      uses: aquasecurity/trivy-action@v0.32.0
+      with:
+        scan-type: 'config'
+        scan-ref: '.'
+        format: 'table'
+        severity: 'CRITICAL,HIGH,MEDIUM'
+        exit-code: '0'
+        
+    - name: Run Trivy config scan (JSON output)
+      uses: aquasecurity/trivy-action@v0.32.0
+      with:
+        scan-type: 'config'
+        scan-ref: '.'
+        format: 'json'
+        output: 'config-results.json'
+        severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+        
+    - name: Upload config scan results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: config-scan-results
+        path: config-results.json
+        retention-days: 30
+        
+  secret-scan:
+    name: Secret Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy secret scan
+      uses: aquasecurity/trivy-action@v0.32.0
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        scanners: 'secret'
+        format: 'table'
+        severity: 'CRITICAL,HIGH,MEDIUM'
+        exit-code: '1'  # Fail on any secrets found
+        
+    - name: Run Trivy secret scan (JSON output)
+      uses: aquasecurity/trivy-action@v0.32.0
+      if: failure()  # Only run if secrets were found
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        scanners: 'secret'
+        format: 'json'
+        output: 'secret-results.json'
+        severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+        
+    - name: Upload secret scan results
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: secret-scan-results
+        path: secret-results.json
+        retention-days: 30
+        
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [trivy-scan, dependency-scan, config-scan, secret-scan]
+    if: always()
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download all scan results
+      uses: actions/download-artifact@v4
+      continue-on-error: true
+      
+    - name: Create security summary
+      run: |
+        echo "# Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Scan Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Check job results
+        if [ "${{ needs.trivy-scan.result }}" == "success" ]; then
+          echo "✅ **Trivy Filesystem Scan**: Passed" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Trivy Filesystem Scan**: Failed" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ "${{ needs.dependency-scan.result }}" == "success" ]; then
+          echo "✅ **Dependency Scan**: Passed" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Dependency Scan**: Failed" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ "${{ needs.config-scan.result }}" == "success" ]; then
+          echo "✅ **Configuration Scan**: Passed" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Configuration Scan**: Failed" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ "${{ needs.secret-scan.result }}" == "success" ]; then
+          echo "✅ **Secret Scan**: Passed" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Secret Scan**: Failed - Secrets detected!" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Next Steps" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- Review the detailed scan results in the Security tab" >> $GITHUB_STEP_SUMMARY
+        echo "- Check artifacts for detailed JSON reports" >> $GITHUB_STEP_SUMMARY
+        echo "- Address any critical or high severity issues immediately" >> $GITHUB_STEP_SUMMARY
+        echo "- Refer to \`security_fix.md\` and \`attack_vectors.md\` for remediation guidance" >> $GITHUB_STEP_SUMMARY
