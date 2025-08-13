@@ -91,6 +91,16 @@
         <li><a href="#cicd-workflow">CI/CD Workflow</a></li>
       </ul>
     </li>
+    <li>
+      <a href="#security-scanning--testing-">Security Scanning & Testing</a>
+      <ul>
+        <li><a href="#automated-security-pipeline">Automated Security Pipeline</a></li>
+        <li><a href="#local-security-testing">Local Security Testing</a></li>
+        <li><a href="#local-ci-testing">Local CI Testing</a></li>
+        <li><a href="#manual-security-verification">Manual Security Verification</a></li>
+        <li><a href="#security-reports--monitoring">Security Reports & Monitoring</a></li>
+      </ul>
+    </li>
     <li><a href="#roadmap-">Roadmap</a></li>
     <li><a href="#blogs-and-tutorials-">Blogs and Tutorials</a></li>
     <li><a href="#community-">Community</a></li>
@@ -304,6 +314,39 @@ This makes it easy to spot vulnerabilities at a glance—especially in multi-age
 To integrate Agentic Radar into your CI/CD pipeline, you can use the [provided GitHub Actions workflow example](https://github.com/splx-ai/agentic-radar/blob/main/examples/github_workflow/auto-agentic-radar.yaml). Just paste the YAML to the `.github/workflows` directory of your repository. 
 
 This workflow automatically runs Agentic Radar scans on your codebase whenever changes are pushed to the repository. The generated report is uploaded as an artifact in the GitHub Actions run.
+
+## Security Scanning & Testing 🔒
+
+### Automated Security Pipeline
+
+Agentic Radar includes comprehensive security scanning powered by [Trivy](https://trivy.dev/) that runs automatically in CI/CD:
+
+- **🛡️ Vulnerability Scanning**: Dependency analysis for HIGH/CRITICAL security issues
+- **🔍 Secret Detection**: Scans for hardcoded API keys, tokens, and credentials  
+- **⚙️ Configuration Security**: Infrastructure-as-Code security checks
+- **📊 SARIF Integration**: Results appear in GitHub Security tab
+- **⏰ Scheduled Scans**: Daily automated security monitoring
+
+### Local Security Testing
+
+You can run security scans locally using Trivy after you install it using [instructions](https://trivy.dev/latest/getting-started/installation/):
+
+```bash
+# Scan for HIGH/CRITICAL vulnerabilities
+trivy fs --scanners vuln --severity HIGH,CRITICAL poetry.lock
+
+# Full security scan (vulnerabilities, secrets, configs)
+trivy fs --security-checks vuln,secret,config .
+
+# Scan specific files
+trivy fs examples/
+```
+### Security Reports & Monitoring
+
+- **GitHub Security Tab**: View SARIF reports from Trivy scans
+- **Actions Artifacts**: Download detailed JSON scan results (30-day retention)
+- **Daily Monitoring**: Automated scans run daily at 2 AM UTC
+- **Failure Notifications**: Critical findings trigger workflow failures
 
 ## Roadmap 📈
 

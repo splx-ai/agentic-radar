@@ -24,10 +24,10 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.2.1
       
     - name: Run Trivy vulnerability scanner in filesystem mode
-      uses: aquasecurity/trivy-action@v0.32.0
+      uses: aquasecurity/trivy-action@0.32.0
       with:
         scan-type: 'fs'
         scan-ref: '.'
@@ -43,7 +43,7 @@ jobs:
         sarif_file: 'trivy-results.sarif'
         
     - name: Run Trivy vulnerability scanner for summary
-      uses: aquasecurity/trivy-action@v0.32.0
+      uses: aquasecurity/trivy-action@0.32.0
       with:
         scan-type: 'fs'
         scan-ref: '.'
@@ -57,10 +57,10 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.2.1
       
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.4.0
       with:
         python-version: '3.11'
         
@@ -72,7 +72,7 @@ jobs:
         poetry install --no-dev
         
     - name: Run Trivy on Poetry lock file
-      uses: aquasecurity/trivy-action@v0.32.0
+      uses: aquasecurity/trivy-action@0.32.0
       with:
         scan-type: 'fs'
         scan-ref: 'poetry.lock'
@@ -81,7 +81,7 @@ jobs:
         severity: 'CRITICAL,HIGH,MEDIUM,LOW'
         
     - name: Upload dependency scan results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4.5.0
       if: always()
       with:
         name: dependency-scan-results
@@ -94,10 +94,10 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.2.1
       
     - name: Run Trivy config scan
-      uses: aquasecurity/trivy-action@v0.32.0
+      uses: aquasecurity/trivy-action@0.32.0
       with:
         scan-type: 'config'
         scan-ref: '.'
@@ -106,7 +106,7 @@ jobs:
         exit-code: '0'
         
     - name: Run Trivy config scan (JSON output)
-      uses: aquasecurity/trivy-action@v0.32.0
+      uses: aquasecurity/trivy-action@0.32.0
       with:
         scan-type: 'config'
         scan-ref: '.'
@@ -115,7 +115,7 @@ jobs:
         severity: 'CRITICAL,HIGH,MEDIUM,LOW'
         
     - name: Upload config scan results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4.5.0
       if: always()
       with:
         name: config-scan-results
@@ -128,10 +128,10 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.2.1
       
     - name: Run Trivy secret scan
-      uses: aquasecurity/trivy-action@v0.32.0
+      uses: aquasecurity/trivy-action@0.32.0
       with:
         scan-type: 'fs'
         scan-ref: '.'
@@ -141,7 +141,7 @@ jobs:
         exit-code: '1'  # Fail on any secrets found
         
     - name: Run Trivy secret scan (JSON output)
-      uses: aquasecurity/trivy-action@v0.32.0
+      uses: aquasecurity/trivy-action@0.32.0
       if: failure()  # Only run if secrets were found
       with:
         scan-type: 'fs'
@@ -152,7 +152,7 @@ jobs:
         severity: 'CRITICAL,HIGH,MEDIUM,LOW'
         
     - name: Upload secret scan results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4.5.0
       if: failure()
       with:
         name: secret-scan-results
@@ -167,10 +167,10 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.2.1
       
     - name: Download all scan results
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v4.4.0
       continue-on-error: true
       
     - name: Create security summary
