@@ -52,7 +52,7 @@ class ReportData(BaseModel):
     force_graph_dependency_path: str
 
 
-def generate(graph: GraphDefinition, out_file: str):
+def generate(graph: GraphDefinition, out_file: str, export_pdf: bool = False):
     svg = from_definition(graph).generate()
 
     env = jinja2.Environment(
@@ -103,3 +103,41 @@ def generate(graph: GraphDefinition, out_file: str):
         ).model_dump(),
         vulnerability_definitions=vulnerability_definitions,
     ).dump(out_file)
+    # If PDF export requested, try to convert the generated HTML to PDF.
+    if export_pdf:
+        # Try a headless browser-based conversion first (Playwright), since the report
+        # relies on client-side JS to render the graph. If Playwright isn't available or
+        # fails, fall back to WeasyPrint which does not execute JS but works for static content.
+        pdf_out = out_file if out_file.lower().endswith('.pdf') else os.path.splitext(out_file)[0] + '.pdf'
+        # Playwright path
+        try:
+            from playwright.sync_api import sync_playwright
+
+            with sync_playwright() as p:
+                browser = p.chromium.launch()
+                page = browser.new_page()
+                page.goto(f"file:///{os.path.abspath(out_file).replace('\\', '/')}", wait_until="networkidle")
+                # Give the force-graph some time to render
+                page.wait_for_timeout(1000)
+                page.pdf(path=pdf_out, print_background=True)
+                browser.close()
+            print(f"PDF report {pdf_out} generated (via Playwright)")
+            return
+        except Exception:
+            # Ignore and try WeasyPrint fallback
+            pass
+
+        # WeasyPrint fallback (no JS execution)
+        try:
+            from weasyprint import HTML
+
+            HTML(filename=out_file).write_pdf(pdf_out)
+            print(f"PDF report {pdf_out} generated (via WeasyPrint)")
+        except Exception as e:
+            # We avoid crashing; provide a helpful message.
+            print(
+                "PDF export requested but conversion failed. "
+                "For faithful rendering (including JS graphs) install Playwright and browser binaries: 'pip install \"agentic-radar[pdf-browser]\"' and run 'playwright install'. "
+                "Alternatively, install WeasyPrint with system dependencies: 'pip install \"agentic-radar[pdf]\"'."
+            )
+            print(f"Conversion error: {e}")

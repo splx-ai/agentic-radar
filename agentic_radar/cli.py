@@ -85,6 +85,15 @@ def scan(
             envvar="AGENTIC_RADAR_OUTPUT_FILE",
         ),
     ] = f"report_{datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d_%H%M%S')}.html",
+    export_pdf: Annotated[
+        bool,
+        typer.Option(
+            "--export-pdf",
+            help="Also export the generated report to PDF (requires optional 'pdf' extras / WeasyPrint).",
+            is_flag=True,
+            envvar="AGENTIC_RADAR_EXPORT_PDF",
+        ),
+    ] = False,
     harden_prompts: Annotated[
         bool,
         typer.Option(
@@ -128,7 +137,8 @@ def scan(
         analyzer=analyzer,
         input_directory=input_directory,
         output_file=output_file,
-        harden_prompts=harden_prompts,
+    harden_prompts=harden_prompts,
+    export_pdf=export_pdf,
         export_graph_json=export_graph_json,
     )
 
@@ -139,6 +149,7 @@ def analyze_and_generate_report(
     input_directory: str,
     output_file: str,
     harden_prompts: bool,
+    export_pdf: bool,
     export_graph_json: bool = False,
 ):
     print(f"Analyzing {input_directory} for {framework} graphs")
@@ -190,7 +201,7 @@ def analyze_and_generate_report(
         hardened_prompts=hardened_prompts,
     )
     print("Generating report")
-    generate(pydot_graph, output_file)
+    generate(pydot_graph, output_file, export_pdf=export_pdf)
     print(f"Report {output_file} generated")
 
 

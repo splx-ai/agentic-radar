@@ -34,6 +34,8 @@ crewai = [
     "crewai-tools (>=0.38.1) ; python_version >= '3.10' and python_version < '3.13'"
     ]
 openai-agents = ["openai-agents (>=0.0.13,<0.0.14)"]
+pdf = ["WeasyPrint>=59.0"]
+pdf-browser = ["playwright>=1.40.0"]
 
 [project.urls]
 Homepage = "https://github.com/splx-ai/agentic-radar"
