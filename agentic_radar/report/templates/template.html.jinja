@@ -6,12 +6,15 @@
 {% include 'assets/force-graph.js' %}
 </script>
 <script language="javascript" type="text/javascript">
+// Render-ready flag for PDF export to wait on
+window.__GRAPH_READY__ = false;
 const __INLINE_DATA = {{graph}};
 </script>
 <style>
 .main {
-    width: 60%;
-    margin: auto;
+    width: 95%;
+    margin: 0 auto;
+    padding: 0 20px;
 
     flex-direction: column;
     display: flex;
@@ -78,6 +81,13 @@ table, th, td {
     color: black;
 }
 
+/* Print-specific tweaks for PDF clarity */
+@media print {
+    .force-graph-container canvas { image-rendering: optimizeQuality; }
+    /* Slightly bump legend text */
+    [data-svg-wrapper] + div { font-size: 11px !important; line-height: 14px !important; }
+}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -138,7 +148,7 @@ table, th, td {
                     </div>
                     <div style="align-self: stretch; padding: 12px; background: #F5F5F5; border: 0.50px #C3C3C3 solid; flex-direction: column; justify-content: center; align-items: flex-end; gap: 12px; display: flex">
                         <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: flex">
-                            <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 500; line-height: 12px; word-wrap: break-word">Legend</div>
+                            <div style="text-align: justify; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 16px; word-wrap: break-word">Legend</div>
                             <div style="justify-content: flex-start; align-items: center; gap: 32px; display: inline-flex">
                                 <div style="height: 24px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
                                     <div data-svg-wrapper style="position: relative">
@@ -154,7 +164,7 @@ table, th, td {
                                     </defs>
                                     </svg>
                                     </div>
-                                    <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Agent</div>
+                                    <div style="text-align: justify; color: black; font-size: 11px; font-family: Inter; font-weight: 600; line-height: 14px; word-wrap: break-word">Agent</div>
                                 </div>
                                 <div style="height: 24px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
                                     <div data-svg-wrapper>
@@ -164,8 +174,8 @@ table, th, td {
                                     </svg>
                                     </div>
                                     <div style="flex-direction: column; justify-content: center; align-items: flex-start; display: inline-flex">
-                                        <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 11.20px; word-wrap: break-word">Tool</div>
-                                        <div style="text-align: justify; color: black; font-size: 6px; font-family: Inter; font-weight: 500; line-height: 8.40px; word-wrap: break-word">Tool Category</div>
+                                        <div style="text-align: justify; color: black; font-size: 11px; font-family: Inter; font-weight: 600; line-height: 14px; word-wrap: break-word">Tool</div>
+                                        <div style="text-align: justify; color: black; font-size: 9px; font-family: Inter; font-weight: 500; line-height: 12px; word-wrap: break-word">Tool Category</div>
                                     </div>
                                 </div>
                                 <div style="height: 24px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
@@ -176,7 +186,7 @@ table, th, td {
                                     <path d="M9.3562 10.9999H10.8562V9.49993L9.1062 7.74993C9.66602 7.48256 10.295 7.39533 10.9064 7.50024C11.5178 7.60515 12.0817 7.89704 12.5204 8.33571C12.9591 8.77439 13.251 9.33828 13.3559 9.94973C13.4608 10.5612 13.3736 11.1901 13.1062 11.7499L16.1062 14.7499C16.3051 14.9488 16.4169 15.2186 16.4169 15.4999C16.4169 15.7812 16.3051 16.051 16.1062 16.2499C15.9073 16.4488 15.6375 16.5606 15.3562 16.5606C15.0749 16.5606 14.8051 16.4488 14.6062 16.2499L11.6062 13.2499C11.0464 13.5173 10.4175 13.6045 9.806 13.4996C9.19455 13.3947 8.63066 13.1028 8.19199 12.6641C7.75331 12.2255 7.46142 11.6616 7.35651 11.0501C7.2516 10.4387 7.33884 9.80974 7.6062 9.24993L9.3562 10.9999Z" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                     </div>
-                                    <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">CustomTool</div>
+                                    <div style="text-align: justify; color: black; font-size: 11px; font-family: Inter; font-weight: 600; line-height: 14px; word-wrap: break-word">CustomTool</div>
                                 </div>
                                 <div style="height: 28.28px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
                                     <div data-svg-wrapper>
@@ -197,7 +207,7 @@ table, th, td {
                                     </defs>
                                     </svg>
                                     </div>
-                                    <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Basic</div>
+                                    <div style="text-align: justify; color: black; font-size: 11px; font-family: Inter; font-weight: 600; line-height: 14px; word-wrap: break-word">Basic</div>
                                 </div>
                                 <div style="height: 24px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
                                     <div data-svg-wrapper>
@@ -214,13 +224,13 @@ table, th, td {
                                     </defs>
                                     </svg>
                                     </div>
-                                    <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">MCP Server</div>
+                                    <div style="text-align: justify; color: black; font-size: 11px; font-family: Inter; font-weight: 600; line-height: 14px; word-wrap: break-word">MCP Server</div>
                                 </div>
                             </div>
                         </div>
                         <div style="align-self: stretch; height: 0px; border: 0.50px #C3C3C3 solid"></div>
                         <div data-svg-wrapper style="width: 100%; position: relative">
-                            <div id="graph" style="width:100%; height: 600px; position: relative"></div>
+                            <div id="graph" style="width:100%; height: 720px; position: relative; border: 1px solid #ddd; background: #fafafa;"></div>
                         </div>
                     </div>
                 </div>
@@ -509,44 +519,293 @@ table, th, td {
                 img.src = n.image;
                 n.image = img;
             }
+            // Use server-computed positions if available
+            if (typeof n.fx !== 'undefined') {
+                n.x = n.fx;
+                n.vx = 0; // Stop initial velocity
+            }
+            if (typeof n.fy !== 'undefined') {
+                n.y = n.fy;
+                n.vy = 0; // Stop initial velocity
+            }
             return n;
         }), 
       links: links,
     };
 
     const node = document.getElementById('graph');
+    const nodeCountAll = gData.nodes.length;
+    const isSmallGraph = nodeCountAll <= 12;
+    const isLargeGraph = nodeCountAll > 30; // Assumption: consider >30 nodes as large
+    // For larger graphs, cap the container height to 550px (also for print via !important)
+    if (isLargeGraph) {
+        try {
+            node.style.setProperty('height', '550px', 'important');
+        } catch (e) {
+            node.style.height = '550px';
+        }
+    }
+    // Adaptive layout tuning by graph size (medium range for small graphs)
+    const linkDistance = (nodeCountAll <= 6) ? 70 : (nodeCountAll <= 12) ? 62 : (nodeCountAll <= 30) ? 64 : (nodeCountAll <= 80) ? 74 : 86;
+    const linkStrength = isSmallGraph ? 0.36 : (nodeCountAll <= 30) ? 0.34 : 0.32;
+    const chargeStrength = (nodeCountAll <= 6) ? -100 : (nodeCountAll <= 12) ? -120 : (nodeCountAll <= 30) ? -150 : -190;
+    const collRadius = (nodeCountAll <= 6) ? 36 : (nodeCountAll <= 12) ? 40 : (nodeCountAll <= 30) ? 42 : 46;
+    const labelMaxWidth = (nodeCountAll <= 8) ? 130 : (nodeCountAll > 60) ? 100 : (nodeCountAll > 30) ? 110 : 120;
+
+    // Simple text wrapper reused by renderer and label layout
+    function wrapText(ctx, text, maxWidth) {
+        const words = String(text || '').split(' ');
+        const lines = [];
+        let current = '';
+        for (let w of words) {
+            const test = current + (current ? ' ' : '') + w;
+            if (ctx.measureText(test).width > maxWidth && current) {
+                lines.push(current);
+                current = w;
+            } else {
+                current = test;
+            }
+        }
+        if (current) lines.push(current);
+        return lines;
+    }
+
+    // Use the graph node's own dimensions (after any inline height adjustment)
+    const initialWidth = node.clientWidth;
+    const initialHeight = node.clientHeight;
 
     const graph = new ForceGraph(node)
-        .linkDirectionalArrowLength(2)
-        .linkDirectionalArrowRelPos(1)
+        .linkDirectionalArrowLength(4)
+        .linkDirectionalArrowRelPos(0.99)
         .nodeId('name')
         .nodeLabel('label')
         .linkSource('source')
         .linkTarget('target')
-        .height(node.parentElement.clientHeight)
-        .width(node.parentElement.clientWidth)
-        .nodeCanvasObject((n, ctx, scale) => {
+    .height(initialHeight)
+    .width(initialWidth)
+        .linkColor(() => '#4a90e2')
+        .linkWidth(2.5)
+    .nodeCanvasObject((n, ctx, scale) => {
+            // Workflow-style node rendering optimized for PDF clarity
+            const nodeSize = 28;  // Slightly larger for print legibility
+            
+            // Draw main node background circle with gradient effect
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, nodeSize/2, 0, 2 * Math.PI);
+            ctx.fillStyle = '#f8f9fa';  // Light background
+            ctx.fill();
+            ctx.strokeStyle = '#4a90e2';
+            ctx.lineWidth = 2;  // Slightly thinner for compact look
+            ctx.stroke();
+            
+            // Add inner highlight for better appearance
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, nodeSize/2 - 1.5, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+            
+            // Draw the icon
             if (n.image) {
-                const size = 8;
-                ctx.drawImage(n.image, n.x-size/2, n.y-size/2, size, size);
+                const iconSize = 16;
+                ctx.drawImage(n.image, n.x-iconSize/2, n.y-iconSize/2, iconSize, iconSize);
             }
-            ctx.font = `${10/scale}px Inter`;
+            
+            // Draw label using precomputed non-overlapping position when available
+            ctx.font = `${11/scale}px Inter, Arial, sans-serif`;
             ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+            ctx.textBaseline = 'top';
 
-            ctx.fillText(n.label, n.x, n.y + 6);
+            const text = n.label || '';
+            const maxWidth = labelMaxWidth;
+            const lines = wrapText(ctx, text, maxWidth);
+            const lineHeight = 16/scale;
+            const textHeight = lines.length * lineHeight;
+            const textWidth = Math.max(1, Math.max(...lines.map(line => ctx.measureText(line).width)));
+            const padding = 8;
 
+            // Default below-node position
+            let lx = n.x;
+            let ly = n.y + nodeSize/2 + 3;
+            // If a collision-free label position is cached, use it
+            if (n.__lbl && typeof n.__lbl.x === 'number' && typeof n.__lbl.y === 'number') {
+                lx = n.__lbl.x;
+                ly = n.__lbl.y;
+                // Draw a subtle leader line if the label was displaced far
+                const dx = lx - n.x;
+                const dy = ly - (n.y + nodeSize/2);
+                const dist = Math.hypot(dx, dy);
+                if (dist > 18) {
+                    ctx.beginPath();
+                    ctx.moveTo(n.x, n.y + nodeSize/2);
+                    ctx.lineTo(lx, ly - 4);
+                    ctx.strokeStyle = '#c9d7ef';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            }
+
+            // Background box
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.97)';
+            ctx.fillRect(lx - textWidth/2 - padding, ly, textWidth + 2*padding, textHeight + padding);
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 0.8;
+            ctx.strokeRect(lx - textWidth/2 - padding, ly, textWidth + 2*padding, textHeight + padding);
+
+            // Text lines with outline
+            ctx.font = `${12/scale}px Inter, Arial, sans-serif`;
+            lines.forEach((line, i) => {
+                const y = ly + 4 + i * lineHeight;
+                ctx.lineWidth = Math.max(1, 3/scale);
+                ctx.strokeStyle = 'rgba(255,255,255,0.95)';
+                ctx.strokeText(line, lx, y);
+                ctx.fillStyle = '#111';
+                ctx.fillText(line, lx, y);
+            });
         })
         .nodeCanvasObjectMode(() => "replace")
-        .warmupTicks(250)
-        .cooldownTime(50)
-        .enableNodeDrag(true)
+    .warmupTicks(0)              // Faster start
+    .cooldownTime(700)           // Quicker settle
+    .enableNodeDrag(false)       // Less interaction overhead during PDF
+    .d3AlphaDecay(0.22)          // Faster decay
+    .d3VelocityDecay(0.85)       // Slightly higher decay
         .graphData(gData)
     ;
-    graph.d3Force('center', null);
-    graph.onEngineStop(() => {
-        graph.zoomToFit(1000, 16)
+    
+    // Configure forces for workflow layout - balanced for PDF
+    graph.d3Force('link').distance(() => linkDistance).strength(linkStrength);   // Adaptive distances
+    graph.d3Force('charge').strength(chargeStrength);              // Adaptive repulsion
+    graph.d3Force('center', d3.forceCenter(0, 0));       // Keep centered
+    graph.d3Force('collision', d3.forceCollide().radius(collRadius));  // Account for bigger labels
+
+    // Fast path: if most nodes have fixed positions, skip heavy forces
+    const fixedFraction = gData.nodes.filter(n => typeof n.x === 'number' && typeof n.y === 'number').length / (gData.nodes.length || 1);
+    if (fixedFraction > 0.8) {
+        graph.d3Force('link', null);
+        graph.d3Force('charge', null);
+        graph.cooldownTime(400);
+    }
+    // For small graphs, gently pull towards center to avoid drifting to edges
+    if (isSmallGraph) {
+        graph.d3Force('x', d3.forceX(0).strength(0.05));
+        graph.d3Force('y', d3.forceY(0).strength(0.05));
+    }
+    
+    // Add boundary force to keep nodes within the container - centered bounds with label margin
+    graph.d3Force('boundary', () => {
+        const nodes = graph.graphData().nodes;
+    // Dynamic padding based on node count; tighter for small graphs to keep medium area
+    const nodeCount = nodes.length || 1;
+    const basePadding = Math.min(220, Math.max(90, 60 + nodeCount * 1.5));
+    const padding = (nodeCount <= 12) ? Math.min(160, Math.max(100, basePadding)) : basePadding;
+    // Base bounds on actual container size (tighter factors for small graphs)
+    const containerW = node.clientWidth || 800;
+    const containerH = node.clientHeight || 720;
+    const widthFactor = (nodeCount <= 12) ? 0.7 : 0.9;
+    const heightFactor = (nodeCount <= 12) ? 0.65 : 0.82;
+    const maxWidth = containerW * widthFactor;    // leave margins for labels
+    const maxHeight = containerH * heightFactor;  // avoid clipping near edges
+        // Compute current graph bounding box
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        nodes.forEach(n => { minX = Math.min(minX, n.x); maxX = Math.max(maxX, n.x); minY = Math.min(minY, n.y); maxY = Math.max(maxY, n.y); });
+        const bboxCx = (minX + maxX) / 2;
+        const bboxCy = (minY + maxY) / 2;
+        // Center around bbox center
+        const centerX = bboxCx;
+        const centerY = bboxCy;
+        nodes.forEach(node => {
+            if (node.x < centerX - maxWidth/2 + padding) node.x = centerX - maxWidth/2 + padding;
+            if (node.x > centerX + maxWidth/2 - padding) node.x = centerX + maxWidth/2 - padding;
+            if (node.y < centerY - maxHeight/2 + padding) node.y = centerY - maxHeight/2 + padding;
+            if (node.y > centerY + maxHeight/2 - padding) node.y = centerY + maxHeight/2 - padding;
+        });
     });
+    
+    graph.onEngineStop(() => {
+        // Center and fit the graph so everything is visible in PDF
+        const nodes = graph.graphData().nodes;
+        const nodeCount = nodes.length || 1;
+        const fitPadding = (nodeCount <= 12) ? 110 : Math.min(260, Math.max(120, 80 + nodeCount * 1.6));
+
+        // Compute graph bbox center
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        nodes.forEach(n => { minX = Math.min(minX, n.x); maxX = Math.max(maxX, n.x); minY = Math.min(minY, n.y); maxY = Math.max(maxY, n.y); });
+        const cx = (minX + maxX) / 2; const cy = (minY + maxY) / 2;
+
+        // Run a tiny label collision layout to avoid overlapping names
+        try {
+            const ctx = document.createElement('canvas').getContext('2d');
+            ctx.font = `12px Inter, Arial, sans-serif`;
+            const padding = 8;
+            const labelObjs = nodes.map(n => {
+                const lines = wrapText(ctx, n.label || '', labelMaxWidth);
+                const textW = Math.max(1, Math.max(...lines.map(line => ctx.measureText(line).width)));
+                const textH = lines.length * 16; // lineHeight ~16 at scale=1
+                const w = textW + 2*padding;
+                const h = textH + padding;
+                // target position directly below node
+                const tx = n.x;
+                const ty = n.y + 28/2 + 3; // nodeSize/2 + 3
+                return { node: n, x: tx, y: ty, tx, ty, w, h, r: Math.hypot(w, h)/2 };
+            });
+
+            const strength = (nodeCount <= 12) ? 0.12 : 0.08;
+            const sim = d3.forceSimulation(labelObjs)
+                .force('x', d3.forceX(d => d.tx).strength(strength))
+                .force('y', d3.forceY(d => d.ty).strength(strength))
+                .force('collide', d3.forceCollide().radius(d => d.r + 6).iterations(2))
+                .stop();
+            // Run a few ticks synchronously
+            for (let i = 0; i < 50; i++) sim.tick();
+            // Clamp labels to container
+            const containerW = node.clientWidth || 800;
+            const containerH = node.clientHeight || 720;
+            labelObjs.forEach(l => {
+                const halfW = l.w/2;
+                l.x = Math.max(halfW + 8, Math.min(containerW - halfW - 8, l.x));
+                l.y = Math.max(4, Math.min(containerH - l.h - 4, l.y));
+                l.node.__lbl = { x: l.x, y: l.y };
+            });
+        } catch (e) {
+            // Non-fatal; fall back to default inline labels
+        }
+
+        setTimeout(() => {
+            graph.centerAt(cx, cy, 500);
+        }, 80);
+        setTimeout(() => {
+            graph.zoomToFit(fitPadding, 900);
+            window.__GRAPH_READY__ = true;
+        }, 850);
+    });
+
+    // Keep canvas in sync with container size and refit view
+    try {
+        const ro = new ResizeObserver(entries => {
+            for (const entry of entries) {
+                const cr = entry.contentRect;
+                graph.width(Math.max(200, Math.floor(cr.width)));
+                graph.height(Math.max(200, Math.floor(cr.height)));
+                // Slight debounce
+                clearTimeout(window.__GRAPH_RESIZE_TO__);
+                window.__GRAPH_RESIZE_TO__ = setTimeout(() => {
+                    try { graph.zoomToFit(isSmallGraph ? 110 : 150, 300); } catch (e) {}
+                }, 120);
+            }
+        });
+        ro.observe(node);
+    } catch (e) { /* ResizeObserver not supported in some headless renderers; safe to ignore */ }
+
+    // Safety net: if for some reason engineStop doesn't fire in time, mark ready after 5s
+    setTimeout(() => {
+        if (!window.__GRAPH_READY__) {
+            try {
+                graph.centerAt(0, 0, 300);
+                graph.zoomToFit(120, 450);
+            } catch (e) {}
+            window.__GRAPH_READY__ = true;
+        }
+    }, 5000);
 </script>
 
 <script>
