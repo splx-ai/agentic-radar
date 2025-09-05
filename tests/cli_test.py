@@ -98,3 +98,50 @@ def test_autogen(params):
     result = runner.invoke(app, ["scan", "autogen", "-i", i, "-o", o])
     assert result.exit_code == 0
     assert o in result.stdout
+
+
+# TDD Tests for --graph-only feature
+def test_graph_only_cli_flag_exists(tmp_path):
+    """Test that --graph-only flag is recognized by CLI"""
+    i = os.path.join(BASE_DIR_LANGGRAPH, os.listdir(BASE_DIR_LANGGRAPH)[0])
+    o = str(tmp_path / "graph.html")
+    
+    # This should fail initially because --graph-only doesn't exist yet
+    result = runner.invoke(app, ["scan", "langgraph", "--graph-only", "-i", i, "-o", o])
+    assert result.exit_code == 0  # Should succeed when implemented
+    assert o in result.stdout
+
+
+def test_graph_only_generates_minimal_html(tmp_path):
+    """Test that --graph-only generates minimal HTML without full report sections"""
+    i = os.path.join(BASE_DIR_LANGGRAPH, os.listdir(BASE_DIR_LANGGRAPH)[0])
+    o = str(tmp_path / "graph.html")
+    
+    result = runner.invoke(app, ["scan", "langgraph", "--graph-only", "-i", i, "-o", o])
+    assert result.exit_code == 0
+    
+    # Verify output file exists and is minimal
+    assert os.path.exists(o)
+    with open(o, 'r') as f:
+        content = f.read()
+    
+    # Should contain graph visualization
+    assert "force-graph.js" in content
+    assert "__INLINE_DATA" in content
+    
+    # Should NOT contain full report sections
+    assert "Vulnerability Analysis" not in content
+    assert "Tool Analysis" not in content
+    assert "Agent Details" not in content
+
+
+def test_graph_only_skips_vulnerability_mapping(tmp_path, capsys):
+    """Test that --graph-only mode skips vulnerability mapping for performance"""
+    i = os.path.join(BASE_DIR_LANGGRAPH, os.listdir(BASE_DIR_LANGGRAPH)[0])
+    o = str(tmp_path / "graph.html")
+    
+    result = runner.invoke(app, ["scan", "langgraph", "--graph-only", "-i", i, "-o", o])
+    assert result.exit_code == 0
+    
+    # Should not see "Mapping vulnerabilities" output
+    assert "Mapping vulnerabilities" not in result.stdout

@@ -103,6 +103,14 @@ def scan(
             envvar="AGENTIC_RADAR_EXPORT_GRAPH_JSON",
         ),
     ] = False,
+    graph_only: Annotated[
+        bool,
+        typer.Option(
+            "--graph-only",
+            help="Render only the graph visualization without the full report sections.",
+            is_flag=True,
+        ),
+    ] = False,
 ):
     if not os.path.isdir(input_directory):
         print(f"Input directory '{input_directory}' does not exist.")
@@ -130,6 +138,7 @@ def scan(
         output_file=output_file,
         harden_prompts=harden_prompts,
         export_graph_json=export_graph_json,
+        graph_only=graph_only,
     )
 
 
@@ -140,6 +149,7 @@ def analyze_and_generate_report(
     output_file: str,
     harden_prompts: bool,
     export_graph_json: bool = False,
+    graph_only: bool = False,
 ):
     print(f"Analyzing {input_directory} for {framework} graphs")
     graph = analyzer.analyze(input_directory)
@@ -158,8 +168,10 @@ def analyze_and_generate_report(
         print(f"Graph exported to {output_file}")
         raise typer.Exit(code=0)
 
-    print("Mapping vulnerabilities")
-    map_vulnerabilities(graph)
+    # Skip vulnerability mapping for graph-only mode (performance optimization)
+    if not graph_only:
+        print("Mapping vulnerabilities")
+        map_vulnerabilities(graph)
 
     if harden_prompts:
         if not os.getenv("OPENAI_API_KEY") and not os.getenv("AZURE_OPENAI_API_KEY"):
@@ -190,7 +202,7 @@ def analyze_and_generate_report(
         hardened_prompts=hardened_prompts,
     )
     print("Generating report")
-    generate(pydot_graph, output_file)
+    generate(pydot_graph, output_file, graph_only=graph_only)
     print(f"Report {output_file} generated")
 
 
