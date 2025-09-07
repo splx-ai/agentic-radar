@@ -10,13 +10,47 @@ from agentic_radar.analysis.utils import walk_yaml_files
 
 
 def read_yaml_config_file(file_path) -> Any:
-    with open(file_path, "r") as file:
-        try:
-            content = yaml.safe_load(file)
-        except Exception as e:
-            raise ValueError(f"Cannot parse YAML file: {file_path}. Error: {e}")
+    """Read a YAML file trying multiple encodings for Windows compatibility.
 
-        return content
+    Some example CrewAI templates (especially those copied from the web / docs)
+    may contain characters outside the active code page on Windows, leading to
+    errors like: 'charmap' codec can't decode byte 0x9d.
+
+    Strategy:
+    1. Try utf-8 (standard)
+    2. Try utf-8-sig (BOM variants)
+    3. Try latin-1 (always decodes) – only if previous attempts fail. We still
+       attempt YAML parse; if that fails with a YAML error we surface it.
+    4. Try cp1252 explicitly (common Windows ANSI superset)
+
+    If decoding succeeds but YAML parsing fails we immediately raise so the
+    caller can decide to skip the file.
+    """
+    encodings_to_try = ["utf-8", "utf-8-sig", "latin-1", "cp1252"]
+    last_decode_error: Exception | None = None
+    for enc in encodings_to_try:
+        try:
+            with open(file_path, "r", encoding=enc) as f:
+                try:
+                    content = yaml.safe_load(f)
+                except yaml.YAMLError as ye:
+                    # Decoded fine but YAML invalid – raise immediately
+                    raise ValueError(
+                        f"Cannot parse YAML file: {file_path}. Error: {ye} (encoding tried: {enc})"
+                    ) from ye
+                if isinstance(content, dict) or isinstance(content, list) or content is None:
+                    return content
+                # Unexpected top-level type is still acceptable; return as-is
+                return content
+        except UnicodeDecodeError as ude:
+            last_decode_error = ude
+            continue
+        except FileNotFoundError as fnf:
+            raise ValueError(f"Cannot open YAML file (not found): {file_path}. Error: {fnf}") from fnf
+    # If we are here all decoding attempts failed
+    raise ValueError(
+        f"Cannot parse YAML file: {file_path}. Error: {last_decode_error} (encodings tried: {encodings_to_try})"
+    )
 
 
 def is_agent_config(file_content: Any) -> bool:

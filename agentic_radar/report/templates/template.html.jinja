@@ -6,12 +6,15 @@
 {% include 'assets/force-graph.js' %}
 </script>
 <script language="javascript" type="text/javascript">
+// Render-ready flag for PDF export to wait on
+window.__GRAPH_READY__ = false;
 const __INLINE_DATA = {{graph}};
 </script>
 <style>
 .main {
-    width: 60%;
-    margin: auto;
+    width: 95%;
+    margin: 0 auto;
+    padding: 0 20px;
 
     flex-direction: column;
     display: flex;
@@ -78,6 +81,12 @@ table, th, td {
     color: black;
 }
 
+/* Print-specific tweaks for PDF clarity */
+@media print {
+    .force-graph-container canvas { image-rendering: optimizeQuality; }
+    /* Slightly bump legend text */
+    [data-svg-wrapper] + div { font-size: 11px !important; line-height: 14px !important; }
+}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -138,7 +147,7 @@ table, th, td {
                     </div>
                     <div style="align-self: stretch; padding: 12px; background: #F5F5F5; border: 0.50px #C3C3C3 solid; flex-direction: column; justify-content: center; align-items: flex-end; gap: 12px; display: flex">
                         <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: flex">
-                            <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 500; line-height: 12px; word-wrap: break-word">Legend</div>
+                            <div style="text-align: justify; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 16px; word-wrap: break-word">Legend</div>
                             <div style="justify-content: flex-start; align-items: center; gap: 32px; display: inline-flex">
                                 <div style="height: 24px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
                                     <div data-svg-wrapper style="position: relative">
@@ -154,7 +163,7 @@ table, th, td {
                                     </defs>
                                     </svg>
                                     </div>
-                                    <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Agent</div>
+                                    <div style="text-align: justify; color: black; font-size: 11px; font-family: Inter; font-weight: 600; line-height: 14px; word-wrap: break-word">Agent</div>
                                 </div>
                                 <div style="height: 24px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
                                     <div data-svg-wrapper>
@@ -164,8 +173,8 @@ table, th, td {
                                     </svg>
                                     </div>
                                     <div style="flex-direction: column; justify-content: center; align-items: flex-start; display: inline-flex">
-                                        <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 11.20px; word-wrap: break-word">Tool</div>
-                                        <div style="text-align: justify; color: black; font-size: 6px; font-family: Inter; font-weight: 500; line-height: 8.40px; word-wrap: break-word">Tool Category</div>
+                                        <div style="text-align: justify; color: black; font-size: 11px; font-family: Inter; font-weight: 600; line-height: 14px; word-wrap: break-word">Tool</div>
+                                        <div style="text-align: justify; color: black; font-size: 9px; font-family: Inter; font-weight: 500; line-height: 12px; word-wrap: break-word">Tool Category</div>
                                     </div>
                                 </div>
                                 <div style="height: 24px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
@@ -176,7 +185,7 @@ table, th, td {
                                     <path d="M9.3562 10.9999H10.8562V9.49993L9.1062 7.74993C9.66602 7.48256 10.295 7.39533 10.9064 7.50024C11.5178 7.60515 12.0817 7.89704 12.5204 8.33571C12.9591 8.77439 13.251 9.33828 13.3559 9.94973C13.4608 10.5612 13.3736 11.1901 13.1062 11.7499L16.1062 14.7499C16.3051 14.9488 16.4169 15.2186 16.4169 15.4999C16.4169 15.7812 16.3051 16.051 16.1062 16.2499C15.9073 16.4488 15.6375 16.5606 15.3562 16.5606C15.0749 16.5606 14.8051 16.4488 14.6062 16.2499L11.6062 13.2499C11.0464 13.5173 10.4175 13.6045 9.806 13.4996C9.19455 13.3947 8.63066 13.1028 8.19199 12.6641C7.75331 12.2255 7.46142 11.6616 7.35651 11.0501C7.2516 10.4387 7.33884 9.80974 7.6062 9.24993L9.3562 10.9999Z" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                     </div>
-                                    <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">CustomTool</div>
+                                    <div style="text-align: justify; color: black; font-size: 11px; font-family: Inter; font-weight: 600; line-height: 14px; word-wrap: break-word">CustomTool</div>
                                 </div>
                                 <div style="height: 28.28px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
                                     <div data-svg-wrapper>
@@ -197,7 +206,7 @@ table, th, td {
                                     </defs>
                                     </svg>
                                     </div>
-                                    <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Basic</div>
+                                    <div style="text-align: justify; color: black; font-size: 11px; font-family: Inter; font-weight: 600; line-height: 14px; word-wrap: break-word">Basic</div>
                                 </div>
                                 <div style="height: 24px; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
                                     <div data-svg-wrapper>
@@ -214,13 +223,13 @@ table, th, td {
                                     </defs>
                                     </svg>
                                     </div>
-                                    <div style="text-align: justify; color: black; font-size: 8px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">MCP Server</div>
+                                    <div style="text-align: justify; color: black; font-size: 11px; font-family: Inter; font-weight: 600; line-height: 14px; word-wrap: break-word">MCP Server</div>
                                 </div>
                             </div>
                         </div>
                         <div style="align-self: stretch; height: 0px; border: 0.50px #C3C3C3 solid"></div>
                         <div data-svg-wrapper style="width: 100%; position: relative">
-                            <div id="graph" style="width:100%; height: 600px; position: relative"></div>
+                            <div id="graph" style="width:100%; height: 980px; position: relative; border: 1px solid #ddd; background: #fafafa;"></div>
                         </div>
                     </div>
                 </div>
@@ -291,7 +300,7 @@ table, th, td {
                         </div>
                     </div>
                 </div>
-        <div style="margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
+        <div style="width: 100%; margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
             <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
                 <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Nodes Overview</div>
                 <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
@@ -299,90 +308,118 @@ table, th, td {
             </div>
         </div>
             {% if agents %}
-              <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Agents</div>
+                <div style="width: 100%; margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex" id="agents-section">
+                    <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
+                        <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Agents</div>
+                        <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
                     </div>
-                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
-                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Agent Name</th>
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">LLM Model</th>
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">System Prompt</th>
-                            {% if hardened_prompts|length > 0 %}
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Hardened System Prompt</th>
-                            {% endif %}
-                        </tr>
-                        {% for agent in agents %}
-                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.name|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{agent.llm|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; text-align: left;">{{agent.system_prompt|e}}</td>
-                            {% if hardened_prompts|length > 0 %}
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">
-                                <div class="cell-content-wrapper">
-                                    <span class="copy-text">{{hardened_prompts.get(agent.name, agent.system_prompt)|e}}</span>
-                                    <button class="copy-btn" data-copy-value="{{hardened_prompts.get(agent.name, agent.system_prompt)|e}}" title="Copy">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-icon-svg">
-                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon-svg" style="display: none;"> <!-- Initially hidden, green stroke -->
-                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                        </svg>
-                                    </button>
+                {% for agent in agents %}
+                    <div style="width: 100%; margin-top:20px; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: inline-flex">
+                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                            <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex">
+                                <div style="color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">{{agent.name|e}}</div>
+                            </div>
+                            <div style="align-self: stretch; border: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; display: inline-flex">
+                                <div style="flex: 1 1 0; border-right: 0.50px #D4D4D4 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
+                                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
+                                        <div style="flex: 40%; padding: 6px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">LLM</div>
+                                        </div>
+                                        <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{agent.llm|e}}</div>
+                                        </div>
+                                    </div>
+                                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
+                                        <div style="flex: 40%; align-self: stretch; padding: 6px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">System Prompt</div>
+                                        </div>
+                                        <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{agent.system_prompt|e}}</div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </td>
-                            {% endif %}
-                        {% endfor %}
-                    </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             {% endif %}
-
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Tools</div>
-                    </div>
-                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
-                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Name</th>
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Category</th>
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Tool Description</th>
-                            <th style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">Number of Vulnerabilities</th>
-                        </tr>
-                        {% for tool in tools %}
-                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.name|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.category|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{tool.description|e}}</td>
-                            <td style="padding: 3.5px; border-bottom: 0.50px #D4D4D4 solid;">{{tool.vulnerabilities | length}}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+            {% if tools %}
+            <div style="width: 100%; margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex" id="tools-section">
+                <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
+                    <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Tools</div>
+                    <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
                 </div>
+                    
+                {% for tool in tools %}
+                    <div style="width: 100%; margin-top:20px; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: inline-flex">
+                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                            <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex">
+                                <div style="color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">{{tool.name|e}}</div>
+                            </div>
+                            <div style="align-self: stretch; border: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; display: inline-flex">
+                                <div style="flex: 1 1 0; border-right: 0.50px #D4D4D4 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
+                                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
+                                        <div style="flex: 40%; padding: 6px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Category</div>
+                                        </div>
+                                        <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{tool.category|e}}</div>
+                                        </div>
+                                    </div>
+                                    {% if tool.description %}
+                                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
+                                        <div style="flex: 40%; align-self: stretch; padding: 6px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Description</div>
+                                        </div>
+                                        <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{tool.description|e}}</div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
             {% if mcp_servers %}
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">MCP Servers</div>
-                    </div>
-                    <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid;border-spacing:0">
-                        <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Name</th>
-                            <th style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid;border-bottom: 0.50px #D4D4D4 solid;">Parameters</th>
-                        </tr>
-                        {% for mcp_server in mcp_servers %}
-                        <tr style="font-family: Inter; font-weight: 400; font-size:8px; text-align: justify; line-height: 150%">
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{mcp_server.name|e}}</td>
-                            <td style="padding: 3.5px; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid;">{{mcp_server.description|safe}}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+            <div style="width: 100%; margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex" id="mcp-section">
+                <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
+                    <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">MCP Servers</div>
+                    <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
                 </div>
+                {% for srv in mcp_servers %}
+                    <div style="width: 100%; margin-top:20px; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: inline-flex">
+                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                            <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex">
+                                <div style="color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">{{srv.name|e}}</div>
+                            </div>
+                            <div style="align-self: stretch; border: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; display: inline-flex">
+                                <div style="flex: 1 1 0; border-right: 0.50px #D4D4D4 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
+                                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
+                                        <div style="flex: 40%; padding: 6px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Description</div>
+                                        </div>
+                                        <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
+                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{srv.description|e}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
             {% endif %}
+        </div>
         {% if tools | map(attribute='vulnerabilities') | map('length') | sum > 0 %}
-        <div style="margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
+        <div style="width: 100%; margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex" id="tool-vulnerabilities-section">
             <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
-                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Tool Vulnerabilities</div>
+                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Vulnerabilities</div>
                 <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
+            </div>
                 {% for tool in tools %}
                 {% if tool.vulnerabilities|length > 0 %}
                 <div style="width: 100%; margin-top:20px; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: inline-flex">
@@ -438,8 +475,8 @@ table, th, td {
             {% endif %}
             {% set non_guardrail_agents = agents | selectattr("is_guardrail", "equalto", False) | list %}
             {% if non_guardrail_agents | map(attribute='vulnerabilities') | map('length') | sum > 0 %}
-            <div style="margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 20px; display: flex">
-                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px;">Agent Vulnerability Mitigations</div>
+            <div style="width: 100%; margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 20px; display: flex" id="agent-mitigations">
+                <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px;">Mitigations</div>
                 <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
                     <table style="align-self: stretch; width: 100%; border-top: 0.50px #D4D4D4 solid; border-left: 0.50px #D4D4D4 solid; border-right: 0.50px #D4D4D4 solid; border-spacing:0">
                         <tr style="background: #F5F5F5; font-family: Inter; font-weight:600; font-size:8px; border-bottom: 0.5px solid #D4D4D4; text-align: left; line-height: 150%; padding: 6px; gap: 12px">
@@ -499,53 +536,176 @@ table, th, td {
     </div>
 </div>
 <script language="javascript" type="text/javascript">
+    // Canonical deterministic workflow graph rendering
     const nodes = __INLINE_DATA.nodes;
     const links = __INLINE_DATA.edges;
 
     const gData = {
-        nodes: nodes.map((n) => {
-            const img = new Image();
+        nodes: nodes.map(n => {
             if (n.image) {
+                const img = new Image();
                 img.src = n.image;
                 n.image = img;
             }
             return n;
-        }), 
-      links: links,
+        }),
+        links: links,
     };
 
-    const node = document.getElementById('graph');
+    const container = document.getElementById('graph');
 
-    const graph = new ForceGraph(node)
+    const graph = new ForceGraph(container)
         .linkDirectionalArrowLength(2)
         .linkDirectionalArrowRelPos(1)
         .nodeId('name')
         .nodeLabel('label')
         .linkSource('source')
         .linkTarget('target')
-        .height(node.parentElement.clientHeight)
-        .width(node.parentElement.clientWidth)
+    .height(container.clientHeight)
+    .width(container.clientWidth)
         .nodeCanvasObject((n, ctx, scale) => {
             if (n.image) {
-                const size = 8;
-                ctx.drawImage(n.image, n.x-size/2, n.y-size/2, size, size);
+                // Larger icon so component is clearly visible beneath label
+                const size = 26;
+                ctx.drawImage(n.image, n.x - size / 2, n.y - size / 2, size, size);
+                n.__iconSize = size;
             }
-            ctx.font = `${10/scale}px Inter`;
+            // Reduced text size for labels
+            const base = 16; // reduced base size
+            const computed = Math.max(7, Math.min(base/scale, 14));
+            ctx.font = `${computed}px Inter`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-
-            ctx.fillText(n.label, n.x, n.y + 6);
-
+            ctx.fillStyle = '#000';
+            // Wrap label after every 2 hyphen/underscore separators to reduce horizontal span
+            const wrapSeparators = (text) => {
+                let sepCount = 0;
+                let out = '';
+                for (let i = 0; i < text.length; i++) {
+                    const ch = text[i];
+                    out += ch;
+                    if (ch === '-' || ch === '_') {
+                        sepCount++;
+                        if (sepCount === 2) { // insert line break
+                            out += '\n';
+                            sepCount = 0; // reset to continue wrapping for very long names
+                        }
+                    }
+                }
+                return out;
+            };
+            const wrapped = wrapSeparators(n.label || '');
+            const lines = wrapped.split('\n');
+            const lineHeight = computed * 0.9;
+            // start drawing a bit below the icon; center the block vertically relative to first baseline anchor
+            const iconOffset = (n.__iconSize || 26) / 2 + 8; // space below icon
+            const startY = n.y + iconOffset + (-(lines.length - 1) * lineHeight) / 2;
+            // Measure widest line for background box
+            let maxWidth = 0;
+            lines.forEach(ln => {
+                const w = ctx.measureText(ln).width;
+                if (w > maxWidth) maxWidth = w;
+            });
+            const padX = 4;
+            const padY = 2;
+            const boxW = maxWidth + padX * 2;
+            const boxH = lines.length * lineHeight + padY * 2;
+            const boxX = n.x - boxW / 2;
+            const boxY = startY - lineHeight / 2 - padY;
+            // Draw background with slight transparency and border for readability
+            ctx.save();
+            ctx.fillStyle = 'rgba(255,255,255,0.92)';
+            ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+            ctx.lineWidth = 1/Math.max(1, scale); // keep thin border
+            ctx.beginPath();
+            const r = 3; // rounded corners
+            ctx.moveTo(boxX + r, boxY);
+            ctx.lineTo(boxX + boxW - r, boxY);
+            ctx.quadraticCurveTo(boxX + boxW, boxY, boxX + boxW, boxY + r);
+            ctx.lineTo(boxX + boxW, boxY + boxH - r);
+            ctx.quadraticCurveTo(boxX + boxW, boxY + boxH, boxX + boxW - r, boxY + boxH);
+            ctx.lineTo(boxX + r, boxY + boxH);
+            ctx.quadraticCurveTo(boxX, boxY + boxH, boxX, boxY + boxH - r);
+            ctx.lineTo(boxX, boxY + r);
+            ctx.quadraticCurveTo(boxX, boxY, boxX + r, boxY);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+            lines.forEach((ln, idx) => {
+                ctx.fillText(ln, n.x, startY + idx * lineHeight);
+            });
         })
-        .nodeCanvasObjectMode(() => "replace")
-        .warmupTicks(250)
-        .cooldownTime(50)
+        .nodeCanvasObjectMode(() => 'replace')
+        .warmupTicks(150)
+        .cooldownTime(30)
         .enableNodeDrag(true)
-        .graphData(gData)
-    ;
+        .graphData(gData);
+
+    // Disable center force – positions are fixed via fx/fy from backend
     graph.d3Force('center', null);
+
     graph.onEngineStop(() => {
-        graph.zoomToFit(1000, 16)
+        // Compression + left shift.
+        // URL params: ?scalex=0.7&shift=180
+        const qs = new URLSearchParams(window.location.search);
+        const paramScaleX = parseFloat(qs.get('scalex') || '');
+        const paramShift = parseInt(qs.get('shift') || '');
+    const SCALE_X = Number.isFinite(paramScaleX) ? paramScaleX : 0.90;
+    // SHIFT_LEFT now adaptive: large graphs get stronger left shift, small graphs slight right shift (negative value)
+    const USER_SHIFT = Number.isFinite(paramShift) ? paramShift : null; // allow override
+        let readySet = false; const setReady = () => { if(!readySet){window.__GRAPH_READY__=true; readySet=true;} };
+        const adjust = () => {
+            try {
+                let bbox = graph.getGraphBbox();
+                const midX = (bbox.x[0]+bbox.x[1])/2; const spanX = bbox.x[1]-bbox.x[0];
+                if (SCALE_X < 0.999 && spanX > 150) {
+                    const data = graph.graphData();
+                    data.nodes.forEach(n => {
+                        if (typeof n.x === 'number') {
+                            const newX = midX + (n.x - midX) * SCALE_X;
+                            n.x = newX; if ('fx' in n) n.fx = newX;
+                        }
+                    });
+                }
+                graph.zoomToFit(600, 30, () => true);
+                // Determine adaptive shift based on span after compression
+                let adaptiveShift = 50; // new gentler default
+                const spanAfter = (graph.getGraphBbox().x[1]-graph.getGraphBbox().x[0]);
+                if (spanAfter > 900) adaptiveShift = 120; // reduced from 160
+                else if (spanAfter > 700) adaptiveShift = 90;  // reduced from 120
+                else if (spanAfter > 500) adaptiveShift = 60;  // reduced from 90
+                else if (spanAfter < 200) adaptiveShift = 30;  // tiny graphs: slight left shift now
+                else if (spanAfter < 300) adaptiveShift = 20;  // small graphs: mild left shift
+                const SHIFT_LEFT = USER_SHIFT !== null ? USER_SHIFT : adaptiveShift;
+                // Apply camera shift AFTER fit (move camera center right to push content left; negative shift moves content right)
+                setTimeout(()=>{
+                    // recalc mid after potential compression
+                    const bb2 = graph.getGraphBbox();
+                    const mid2X = (bb2.x[0]+bb2.x[1])/2; const mid2Y = (bb2.y[0]+bb2.y[1])/2;
+                    graph.centerAt(mid2X + SHIFT_LEFT, mid2Y, 0);
+                    if(window.console) console.log('[GraphAdjust] scaleX', SCALE_X, 'shift', SHIFT_LEFT);
+                    setReady();
+                }, 90);
+            } catch(e) {
+                graph.zoomToFit(600,30); setReady();
+            }
+        };
+        adjust();
+        if (window.ResizeObserver) {
+            const ro = new ResizeObserver(()=>{
+                graph.width(container.clientWidth);
+                graph.height(container.clientHeight);
+                adjust();
+            });
+            ro.observe(container);
+        } else {
+            window.addEventListener('resize', () => {
+                graph.width(container.clientWidth);
+                graph.height(container.clientHeight);
+                adjust();
+            });
+        }
     });
 </script>
 

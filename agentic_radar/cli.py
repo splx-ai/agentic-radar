@@ -4,7 +4,7 @@ import shlex
 import time
 from enum import Enum
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Tuple
 
 import typer
 from dotenv import load_dotenv
@@ -203,6 +203,214 @@ def analyze_and_generate_report(
     print("Generating report")
     generate(pydot_graph, output_file, export_pdf=export_pdf)
     print(f"Report {output_file} generated")
+
+
+def _get_analyzer(framework: AgenticFramework) -> Analyzer:
+    if framework == AgenticFramework.langgraph:
+        return LangGraphAnalyzer()
+    if framework == AgenticFramework.crewai:
+        return CrewAIAnalyzer()
+    if framework == AgenticFramework.n8n:
+        return N8nAnalyzer()
+    if framework == AgenticFramework.openai_agents:
+        return OpenAIAgentsAnalyzer()
+    if framework == AgenticFramework.autogen:
+        return AutogenAgentChatAnalyzer()
+    raise ValueError(f"Unsupported framework: {framework}")
+
+
+def _merge_graphs(named_graphs: List[Tuple[str, GraphDefinition]]) -> GraphDefinition:
+    """Merge multiple GraphDefinition objects into one, avoiding name collisions.
+
+    Each tuple contains an identifier (usually framework or short dir name) and the graph.
+    If a node / tool / agent name collides, it is prefixed with the identifier and an underscore.
+    Edge references are updated accordingly.
+    START/END nodes are kept only once (first occurrence).
+    """
+    from agentic_radar.graph import GraphDefinition as GD, NodeDefinition as ND, EdgeDefinition as ED, Agent as AG
+
+    combined_nodes: List[ND] = []
+    combined_edges: List[ED] = []
+    combined_agents: List[AG] = []
+    combined_tools: List[ND] = []
+
+    existing_names = set()
+    name_mapping_global = {}
+    have_start = False
+    have_end = False
+
+    for ident, graph in named_graphs:
+        name_mapping = {}
+        # Nodes
+        for n in graph.nodes:
+            original = n.name
+            if n.name in ("START", "END"):
+                if n.name == "START" and have_start:
+                    continue
+                if n.name == "END" and have_end:
+                    continue
+                if n.name == "START":
+                    have_start = True
+                if n.name == "END":
+                    have_end = True
+            new_name = n.name
+            if new_name in existing_names:
+                new_name = f"{ident}_{new_name}"
+            existing_names.add(new_name)
+            name_mapping[original] = new_name
+            name_mapping_global[(ident, original)] = new_name
+            if new_name != original:
+                n = n.model_copy(update={"name": new_name, "label": new_name if n.label == original else n.label})
+            combined_nodes.append(n)
+
+        # Tools
+        for t in graph.tools:
+            original = t.name
+            new_name = t.name
+            if new_name in existing_names:
+                new_name = f"{ident}_{new_name}"
+            existing_names.add(new_name)
+            name_mapping[original] = new_name
+            name_mapping_global[(ident, original)] = new_name
+            if new_name != original:
+                t = t.model_copy(update={"name": new_name, "label": new_name if t.label == original else t.label})
+            combined_tools.append(t)
+
+        # Agents
+        for a in graph.agents:
+            original = a.name
+            new_name = a.name
+            if new_name in existing_names:
+                new_name = f"{ident}_{new_name}"
+            existing_names.add(new_name)
+            name_mapping[original] = new_name
+            name_mapping_global[(ident, original)] = new_name
+            if new_name != original:
+                a = a.model_copy(update={"name": new_name})
+            combined_agents.append(a)
+
+        # Edges
+        for e in graph.edges:
+            start = name_mapping.get(e.start, e.start)
+            end = name_mapping.get(e.end, e.end)
+            combined_edges.append(e.model_copy(update={"start": start, "end": end}))
+
+    return GD(
+        name="combined",
+        nodes=combined_nodes,
+        edges=combined_edges,
+        agents=combined_agents,
+        tools=combined_tools,
+    )
+
+
+@app.command("scan-multi", help="Scan multiple agentic workflows (potentially across frameworks) and generate one combined report")
+def scan_multi(
+    target: Annotated[
+        List[str],
+        typer.Option(
+            "--target",
+            "-t",
+            help="Target spec in the form framework:path (e.g. langgraph:examples/langgraph/customer_service). Can be repeated.",
+        ),
+    ],
+    output_file: Annotated[
+        str,
+        typer.Option(
+            "--output-file",
+            "-o",
+            help="Where should the combined output report be stored",
+            envvar="AGENTIC_RADAR_OUTPUT_FILE",
+        ),
+    ] = f"combined_report_{datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d_%H%M%S')}.html",
+    export_pdf: Annotated[
+        bool,
+        typer.Option(
+            "--export-pdf",
+            help="Also export the generated report to PDF (requires optional 'pdf' extras / WeasyPrint).",
+            is_flag=True,
+            envvar="AGENTIC_RADAR_EXPORT_PDF",
+        ),
+    ] = False,
+    harden_prompts: Annotated[
+        bool,
+        typer.Option(
+            "--harden-prompts",
+            help="Harden detected system prompts (across all targets). Requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY.",
+            is_flag=True,
+            envvar="AGENTIC_RADAR_HARDEN_PROMPTS",
+        ),
+    ] = False,
+):
+    if not target:
+        print("At least one --target must be provided.")
+        raise typer.Exit(code=1)
+
+    parsed: List[Tuple[str, AgenticFramework, str]] = []
+    for t in target:
+        if ':' not in t:
+            print(f"Invalid target spec '{t}'. Expected format framework:path")
+            raise typer.Exit(code=1)
+        fw_str, path = t.split(':', 1)
+        try:
+            fw = AgenticFramework(fw_str)
+        except ValueError:
+            print(f"Unsupported framework '{fw_str}' in target '{t}'")
+            raise typer.Exit(code=1)
+        if not os.path.isdir(path):
+            print(f"Input directory '{path}' does not exist for target '{t}'. Skipping.")
+            continue
+        parsed.append((fw_str, fw, path))
+
+    if not parsed:
+        print("No valid targets to process.")
+        raise typer.Exit(code=1)
+
+    from agentic_radar.prompt_hardening.pipeline import PromptHardeningPipeline
+    from agentic_radar.prompt_hardening.steps import OpenAIGeneratorStep, PIIProtectionStep
+    from agentic_radar.prompt_hardening.harden import harden_agent_prompts
+    from agentic_radar.mapper import map_vulnerabilities
+
+    named_graphs: List[Tuple[str, GraphDefinition]] = []
+    for ident, fw_enum, directory in parsed:
+        print(f"Analyzing {directory} for {ident} graph")
+        analyzer = _get_analyzer(fw_enum)
+        g = analyzer.analyze(directory)
+        if len(g.nodes) <= 2:
+            print(f"No workflow found in {directory}; skipping.")
+            continue
+        sanitize_graph(g)
+        map_vulnerabilities(g)
+        named_graphs.append((ident, g))
+
+    if not named_graphs:
+        print("No graphs produced; exiting.")
+        raise typer.Exit(code=1)
+
+    combined = _merge_graphs(named_graphs)
+
+    hardened_prompts = {}
+    if harden_prompts:
+        if not os.getenv("OPENAI_API_KEY") and not os.getenv("AZURE_OPENAI_API_KEY"):
+            print("Hardening system prompts requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY.")
+            raise typer.Exit(code=1)
+        print("Hardening system prompts across combined agents")
+        pipeline = PromptHardeningPipeline([OpenAIGeneratorStep(), PIIProtectionStep()])
+        hardened_prompts = harden_agent_prompts(combined.agents, pipeline)
+
+    # Attach hardened prompts to a GraphDefinition compatible with generate()
+    pydot_graph = GraphDefinition(
+        framework="multi",
+        name=combined.name,
+        nodes=[NodeDefinition.model_validate(n, from_attributes=True) for n in combined.nodes],
+        edges=[EdgeDefinition.model_validate(e, from_attributes=True) for e in combined.edges],
+        agents=[Agent.model_validate(a, from_attributes=True) for a in combined.agents],
+        tools=[NodeDefinition.model_validate(t, from_attributes=True) for t in combined.tools],
+        hardened_prompts=hardened_prompts,
+    )
+    print("Generating combined report")
+    generate(pydot_graph, output_file, export_pdf=export_pdf)
+    print(f"Combined report {output_file} generated")
 
 
 @app.command(

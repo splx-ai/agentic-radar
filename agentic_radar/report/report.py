@@ -48,12 +48,155 @@ class ReportData(BaseModel):
     mcp_servers: List[MCPServer]
     hardened_prompts: Dict[str, str]
     scanner_version: str
+    report_intro: Optional[str] = None
 
     force_graph_dependency_path: str
 
 
+def _compute_workflow_layout(graph_data: dict) -> dict:
+    """Deterministic hierarchical workflow layout with adaptive compression.
+
+    Goals:
+    - Keep graph fully visible (no clipping) regardless of node count.
+    - Minimize vertical span while preserving readable separation.
+    - Provide minimum horizontal spread to avoid over-zoom tiny graphs.
+    - Stable ordering per level (alphabetical fallback) for reproducibility.
+    """
+    nodes = graph_data.get("nodes", [])
+    edges = graph_data.get("edges", [])
+    if not nodes:
+        return graph_data
+
+    # Build adjacency
+    incoming: Dict[str, List[str]] = {n["name"]: [] for n in nodes if "name" in n}
+    outgoing: Dict[str, List[str]] = {n["name"]: [] for n in nodes if "name" in n}
+    for e in edges:
+        s, t = e.get("source"), e.get("target")
+        if s in outgoing and t in incoming:
+            outgoing[s].append(t)
+            incoming[t].append(s)
+
+    # Roots detection: explicit START-like else zero incoming else min incoming.
+    start_aliases = {"START", "BEGIN", "INIT"}
+    roots = [n for n in incoming if n.upper() in start_aliases] or [n for n, v in incoming.items() if not v]
+    if not roots:
+        min_in_deg = min(len(v) for v in incoming.values()) if incoming else 0
+        roots = [n for n, v in incoming.items() if len(v) == min_in_deg]
+
+    # BFS levels
+    levels: Dict[str, int] = {}
+    queue: List[tuple[str, int]] = [(r, 0) for r in roots]
+    seen = set()
+    while queue:
+        name, lvl = queue.pop(0)
+        if name in seen:
+            continue
+        seen.add(name)
+        levels[name] = min(lvl, levels.get(name, lvl))
+        for ch in outgoing.get(name, []):
+            if ch not in seen:
+                queue.append((ch, lvl + 1))
+    # Orphans -> level 0
+    for n in incoming:
+        levels.setdefault(n, 0)
+
+    # Group by level preserving insertion order but sort labels for stability
+    level_groups: Dict[int, List[str]] = {}
+    for name, lvl in levels.items():
+        level_groups.setdefault(lvl, []).append(name)
+    for lst in level_groups.values():
+        lst.sort()
+
+    sorted_levels = sorted(level_groups.keys())
+    max_level_index = len(sorted_levels) - 1
+    total_nodes = len(nodes)
+
+    # Base spacing heuristics
+    base_vertical_cap = 70
+    if total_nodes > 60:
+        base_vertical_cap = 40
+    elif total_nodes > 40:
+        base_vertical_cap = 48
+    elif total_nodes > 25:
+        base_vertical_cap = 55
+
+    level_spacing = base_vertical_cap if max_level_index <= 0 else base_vertical_cap
+
+    # Horizontal spacing bounds (slightly reduced to compress width)
+    min_h = 40
+    max_h = 100
+    if total_nodes > 50:
+        max_h = 90
+    if total_nodes > 70:
+        min_h = 35
+
+    # Offsets (fully centered now; removed left bias)
+    center_x_offset = 0
+    center_y_offset = 0
+
+    positions: Dict[str, Dict[str, float]] = {}
+    for idx, lvl in enumerate(sorted_levels):
+        names = level_groups[lvl]
+        # Vertical position: stack centered
+        total_vertical_span = max_level_index * level_spacing if max_level_index > 0 else 0
+        y = (idx * level_spacing) - (total_vertical_span / 2) + center_y_offset
+
+        count = len(names)
+        if count == 1:
+            positions[names[0]] = {"x": center_x_offset, "y": y}
+            continue
+
+        # Compute spacing
+        span = min(max_h, max(min_h, 80 if count == 2 else max_h))
+        # Try to compress if many nodes at level
+        tentative = span
+        if count > 6:
+            tentative = max(min_h, min(span, (max_h * 0.8)))
+        spacing = min(tentative, max_h)
+        total_width = (count - 1) * spacing
+        start_x = -total_width / 2 + center_x_offset
+        for i, name in enumerate(names):
+            positions[name] = {"x": start_x + i * spacing, "y": y}
+
+    # Enforce minimum overall horizontal span (avoid zoom blow-up)
+    xs = [p["x"] for p in positions.values()]
+    if xs:
+        span_x = max(xs) - min(xs)
+        # Ensure minimum span for tiny graphs, but also gently normalize very wide graphs.
+        if span_x < 120 and len(xs) > 1:
+            scale = 120 / span_x if span_x > 0 else 1
+            mid_x = (max(xs) + min(xs)) / 2
+            for p in positions.values():
+                p["x"] = (p["x"] - mid_x) * scale
+        elif span_x > 800:  # extremely wide, compress slightly
+            scale = 800 / span_x
+            mid_x = (max(xs) + min(xs)) / 2
+            for p in positions.values():
+                p["x"] = mid_x + (p["x"] - mid_x) * scale
+
+    # Apply positions
+    for n in nodes:
+        name = n.get("name")
+        if name in positions:
+            n["fx"] = float(positions[name]["x"])
+            n["fy"] = float(positions[name]["y"])
+
+    return graph_data
+
+
 def generate(graph: GraphDefinition, out_file: str, export_pdf: bool = False):
     svg = from_definition(graph).generate()
+
+    # Apply deterministic workflow layout
+    try:
+        graph_json = json.loads(svg)
+        graph_json = _compute_workflow_layout(graph_json)
+        svg = json.dumps(graph_json)
+    except Exception:
+        # Layout failure should not abort report generation
+        pass
+
+    # (Reverted) Removed automatic orientation logic
 
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(
@@ -63,7 +206,41 @@ def generate(graph: GraphDefinition, out_file: str, export_pdf: bool = False):
 
     template = env.get_template("template.html.jinja")
     agents = [Agent.model_validate(a, from_attributes=True) for a in graph.agents]
+    # Primary tools list (explicit tools attribute)
     tools = [Tool.model_validate(t, from_attributes=True) for t in graph.tools]
+    # Fallback: if no explicit tools provided, derive from node list (tool-like node types)
+    if not tools:
+        try:
+            tool_node_types = {NodeType.TOOL, NodeType.CUSTOM_TOOL, NodeType.BASIC}
+            derived_tools: list[Tool] = []
+            for node in graph.nodes:
+                if node.node_type in tool_node_types:
+                    vulns = []
+                    for v in node.vulnerabilities:
+                        try:
+                            vulns.append(
+                                Vulnerability(
+                                    name=v.name,
+                                    description=v.description,
+                                    security_framework_mapping=v.security_framework_mapping,
+                                    remediation=v.remediation,
+                                )
+                            )
+                        except Exception:
+                            continue
+                    derived_tools.append(
+                        Tool(
+                            name=node.name,
+                            category=str(node.category) if node.category else str(node.node_type),
+                            description=node.description or "",
+                            vulnerabilities=vulns,
+                        )
+                    )
+            if derived_tools:
+                tools = derived_tools
+        except Exception:
+            # Silent fallback; keep empty if anything unexpected happens
+            pass
     mcp_servers = [
         MCPServer(name=node.name, description=node.description or "")
         for node in graph.nodes
@@ -97,10 +274,15 @@ def generate(graph: GraphDefinition, out_file: str, export_pdf: bool = False):
             mcp_servers=mcp_servers,
             hardened_prompts=graph.hardened_prompts,
             scanner_version=__version__,
+            report_intro=(
+                f"This report summarizes the analyzed agentic workflow for project '{graph.name}' using the {graph.framework} framework. "
+                f"It identifies {len(agents)} agent(s), {len(tools)} tool(s), and {len([n for n in graph.nodes if n.node_type == NodeType.MCP_SERVER])} MCP server(s). "
+                "The sections below provide a deterministic layout of the workflow graph, a consolidated node overview, and any discovered vulnerabilities with recommended mitigations."
+            ),
             force_graph_dependency_path=str(
                 resources.files(__package__) / "templates" / "assets" / "force-graph.js"
             ),
-        ).model_dump(),
+    ).model_dump(),
         vulnerability_definitions=vulnerability_definitions,
     ).dump(out_file)
     # If PDF export requested, try to convert the generated HTML to PDF.
@@ -114,17 +296,31 @@ def generate(graph: GraphDefinition, out_file: str, export_pdf: bool = False):
             from playwright.sync_api import sync_playwright
 
             with sync_playwright() as p:
-                browser = p.chromium.launch()
+                browser = p.chromium.launch(headless=True)
                 page = browser.new_page()
-                page.goto(f"file:///{os.path.abspath(out_file).replace('\\', '/')}", wait_until="networkidle")
-                # Give the force-graph some time to render
-                page.wait_for_timeout(1000)
-                page.pdf(path=pdf_out, print_background=True)
+                report_path = os.path.abspath(out_file).replace('\\', '/')
+                page.goto(f"file:///{report_path}", wait_until="domcontentloaded")
+                # Wait for graph container & canvas
+                try:
+                    page.wait_for_selector('#graph', timeout=12000)
+                    page.wait_for_selector('#graph canvas', timeout=12000)
+                except Exception:
+                    pass
+                # Wait for readiness flag if set by template JS
+                try:
+                    page.wait_for_function("window.__GRAPH_READY__ === true", timeout=6000)
+                except Exception:
+                    page.wait_for_timeout(1500)
+                page.pdf(
+                    path=pdf_out,
+                    print_background=True,
+                    format='A4',
+                    margin={'top': '0.5in', 'bottom': '0.5in', 'left': '0.5in', 'right': '0.5in'}
+                )
                 browser.close()
             print(f"PDF report {pdf_out} generated (via Playwright)")
             return
         except Exception:
-            # Ignore and try WeasyPrint fallback
             pass
 
         # WeasyPrint fallback (no JS execution)
