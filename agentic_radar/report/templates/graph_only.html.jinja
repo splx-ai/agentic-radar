@@ -80,26 +80,36 @@ const graph = ForceGraph()
     .graphData(__INLINE_DATA)
     .nodeAutoColorBy('type')
     .nodeCanvasObject((node, ctx, globalScale) => {
-        const label = node.name || node.id;
-        const fontSize = 12/globalScale;
+        const label = node.label || node.name || node.id;
+        const size = 20/globalScale;
+        
+        // Draw node icon if available
+        if (node.image) {
+            // Cache image objects
+            if (!node._img) {
+                node._img = new Image();
+                node._img.src = node.image;
+            }
+            
+            if (node._img.complete) {
+                // Draw icon
+                ctx.drawImage(node._img, node.x - size/2, node.y - size/2, size, size);
+            }
+        } else {
+            // Fallback to colored circle if no image
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, size/2, 0, 2 * Math.PI, false);
+            ctx.fillStyle = node.color || '#999';
+            ctx.fill();
+        }
+        
+        // Draw label below the icon
+        const fontSize = 10/globalScale;
         ctx.font = `${fontSize}px Sans-Serif`;
-        const textWidth = ctx.measureText(label).width;
-        const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2);
-
-        // Draw background
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-        ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
-
-        // Draw border
-        ctx.strokeStyle = node.color;
-        ctx.lineWidth = 1/globalScale;
-        ctx.strokeRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
-
-        // Draw text
         ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = node.color;
-        ctx.fillText(label, node.x, node.y);
+        ctx.textBaseline = 'top';
+        ctx.fillStyle = '#333';
+        ctx.fillText(label, node.x, node.y + size/2 + 2/globalScale);
     })
     .onNodeClick(node => {
         // Display node information

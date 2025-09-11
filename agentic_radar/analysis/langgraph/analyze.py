@@ -61,7 +61,16 @@ class LangGraphAnalyzer(Analyzer):
                 if func_name and func_name in agent_func_map:
                     is_agent = agent_func_map[func_name]
 
-                node_type = NodeType.AGENT if is_agent else NodeType.BASIC
+                # Improved heuristic for node type detection
+                node_name_lower = node["name"].lower()
+                if is_agent or "assistant" in node_name_lower or "agent" in node_name_lower:
+                    node_type = NodeType.AGENT
+                elif "_tools" in node_name_lower or "_tool" in node_name_lower:
+                    node_type = NodeType.TOOL
+                elif any(word in node_name_lower for word in ["fetch", "update", "book", "search", "get", "call"]):
+                    node_type = NodeType.AGENT  # Action nodes are typically agents
+                else:
+                    node_type = NodeType.BASIC
                 nodes.append(
                     Node(type=node_type, name=node["name"], label=node["name"])
                 )
