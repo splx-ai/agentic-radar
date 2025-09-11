@@ -4,9 +4,24 @@ Tests for the main entry point (__main__.py).
 These tests ensure the module can be executed as python -m agentic_radar.
 """
 
+import os
 import subprocess
 import sys
+from pathlib import Path
 from unittest.mock import patch
+
+import pytest
+
+
+def _get_project_root():
+    """Find the project root directory dynamically."""
+    current_file = Path(__file__).resolve()
+    # Go up from tests/test_main_entry.py to find project root
+    for parent in current_file.parents:
+        if (parent / "pyproject.toml").exists():
+            return str(parent)
+    # Fallback to current working directory
+    return os.getcwd()
 
 
 def test_main_module_execution():
@@ -16,7 +31,7 @@ def test_main_module_execution():
         [sys.executable, "-m", "agentic_radar", "--help"],
         capture_output=True,
         text=True,
-        cwd="/Users/michaeloboyle/Documents/github/agentic-radar"
+        cwd=_get_project_root()
     )
     
     assert result.returncode == 0
@@ -29,7 +44,7 @@ def test_main_module_version():
         [sys.executable, "-m", "agentic_radar", "--version"],
         capture_output=True,
         text=True,
-        cwd="/Users/michaeloboyle/Documents/github/agentic-radar"
+        cwd=_get_project_root()
     )
     
     assert result.returncode == 0
@@ -53,7 +68,7 @@ def test_main_module_invalid_command():
         [sys.executable, "-m", "agentic_radar", "invalid-command"],
         capture_output=True,
         text=True,
-        cwd="/Users/michaeloboyle/Documents/github/agentic-radar"
+        cwd=_get_project_root()
     )
     
     assert result.returncode != 0
