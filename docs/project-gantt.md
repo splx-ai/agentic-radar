@@ -3,7 +3,7 @@
 This document provides a comprehensive view of the Agentic Radar project's development history and future roadmap.
 
 ## Project Overview
-[Agentic Radar](https://github.com/michaelo/agentic-radar) is a security scanner for agentic workflows, providing analysis, visualization, and vulnerability assessment for AI agent systems.
+[Agentic Radar](https://github.com/splx-ai/agentic-radar) is a security scanner for agentic workflows, providing analysis, visualization, and vulnerability assessment for AI agent systems.
 
 ## Development Timeline
 
@@ -62,6 +62,7 @@ gantt
     System Prompts 39         :done, sys-prompts, 2025-09-01, 2025-09-07
     Export Graph JSON 99      :done, export-json, 2025-09-01, 2025-09-10
     AutoGen Improvements 103  :done, autogen-fix, 2025-09-05, 2025-09-10
+    Test Coverage & Standards :done, test-coverage, 2025-09-10, 2025-09-11
     LangGraph Bug Fix 94      :active, langgraph-bug, 2025-09-10, 2025-09-30
     
     section Q4 2025 Roadmap
@@ -95,21 +96,21 @@ gantt
 ## Major Milestones
 
 ### Completed Milestones
-- **March 2025**: Initial release with [LangGraph](https://langchain-ai.github.io/langgraph/) support ([#34](https://github.com/michaelo/agentic-radar/issues/34))
-- **April-May 2025**: [CrewAI](https://crewai.com/) integration ([#33](https://github.com/michaelo/agentic-radar/issues/33)), [OpenAI Agents](https://platform.openai.com/docs/agents) support ([#30](https://github.com/michaelo/agentic-radar/issues/30))
-- **May 2025**: Agent metadata extraction ([#62](https://github.com/michaelo/agentic-radar/issues/62), [#65](https://github.com/michaelo/agentic-radar/issues/65)), test configuration ([#82](https://github.com/michaelo/agentic-radar/issues/82))
-- **September 2025**: Graph-only rendering ([#36](https://github.com/michaelo/agentic-radar/issues/36)), system prompts section ([#39](https://github.com/michaelo/agentic-radar/issues/39)), JSON export ([#99](https://github.com/michaelo/agentic-radar/issues/99)), [AutoGen](https://autogen-ai.github.io/autogen/) improvements ([#103](https://github.com/michaelo/agentic-radar/issues/103))
+- **March 2025**: Initial release with [LangGraph](https://langchain-ai.github.io/langgraph/) support ([#34](https://github.com/splx-ai/agentic-radar/issues/34))
+- **April-May 2025**: [CrewAI](https://crewai.com/) integration ([#33](https://github.com/splx-ai/agentic-radar/issues/33)), [OpenAI Agents](https://platform.openai.com/docs/agents) support ([#30](https://github.com/splx-ai/agentic-radar/issues/30))
+- **May 2025**: Agent metadata extraction ([#62](https://github.com/splx-ai/agentic-radar/issues/62), [#65](https://github.com/splx-ai/agentic-radar/issues/65)), test configuration ([#82](https://github.com/splx-ai/agentic-radar/issues/82))
+- **September 2025**: Graph-only rendering ([#36](https://github.com/splx-ai/agentic-radar/issues/36)), system prompts section ([#39](https://github.com/splx-ai/agentic-radar/issues/39)), JSON export ([#99](https://github.com/splx-ai/agentic-radar/issues/99)), [AutoGen](https://autogen-ai.github.io/autogen/) improvements ([#103](https://github.com/splx-ai/agentic-radar/issues/103))
 
 ### Current Focus (September 2025)
-- **[Issue #35](https://github.com/michaelo/agentic-radar/issues/35)**: Enhanced graph visualization with multiple layouts, scaling, and styling improvements
-- **[Issue #94](https://github.com/michaelo/agentic-radar/issues/94)**: Fixing [LangGraph](https://langchain-ai.github.io/langgraph/) visualization bug (incomplete edge detection)
+- **[Issue #35](https://github.com/splx-ai/agentic-radar/issues/35)**: Enhanced graph visualization with multiple layouts, scaling, and styling improvements
+- **[Issue #94](https://github.com/splx-ai/agentic-radar/issues/94)**: Fixing [LangGraph](https://langchain-ai.github.io/langgraph/) visualization bug (incomplete edge detection)
 - Established [testing standards](testing-standards.md) for HTML+JavaScript components
 
 ### Active GitHub Issues (Open)
-- **Framework Support**: [AutoGen](https://autogen-ai.github.io/autogen/) ([#41](https://github.com/michaelo/agentic-radar/issues/41)), [PydanticAI](https://ai.pydantic.dev/) ([#42](https://github.com/michaelo/agentic-radar/issues/42)), [Dify](https://dify.ai/) ([#40](https://github.com/michaelo/agentic-radar/issues/40))
-- **Export Features**: PDF export ([#37](https://github.com/michaelo/agentic-radar/issues/37))
-- **Visualization**: Graph improvements ([#35](https://github.com/michaelo/agentic-radar/issues/35)), system prompt extraction ([#39](https://github.com/michaelo/agentic-radar/issues/39))
-- **Bug Fixes**: [LangGraph](https://langchain-ai.github.io/langgraph/) [Langmanus agent](https://github.com/Darwin-lfl/langmanus) visualization ([#94](https://github.com/michaelo/agentic-radar/issues/94))
+- **Framework Support**: [AutoGen](https://autogen-ai.github.io/autogen/) ([#41](https://github.com/splx-ai/agentic-radar/issues/41)), [PydanticAI](https://ai.pydantic.dev/) ([#42](https://github.com/splx-ai/agentic-radar/issues/42)), [Dify](https://dify.ai/) ([#40](https://github.com/splx-ai/agentic-radar/issues/40))
+- **Export Features**: PDF export ([#37](https://github.com/splx-ai/agentic-radar/issues/37))
+- **Visualization**: Graph improvements ([#35](https://github.com/splx-ai/agentic-radar/issues/35)), system prompt extraction ([#39](https://github.com/splx-ai/agentic-radar/issues/39))
+- **Bug Fixes**: [LangGraph](https://langchain-ai.github.io/langgraph/) [Langmanus agent](https://github.com/Darwin-lfl/langmanus) visualization ([#94](https://github.com/splx-ai/agentic-radar/issues/94))
 
 ### Upcoming Milestones
 - **Q4 2025**: New framework integrations and export capabilities
