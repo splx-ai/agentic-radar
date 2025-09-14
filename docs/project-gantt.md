@@ -57,13 +57,14 @@ gantt
     axisFormat %Y-%m
     
     section September 2025 Active
-    Graph Visualization 35    :done, graph-viz, 2025-09-01, 2025-09-11
+    Graph JS Runtime Fixes    :done, graph-js-fix, 2025-09-01, 2025-09-11
     Render Only Graph 36      :done, graph-only, 2025-09-01, 2025-09-07
     System Prompts 39         :done, sys-prompts, 2025-09-01, 2025-09-07
     Export Graph JSON 99      :done, export-json, 2025-09-01, 2025-09-10
     AutoGen Improvements 103  :done, autogen-fix, 2025-09-05, 2025-09-10
     Test Coverage & Standards :done, test-coverage, 2025-09-10, 2025-09-11
     PR 107 Review Fixes       :done, pr-107-fixes, 2025-09-11, 2025-09-14
+    Graph Visualization 35    :active, graph-viz, 2025-09-14, 2025-10-15
     LangGraph Bug Fix 94      :active, langgraph-bug, 2025-09-10, 2025-09-30
     
     section Q4 2025 Roadmap
@@ -103,7 +104,8 @@ gantt
 - **September 2025**: Graph-only rendering ([#36](https://github.com/splx-ai/agentic-radar/issues/36)), system prompts section ([#39](https://github.com/splx-ai/agentic-radar/issues/39)), JSON export ([#99](https://github.com/splx-ai/agentic-radar/issues/99)), [AutoGen](https://autogen-ai.github.io/autogen/) improvements ([#103](https://github.com/splx-ai/agentic-radar/issues/103))
 
 ### Current Focus (September 2025)
-- **[PR #107](https://github.com/splx-ai/agentic-radar/pull/107)**: Completed graph visualization fixes for issues #35, #36, #39 with comprehensive test coverage
+- **[PR #107](https://github.com/splx-ai/agentic-radar/pull/107)**: Fixed JavaScript runtime errors and completed issues #36, #39 with comprehensive test coverage
+- **[Issue #35](https://github.com/splx-ai/agentic-radar/issues/35)**: Graph visualization improvements still in progress (scaling, orientation, overlap reduction, styling)
 - **[Issue #94](https://github.com/splx-ai/agentic-radar/issues/94)**: Fixing [LangGraph](https://langchain-ai.github.io/langgraph/) visualization bug (incomplete edge detection)
 - Established [testing standards](testing-standards.md) for HTML+JavaScript components
 - Addressed all PR review comments and improved test portability
@@ -111,7 +113,7 @@ gantt
 ### Active GitHub Issues (Open)
 - **Framework Support**: [AutoGen](https://autogen-ai.github.io/autogen/) ([#41](https://github.com/splx-ai/agentic-radar/issues/41)), [PydanticAI](https://ai.pydantic.dev/) ([#42](https://github.com/splx-ai/agentic-radar/issues/42)), [Dify](https://dify.ai/) ([#40](https://github.com/splx-ai/agentic-radar/issues/40))
 - **Export Features**: PDF export ([#37](https://github.com/splx-ai/agentic-radar/issues/37))
-- **Visualization**: Graph improvements ([#35](https://github.com/splx-ai/agentic-radar/issues/35)), system prompt extraction ([#39](https://github.com/splx-ai/agentic-radar/issues/39))
+- **Visualization**: Graph improvements ([#35](https://github.com/splx-ai/agentic-radar/issues/35))
 - **Bug Fixes**: [LangGraph](https://langchain-ai.github.io/langgraph/) [Langmanus agent](https://github.com/Darwin-lfl/langmanus) visualization ([#94](https://github.com/splx-ai/agentic-radar/issues/94))
 
 ### Upcoming Milestones
