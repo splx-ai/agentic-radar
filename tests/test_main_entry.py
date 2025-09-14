@@ -54,12 +54,17 @@ def test_main_module_version():
 def test_main_module_imports():
     """Test that __main__.py imports correctly."""
     # This test ensures the import in __main__.py works
-    try:
-        import agentic_radar.__main__
-        # If we get here, imports worked
-        assert True
-    except ImportError as e:
-        pytest.fail(f"Failed to import __main__.py: {e}")
+    # We need to mock sys.argv to prevent CLI execution during import
+    with patch('sys.argv', ['agentic-radar', '--help']):
+        try:
+            import agentic_radar.__main__
+            # If we get here, imports worked
+            assert True
+        except ImportError as e:
+            pytest.fail(f"Failed to import __main__.py: {e}")
+        except SystemExit:
+            # SystemExit is expected when CLI runs with --help
+            assert True
 
 
 def test_main_module_invalid_command():
