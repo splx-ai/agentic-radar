@@ -338,56 +338,6 @@ table, th, td {
                 </div>
             {% endif %}
 
-            <!-- System Prompts Section -->
-            {% if agents %}
-                {% set system_prompts = agents|selectattr("system_prompt")|selectattr("system_prompt", "ne", "")|list %}
-                {% if system_prompts %}
-                <div id="system-prompts-section" style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex; margin-bottom: 20px;">
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">System Prompts</div>
-                    </div>
-                    {% for agent in system_prompts %}
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex; background: #fafafa; border: 1px solid #e1e1e1; border-radius: 6px; padding: 12px;">
-                        <div style="align-self: stretch; flex-direction: row; justify-content: space-between; align-items: center; display: flex;">
-                            <div style="color: black; font-size: 11px; font-family: Inter; font-weight: 600; line-height: 11px;">{{agent.name}}</div>
-                            <div class="cell-content-wrapper">
-                                <button class="copy-btn" data-copy-value="{{agent.system_prompt|e}}" title="Copy System Prompt">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-icon-svg">
-                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                    </svg>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon-svg" style="display: none;">
-                                        <polyline points="20,6 9,17 4,12"></polyline>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div style="align-self: stretch; padding: 8px 12px; background: white; border: 1px solid #e1e1e1; border-radius: 4px;">
-                            <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 9px; line-height: 1.4; white-space: pre-wrap; word-wrap: break-word; color: #333;">{{agent.system_prompt|e}}</pre>
-                        </div>
-                        {% if hardened_prompts.get(agent.name) and hardened_prompts.get(agent.name) != agent.system_prompt %}
-                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex;">
-                            <div style="color: #666; font-size: 10px; font-family: Inter; font-weight: 500; line-height: 10px;">Hardened Version:</div>
-                            <div style="align-self: stretch; padding: 8px 12px; background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 4px;">
-                                <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 9px; line-height: 1.4; white-space: pre-wrap; word-wrap: break-word; color: #333;">{{hardened_prompts.get(agent.name)|e}}</pre>
-                            </div>
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                </div>
-                {% else %}
-                <div id="system-prompts-section" style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex; margin-bottom: 20px;">
-                    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                        <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">System Prompts</div>
-                    </div>
-                    <div style="padding: 16px; background: #f9f9f9; border: 1px solid #e1e1e1; border-radius: 6px; text-align: center;">
-                        <div style="color: #666; font-size: 10px; font-family: Inter; font-style: italic;">No system prompts found in this workflow</div>
-                    </div>
-                </div>
-                {% endif %}
-            {% endif %}
-
                 <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
                     <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
                         <div style="width: 100%; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Tools</div>
@@ -550,7 +500,7 @@ table, th, td {
 </div>
 <script language="javascript" type="text/javascript">
     const nodes = __INLINE_DATA.nodes;
-    const links = __INLINE_DATA.edges;
+    const links = __INLINE_DATA.links;
 
     const gData = {
         nodes: nodes.map((n) => {
