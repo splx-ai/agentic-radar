@@ -86,11 +86,31 @@ agentic-radar scan langgraph --visualization vis-js -i input -o output.html
 - Smooth migration path with CLI flag
 
 ## Visual Evidence
-Screenshots will be generated to show:
-- ✅ Graph displays correctly (no longer empty)
-- ✅ Enhanced SPLX styling in graph-only mode
-- ✅ Proper node click functionality  
-- ✅ Format compatibility (ForceGraph.js vs vis.js)
+Screenshots have been generated in `pr-screenshots/` folder:
+
+### Before/After Comparison
+- **Before**: Empty graph due to edges/links mismatch 
+- **After**: `graph_only_graph_only_screenshot.png` - Shows working graph with SPLX styling
+
+### Key Visual Improvements
+- ✅ **Graph Renders**: `visualization_comparison_force_graph_screenshot.png` 
+- ✅ **SPLX Styling**: `graph_only_graph_only_screenshot.png` - Professional gradient header and branding
+- ✅ **Format Compatibility**: 
+  - `visualization_comparison_force_graph_screenshot.png` (ForceGraph.js)
+  - `visualization_comparison_vis_js_screenshot.png` (vis.js)
+- ✅ **Responsive Design**: `responsive_views_*_screenshot.png` files
+
+### How to View Screenshots
+```bash
+# Open graph-only screenshot (shows the fix)
+open pr-screenshots/graph_only_graph_only_screenshot.png
+
+# Open full report screenshot  
+open pr-screenshots/full_report_full_report_screenshot.png
+
+# View all screenshots
+open pr-screenshots/
+```
 
 ## Testing
 ```bash

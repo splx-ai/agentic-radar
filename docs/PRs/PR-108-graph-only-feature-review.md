@@ -35,6 +35,7 @@ agentic-radar scan langgraph --graph-only --visualization vis-js -i input_dir -o
 <head>
     <title>SPLX Agentic Radar - Graph Visualization</title>
     <!-- Includes force-graph.js library -->
+     
     <!-- SPLX-branded styling -->
 </head>
 <body>
@@ -85,6 +86,26 @@ agentic-radar scan langgraph --graph-only --visualization vis-js -i input_dir -o
 - Clean, minimal HTML structure
 - Self-contained with inline assets
 - Professional appearance suitable for presentations
+
+## Visual Evidence  
+Screenshots demonstrating the feature are available in `pr-screenshots/`:
+
+- **Graph-Only Output**: `graph_only_graph_only_screenshot.png` - Shows the minimal HTML with SPLX branding
+- **Full Report Comparison**: `full_report_full_report_screenshot.png` - Shows difference from full report
+- **Responsive Design**: `responsive_views_*_screenshot.png` - Mobile, tablet, desktop layouts
+- **Professional Styling**: Gradient header, SPLX logo, clean typography
+
+### View Screenshots
+```bash
+# View the main graph-only output
+open pr-screenshots/graph_only_graph_only_screenshot.png
+
+# Compare with full report
+open pr-screenshots/full_report_full_report_screenshot.png
+
+# View all screenshots
+open pr-screenshots/
+```
 
 ## Testing Coverage
 

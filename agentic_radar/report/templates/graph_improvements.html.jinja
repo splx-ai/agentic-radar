@@ -1,0 +1,253 @@
+<!-- Enhanced Graph Template with Better Layout and Text Handling -->
+<script>
+// Initialize the force graph with improved settings
+const graph = ForceGraph()
+    (document.getElementById('graph'))
+    .graphData(__INLINE_DATA)
+    .nodeAutoColorBy('type')
+    .width(document.getElementById('graph').offsetWidth)
+    .height(document.getElementById('graph').offsetHeight)
+    
+    // Better node rendering with text wrapping
+    .nodeCanvasObject((node, ctx, globalScale) => {
+        const label = node.label || node.name || node.id;
+        const size = Math.max(20/globalScale, 8); // Minimum size
+        
+        // Clean up label text - handle underscores and long names
+        const cleanLabel = label
+            .replace(/_/g, ' ')  // Replace underscores with spaces
+            .replace(/([a-z])([A-Z])/g, '$1 $2')  // Add space before capitals
+            .split(' ')
+            .map(word => word.length > 12 ? word.substring(0, 10) + '...' : word)  // Truncate long words
+            .join(' ');
+        
+        // Calculate text dimensions
+        const fontSize = Math.max(10/globalScale, 6);
+        ctx.font = `${fontSize}px Sans-Serif`;
+        
+        // Multi-line text wrapping
+        const maxWidth = 120/globalScale;
+        const words = cleanLabel.split(' ');
+        const lines = [];
+        let currentLine = words[0];
+        
+        for (let i = 1; i < words.length; i++) {
+            const testLine = currentLine + ' ' + words[i];
+            const testWidth = ctx.measureText(testLine).width;
+            if (testWidth > maxWidth && currentLine.length > 0) {
+                lines.push(currentLine);
+                currentLine = words[i];
+            } else {
+                currentLine = testLine;
+            }
+        }
+        lines.push(currentLine);
+        
+        // Calculate background dimensions
+        const lineHeight = fontSize * 1.2;
+        const textHeight = lines.length * lineHeight;
+        const textWidth = Math.max(...lines.map(line => ctx.measureText(line).width));
+        const padding = fontSize * 0.3;
+        const bckgWidth = textWidth + padding * 2;
+        const bckgHeight = textHeight + padding * 2;
+        
+        // Draw node background
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.fillRect(
+            node.x - bckgWidth/2, 
+            node.y - bckgHeight/2, 
+            bckgWidth, 
+            bckgHeight
+        );
+        
+        // Draw border
+        ctx.strokeStyle = node.color || '#999';
+        ctx.lineWidth = 1/globalScale;
+        ctx.strokeRect(
+            node.x - bckgWidth/2, 
+            node.y - bckgHeight/2, 
+            bckgWidth, 
+            bckgHeight
+        );
+        
+        // Draw icon if available
+        if (node.image && node._img && node._img.complete) {
+            const iconSize = Math.min(size, bckgWidth * 0.3);
+            ctx.drawImage(
+                node._img, 
+                node.x - bckgWidth/2 + padding, 
+                node.y - bckgHeight/2 + padding,
+                iconSize, 
+                iconSize
+            );
+        }
+        
+        // Draw multi-line text
+        ctx.fillStyle = '#333';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        const startY = node.y - (lines.length - 1) * lineHeight / 2;
+        lines.forEach((line, index) => {
+            ctx.fillText(line, node.x, startY + index * lineHeight);
+        });
+        
+        // Store node dimensions for collision detection
+        node._width = bckgWidth;
+        node._height = bckgHeight;
+    })
+    
+    // Improved link rendering with better arrow positioning
+    .linkDirectionalArrowLength(node => Math.max(6, 15/Math.max(1, globalScale)))
+    .linkDirectionalArrowRelPos(1)
+    .linkCurvature(0.25)
+    .linkWidth(link => Math.max(1, 2/Math.max(1, globalScale)))
+    
+    // Enhanced link positioning to avoid node overlap
+    .linkPositionUpdate((link, { start, end }) => {
+        const sourceNode = link.source;
+        const targetNode = link.target;
+        
+        if (sourceNode._width && targetNode._width) {
+            // Calculate connection points on node edges
+            const dx = end.x - start.x;
+            const dy = end.y - start.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance > 0) {
+                const sourceRadius = Math.max(sourceNode._width, sourceNode._height) / 2;
+                const targetRadius = Math.max(targetNode._width, targetNode._height) / 2;
+                
+                const unitX = dx / distance;
+                const unitY = dy / distance;
+                
+                // Adjust start and end points
+                Object.assign(start, {
+                    x: start.x + unitX * sourceRadius,
+                    y: start.y + unitY * sourceRadius
+                });
+                
+                Object.assign(end, {
+                    x: end.x - unitX * targetRadius,
+                    y: end.y - unitY * targetRadius
+                });
+            }
+        }
+    })
+    
+    // Improved force simulation
+    .d3Force('charge', d3.forceManyBody().strength(-300))
+    .d3Force('link', d3.forceLink().distance(100).strength(0.5))
+    .d3Force('center', d3.forceCenter())
+    .d3Force('collision', d3.forceCollide().radius(node => {
+        return Math.max((node._width || 60) / 2, (node._height || 30) / 2) + 10;
+    }))
+    
+    // Enhanced zoom with boundaries
+    .enableZoomInteraction(true)
+    .onZoom(({ k, x, y }) => {
+        // Limit zoom level
+        const minZoom = 0.1;
+        const maxZoom = 5;
+        if (k < minZoom || k > maxZoom) return false;
+    })
+    
+    // Better node click handler
+    .onNodeClick(node => {
+        const info = [];
+        const displayName = (node.name || node.id || 'Unknown')
+            .replace(/_/g, ' ')
+            .replace(/([a-z])([A-Z])/g, '$1 $2');
+            
+        info.push(`Node: ${displayName}`);
+        info.push(`Type: ${node.type || node.node_class || 'agent'}`);
+        if (node.description) info.push(`Description: ${node.description}`);
+        if (node.role) info.push(`Role: ${node.role}`);
+        if (node.tools && node.tools.length > 0) {
+            info.push(`Tools: ${node.tools.length}`);
+        }
+        
+        // Better modal instead of alert
+        showNodeDetails(info.join('\n'));
+    })
+    
+    // Auto-fit with padding to ensure all elements are visible
+    .onEngineStop(() => {
+        graph.zoomToFit(2000, 100); // Longer duration, more padding
+    });
+
+// Enhanced node details display
+function showNodeDetails(details) {
+    // Create a better modal overlay
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+    `;
+    
+    const content = document.createElement('div');
+    content.style.cssText = `
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 400px;
+        max-height: 60vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    `;
+    
+    content.innerHTML = `
+        <h3 style="margin: 0 0 15px 0; color: #333;">Node Details</h3>
+        <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">${details}</pre>
+        <button onclick="this.closest('[style*=position]').remove()" 
+                style="margin-top: 15px; padding: 8px 16px; background: #2A90F4; 
+                       color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Close
+        </button>
+    `;
+    
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+    
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
+}
+
+// Enhanced zoom controls
+function addZoomControls() {
+    const controls = document.querySelector('.controls');
+    if (controls) {
+        const zoomControls = document.createElement('div');
+        zoomControls.innerHTML = `
+            <div style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">
+                <button onclick="graph.zoom(graph.zoom() * 1.2)" 
+                        style="margin: 2px; padding: 4px 8px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 3px; cursor: pointer;">
+                    Zoom In
+                </button>
+                <button onclick="graph.zoom(graph.zoom() * 0.8)" 
+                        style="margin: 2px; padding: 4px 8px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 3px; cursor: pointer;">
+                    Zoom Out
+                </button>
+                <button onclick="graph.zoomToFit(1000, 50)" 
+                        style="margin: 2px; padding: 4px 8px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 3px; cursor: pointer;">
+                    Fit All
+                </button>
+            </div>
+        `;
+        controls.appendChild(zoomControls);
+    }
+}
+
+// Initialize enhancements after graph loads
+setTimeout(() => {
+    addZoomControls();
+    graph.zoomToFit(2000, 100);
+}, 500);
+</script>
