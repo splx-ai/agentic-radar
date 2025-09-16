@@ -52,8 +52,17 @@ class ReportData(BaseModel):
     force_graph_dependency_path: str
 
 
-def generate(graph: GraphDefinition, out_file: str, graph_only: bool = False):
-    svg = from_definition(graph).generate()
+def generate(graph: GraphDefinition, out_file: str, graph_only: bool = False, visualization: str = "force-graph"):
+    """
+    Generate HTML report with graph visualization.
+    
+    Args:
+        graph: The graph definition to visualize
+        out_file: Output file path
+        graph_only: Whether to generate minimal graph-only output
+        visualization: Visualization library to use ("force-graph" or "vis-js")
+    """
+    svg = from_definition(graph).generate(visualization=visualization)
 
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(

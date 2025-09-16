@@ -111,6 +111,13 @@ def scan(
             is_flag=True,
         ),
     ] = False,
+    visualization: Annotated[
+        str,
+        typer.Option(
+            "--visualization",
+            help="Visualization library to use: 'force-graph' (default) or 'vis-js'.",
+        ),
+    ] = "force-graph",
 ):
     if not os.path.isdir(input_directory):
         print(f"Input directory '{input_directory}' does not exist.")
@@ -139,6 +146,7 @@ def scan(
         harden_prompts=harden_prompts,
         export_graph_json=export_graph_json,
         graph_only=graph_only,
+        visualization=visualization,
     )
 
 
@@ -150,6 +158,7 @@ def analyze_and_generate_report(
     harden_prompts: bool,
     export_graph_json: bool = False,
     graph_only: bool = False,
+    visualization: str = "force-graph",
 ):
     print(f"Analyzing {input_directory} for {framework} graphs")
     graph = analyzer.analyze(input_directory)
@@ -202,7 +211,7 @@ def analyze_and_generate_report(
         hardened_prompts=hardened_prompts,
     )
     print("Generating report")
-    generate(pydot_graph, output_file, graph_only=graph_only)
+    generate(pydot_graph, output_file, graph_only=graph_only, visualization=visualization)
     print(f"Report {output_file} generated")
 
 
