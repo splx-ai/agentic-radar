@@ -499,217 +499,54 @@ table, th, td {
     </div>
 </div>
 <script language="javascript" type="text/javascript">
-    // Initialize the force graph with improved settings (matching graph-only template)
-    const graph = ForceGraph()
-        (document.getElementById('graph'))
-        .graphData(__INLINE_DATA)
-        .nodeAutoColorBy('type')
-        .width(document.getElementById('graph').offsetWidth)
-        .height(600) // Fixed height for full report
-        
-        // Enhanced node rendering with text wrapping (same as graph-only)
-        .nodeCanvasObject((node, ctx, globalScale) => {
-            const label = node.label || node.name || node.id;
-            
-            // Clean up label text - handle underscores and long names
-            const cleanLabel = label
-                .replace(/_/g, ' ')  // Replace underscores with spaces
-                .replace(/([a-z])([A-Z])/g, '$1 $2')  // Add space before capitals
-                .split(' ')
-                .map(word => word.length > 15 ? word.substring(0, 12) + '...' : word)  // Truncate long words
-                .join(' ');
-            
-            // Calculate text dimensions with wrapping
-            const fontSize = Math.max(10/globalScale, 8);
-            ctx.font = `${fontSize}px Inter, Sans-Serif`;
-            
-            // Multi-line text wrapping
-            const maxWidth = 140/globalScale;
-            const words = cleanLabel.split(' ');
-            const lines = [];
-            let currentLine = words[0] || '';
-            
-            for (let i = 1; i < words.length; i++) {
-                const testLine = currentLine + ' ' + words[i];
-                const testWidth = ctx.measureText(testLine).width;
-                if (testWidth > maxWidth && currentLine.length > 0) {
-                    lines.push(currentLine);
-                    currentLine = words[i];
-                } else {
-                    currentLine = testLine;
-                }
+    const nodes = __INLINE_DATA.nodes;
+    const links = __INLINE_DATA.links;
+
+    const gData = {
+        nodes: nodes.map((n) => {
+            const img = new Image();
+            if (n.image) {
+                img.src = n.image;
+                n.image = img;
             }
-            if (currentLine) lines.push(currentLine);
-            
-            // Calculate background dimensions
-            const lineHeight = fontSize * 1.3;
-            const textHeight = lines.length * lineHeight;
-            const textWidth = Math.max(...lines.map(line => ctx.measureText(line).width));
-            const padding = fontSize * 0.4;
-            const bckgWidth = Math.max(textWidth + padding * 2, 60/globalScale);
-            const bckgHeight = textHeight + padding * 2;
-            
-            // Draw node background with rounded corners
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-            ctx.strokeStyle = node.color || '#999';
-            ctx.lineWidth = 1.5/globalScale;
-            
-            // Rounded rectangle
-            const radius = 4/globalScale;
-            const x = node.x - bckgWidth/2;
-            const y = node.y - bckgHeight/2;
-            
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.arcTo(x + bckgWidth, y, x + bckgWidth, y + bckgHeight, radius);
-            ctx.arcTo(x + bckgWidth, y + bckgHeight, x, y + bckgHeight, radius);
-            ctx.arcTo(x, y + bckgHeight, x, y, radius);
-            ctx.arcTo(x, y, x + bckgWidth, y, radius);
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
-            
-            // Draw icon if available (smaller, positioned top-left)
-            if (node.image) {
-                if (!node._img) {
-                    node._img = new Image();
-                    node._img.src = node.image;
-                }
-                
-                if (node._img.complete) {
-                    const iconSize = Math.min(16/globalScale, bckgWidth * 0.25);
-                    ctx.drawImage(
-                        node._img, 
-                        x + padding, 
-                        y + padding,
-                        iconSize, 
-                        iconSize
-                    );
-                }
+            return n;
+        }), 
+      links: links,
+    };
+
+    const node = document.getElementById('graph');
+
+    const graph = new ForceGraph(node)
+        .linkDirectionalArrowLength(2)
+        .linkDirectionalArrowRelPos(1)
+        .nodeId('name')
+        .nodeLabel('label')
+        .linkSource('source')
+        .linkTarget('target')
+        .height(node.parentElement.clientHeight)
+        .width(node.parentElement.clientWidth)
+        .nodeCanvasObject((n, ctx, scale) => {
+            if (n.image) {
+                const size = 8;
+                ctx.drawImage(n.image, n.x-size/2, n.y-size/2, size, size);
             }
-            
-            // Draw multi-line text centered
-            ctx.fillStyle = '#333';
+            ctx.font = `${10/scale}px Inter`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            
-            const startY = node.y - (lines.length - 1) * lineHeight / 2;
-            lines.forEach((line, index) => {
-                ctx.fillText(line, node.x, startY + index * lineHeight);
-            });
-            
-            // Store node dimensions for better collision detection
-            node._width = bckgWidth;
-            node._height = bckgHeight;
+
+            ctx.fillText(n.label, n.x, n.y + 6);
+
         })
-        .linkDirectionalArrowLength(6)
-        .linkDirectionalArrowRelPos(1)
-        .linkCurvature(0.25)
-        .linkWidth(2)
-        
-        // Improved force simulation for better layout
-        .d3Force('charge', d3.forceManyBody().strength(-400))
-        .d3Force('link', d3.forceLink().distance(120).strength(0.6))
-        .d3Force('center', d3.forceCenter())
-        .d3Force('collision', d3.forceCollide().radius(node => {
-            return Math.max((node._width || 80) / 2, (node._height || 40) / 2) + 15;
-        }))
-        
-        // Enhanced zoom with boundaries
-        .enableZoomInteraction(true)
-        .onZoom(({ k, x, y }) => {
-            // Limit zoom level to prevent issues
-            const minZoom = 0.1;
-            const maxZoom = 4;
-            if (k < minZoom || k > maxZoom) return false;
-        });
-
-    // Enhanced node click handler with better text formatting
-    graph.onNodeClick(node => {
-        const displayName = (node.name || node.id || 'Unknown')
-            .replace(/_/g, ' ')
-            .replace(/([a-z])([A-Z])/g, '$1 $2');
-            
-        const info = [];
-        info.push(`Node: ${displayName}`);
-        info.push(`Type: ${node.type || node.node_class || 'agent'}`);
-        if (node.description) info.push(`Description: ${node.description}`);
-        if (node.role) info.push(`Role: ${node.role}`);
-        if (node.tools && node.tools.length > 0) {
-            info.push(`Tools: ${node.tools.length}`);
-        }
-        
-        // Create better modal instead of alert
-        showNodeDetails(info.join('\n'));
+        .nodeCanvasObjectMode(() => "replace")
+        .warmupTicks(250)
+        .cooldownTime(50)
+        .enableNodeDrag(true)
+        .graphData(gData)
+    ;
+    graph.d3Force('center', null);
+    graph.onEngineStop(() => {
+        graph.zoomToFit(1000, 16)
     });
-
-    // Enhanced node details display function
-    function showNodeDetails(details) {
-        // Remove existing modal if any
-        const existingModal = document.querySelector('.node-modal');
-        if (existingModal) existingModal.remove();
-        
-        const modal = document.createElement('div');
-        modal.className = 'node-modal';
-        modal.style.cssText = `
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            backdrop-filter: blur(2px);
-        `;
-        
-        const content = document.createElement('div');
-        content.style.cssText = `
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            max-width: 400px;
-            max-height: 60vh;
-            overflow-y: auto;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            border: 1px solid #E5E7EB;
-        `;
-        
-        content.innerHTML = `
-            <h3 style="margin: 0 0 16px 0; color: #1F2937; font-size: 18px; font-weight: 600;">
-                Node Details
-            </h3>
-            <div style="white-space: pre-wrap; font-family: inherit; margin: 0; color: #374151; line-height: 1.5;">
-                ${details}
-            </div>
-            <button onclick="this.closest('.node-modal').remove()" 
-                    style="margin-top: 20px; padding: 10px 20px; background: linear-gradient(135deg, #2AF5D8 0%, #2A90F4 50%, #9281FF 100%); 
-                           color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;
-                           transition: transform 0.1s ease;">
-                Close
-            </button>
-        `;
-        
-        modal.appendChild(content);
-        document.body.appendChild(modal);
-        
-        // Close on background click or escape key
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) modal.remove();
-        });
-        
-        document.addEventListener('keydown', function escHandler(e) {
-            if (e.key === 'Escape') {
-                modal.remove();
-                document.removeEventListener('keydown', escHandler);
-            }
-        });
-    }
-
-    // Auto-fit graph with better timing and padding
-    setTimeout(() => {
-        graph.zoomToFit(2000, 60); // Better padding for full report
-    }, 500);
 </script>
 
 <script>

@@ -87,25 +87,45 @@ agentic-radar scan langgraph --graph-only --visualization vis-js -i input_dir -o
 - Self-contained with inline assets
 - Professional appearance suitable for presentations
 
-## Visual Evidence  
-Screenshots demonstrating the feature are available in `pr-screenshots/`:
+## 📸 Visual Evidence & Before/After
 
-- **Graph-Only Output**: `graph_only_graph_only_screenshot.png` - Shows the minimal HTML with SPLX branding
-- **Full Report Comparison**: `full_report_full_report_screenshot.png` - Shows difference from full report
-- **Responsive Design**: `responsive_views_*_screenshot.png` - Mobile, tablet, desktop layouts
-- **Professional Styling**: Gradient header, SPLX logo, clean typography
+### **Before this PR:**
+- **Empty Graph Issue (Issue #35)**: Graph visualization was completely blank/not rendering
+- **Graph-Only Feature Missing**: No `--graph-only` flag existed for minimal visualization output
+- **JavaScript Runtime Errors**: Graph failed to initialize due to data format mismatches
+- **No Visual Testing**: No automated way to verify graph rendering across different scenarios
 
-### View Screenshots
-```bash
-# View the main graph-only output
-open pr-screenshots/graph_only_graph_only_screenshot.png
+### **After this PR:**
+- **✅ Graph Now Renders**: Fixed the empty graph issue - visualization displays properly with nodes and links
+- **✅ Graph-Only Feature Added**: New `--graph-only` flag generates minimal visualization-only HTML output
+- **✅ Template Consistency**: Both full report and graph-only use identical graph implementation with `__INLINE_DATA.links`
+- **✅ Professional Styling**: SPLX branding with gradient header and proper layout
+- **✅ Interactive Features**: Working node interactions, drag functionality, zoom controls
+- **✅ Visual Testing Framework**: Automated screenshot generation for PR validation
 
-# Compare with full report
-open pr-screenshots/full_report_full_report_screenshot.png
+### **📸 [View All Screenshots](../screenshots/pr-108/README.md)**
 
-# View all screenshots
-open pr-screenshots/
-```
+**Generated 8 screenshots across 4 test categories:**
+
+#### Full Report vs Graph-Only Comparison
+- `full_report_full_report_screenshot.png` - Complete HTML report with all sections
+- `graph_only_graph_only_screenshot.png` - Minimal graph visualization (--graph-only flag)
+
+#### Key Fix Demonstrated
+- **Empty Graph Resolved**: Graph now renders correctly (was blank before)
+- **Template Consistency**: Both outputs use identical graph implementation
+- **Professional Styling**: SPLX branding and responsive design
+
+#### Visualization Library Compatibility  
+- `visualization_comparison_force_graph_screenshot.png` - ForceGraph.js format (current default)
+- `visualization_comparison_vis_js_screenshot.png` - vis.js format (future migration ready)
+
+#### Responsive Design Validation
+- `responsive_views_desktop_screenshot.png` - Desktop (1920×1080)
+- `responsive_views_tablet_screenshot.png` - Tablet (1024×768) 
+- `responsive_views_mobile_screenshot.png` - Mobile (375×667)
+
+> 🤖 Screenshots automatically generated using Playwright to ensure accuracy
 
 ## Testing Coverage
 
@@ -176,11 +196,16 @@ Both generate minimal HTML with the appropriate visualization library.
 
 ## Addresses User Feedback
 
-### ✅ Original Request (DJurincic)
-- ✅ CLI argument implemented (`--graph-only`)
+### ✅ Original Request (DJurincic - Issue #36)
+- ✅ CLI argument implemented (`--graph-only`) - **Exact flag name requested**
 - ✅ Renders only graph visualization  
 - ✅ Excludes full report sections
 - ✅ Professional presentation
+
+### ✅ Critical Fix (Issue #35) 
+- ✅ **Empty graph resolved** - Core JavaScript runtime errors fixed
+- ✅ **Template consistency** - Both full report and graph-only use identical `__INLINE_DATA.links` format
+- ✅ **Working interactions** - Node clicks, drag functionality, zoom controls all functional
 
 ### ✅ jsrzic's Styling Feedback  
 - ✅ SPLX colors and branding
@@ -188,6 +213,12 @@ Both generate minimal HTML with the appropriate visualization library.
 - ✅ Agentic Radar logo included
 - ✅ Same graph behavior as regular report
 - ✅ Improved node click information
+
+### ✅ Visual Testing Framework Added
+- ✅ **Automated screenshots** for PR validation
+- ✅ **Cross-device testing** (desktop, tablet, mobile)
+- ✅ **Format compatibility** (ForceGraph.js and vis.js)
+- ✅ **Documentation in `docs/screenshots/pr-108/`**
 
 ## Files Changed
 - `agentic_radar/cli.py` - Added `--graph-only` CLI flag
