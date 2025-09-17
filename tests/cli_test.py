@@ -383,36 +383,11 @@ def test_graph_only_handles_empty_data_gracefully(tmp_path):
     pytest.importorskip("playwright")
     from playwright.sync_api import sync_playwright
     
-    # Create a minimal HTML file with empty graph data to test error handling
-    empty_graph_html = '''<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Test Empty Graph</title>
-<script>
-// Minimal ForceGraph stub for testing
-function ForceGraph() {
-    return {
-        graphData: function(data) { 
-            if (!data || !data.nodes) throw new Error("Invalid graph data");
-            return this; 
-        }
-    };
-}
-</script>
-</head>
-<body>
-<div id="graph"></div>
-<script>
-const __INLINE_DATA = {"nodes": [], "links": []};
-const graph = ForceGraph()(document.getElementById('graph')).graphData(__INLINE_DATA);
-</script>
-</body>
-</html>'''
-    
+    # Use test fixture for better maintainability
+    import shutil
+    fixture_path = os.path.join(os.path.dirname(__file__), "fixtures", "empty_graph_test.html")
     empty_file = str(tmp_path / "empty_graph.html")
-    with open(empty_file, 'w') as f:
-        f.write(empty_graph_html)
+    shutil.copy(fixture_path, empty_file)
     
     # Test in browser
     with sync_playwright() as p:

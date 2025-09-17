@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Test Empty Graph</title>
+<script>
+// Minimal ForceGraph stub for testing
+function ForceGraph() {
+    return {
+        graphData: function(data) { 
+            if (!data || !data.nodes) throw new Error("Invalid graph data");
+            return this; 
+        }
+    };
+}
+</script>
+</head>
+<body>
+<div id="graph"></div>
+<script>
+const __INLINE_DATA = {"nodes": [], "links": []};
+const graph = ForceGraph()(document.getElementById('graph')).graphData(__INLINE_DATA);
+</script>
+</body>
+</html>

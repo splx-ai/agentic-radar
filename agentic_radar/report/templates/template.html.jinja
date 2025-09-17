@@ -579,7 +579,12 @@ document.addEventListener('click', function(event) {
     // 4. Check if clipboard API is available
     if (!navigator.clipboard || !navigator.clipboard.writeText) {
         console.error("Clipboard API (writeText) is not available. Requires HTTPS or localhost.");
-        alert("Copying is not supported in this browser or context (requires HTTPS).");
+        // Show modern toast notification instead of alert
+        const toast = document.createElement('div');
+        toast.textContent = 'Copying requires HTTPS connection';
+        toast.style.cssText = 'position:fixed;top:20px;right:20px;background:#f44336;color:white;padding:12px 20px;border-radius:4px;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,0.2)';
+        document.body.appendChild(toast);
+        setTimeout(() => document.body.removeChild(toast), 3000);
         button.disabled = false; // Re-enable since we can't proceed
         return;
     }

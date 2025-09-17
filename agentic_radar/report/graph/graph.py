@@ -41,7 +41,8 @@ class Graph(BaseModel):
                 "label": getattr(edge, 'condition', None)
             }
             for edge in self.edges
-            if edge.source in node_names and edge.target in node_names  # Filter out edges to non-existent nodes
+            # Filter out edges to non-existent nodes
+            if edge.source in node_names and edge.target in node_names
         ]
         
         if visualization == "vis-js":
