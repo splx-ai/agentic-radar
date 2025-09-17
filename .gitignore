@@ -19,3 +19,22 @@
 /poetry.toml
 
 .env
+
+# Test outputs and artifacts
+test_*.html
+test_*.json
+test_*.png
+*_test_output/
+screenshots/*.png
+temp_test_*
+
+# Documentation build artifacts
+docs/site/
+docs/_build/
+docs/.doctrees/
+
+# Generated reports (keep example/fixture files but exclude generated ones)
+report_*.html
+graph_*.html
+!examples/
+!tests/fixtures/

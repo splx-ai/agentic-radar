@@ -82,13 +82,15 @@ def generate(graph: GraphDefinition, out_file: str, graph_only: bool = False, vi
 
     # For graph-only mode, we skip vulnerability processing and use minimal data
     if graph_only:
-        template.stream(
+        rendered_content = template.render(
             project_name=graph.name,
             framework=graph.framework,
             timestamp=datetime.datetime.now().strftime("%x %X"),
             graph=svg,
             scanner_version=__version__,
-        ).dump(out_file)
+        )
+        with open(out_file, 'w', encoding='utf-8') as f:
+            f.write(rendered_content)
     else:
         with open(
             os.path.join(

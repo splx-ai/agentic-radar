@@ -10,7 +10,7 @@ from ...graph import ToolType
 def _image_to_data_url(path: str) -> str:
     with open(path, "rb") as f:
         data = f.read()
-        return "data:image/svg+xml;base64," + base64.encodebytes(data).decode("utf-8")
+        return "data:image/svg+xml;base64," + base64.encodebytes(data).decode("utf-8").replace('\n', '')
 
 
 class Node(BaseModel):

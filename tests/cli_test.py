@@ -216,9 +216,9 @@ def test_graph_only_renders_functional_javascript(tmp_path):
         content = f.read()
     
     # Should have ForceGraph function call with proper initialization
-    assert "const graph = ForceGraph()" in content
+    assert "const graph = new ForceGraph(" in content
     assert "document.getElementById('graph')" in content
-    assert ".graphData(__INLINE_DATA)" in content
+    assert ".graphData(gData)" in content
     
     # Should have valid graph data
     assert '"nodes":' in content
@@ -301,7 +301,7 @@ def test_graph_only_data_is_valid_json(tmp_path):
     import json
     
     # Find __INLINE_DATA assignment
-    pattern = r'const __INLINE_DATA = (.+?);'
+    pattern = r'const __INLINE_DATA = (.+?);\s*</script>'
     match = re.search(pattern, content, re.DOTALL)
     assert match, "__INLINE_DATA assignment not found"
     

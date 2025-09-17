@@ -7,7 +7,7 @@
 {% include 'assets/force-graph.js' %}
 </script>
 <script language="javascript" type="text/javascript">
-const __INLINE_DATA = {{graph}};
+const __INLINE_DATA = {{graph|safe}};
 </script>
 <style>
 body {
