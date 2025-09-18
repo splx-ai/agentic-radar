@@ -1,3 +1,4 @@
+import json
 from typing import List
 
 from pydantic import BaseModel
@@ -11,4 +12,7 @@ class Graph(BaseModel):
     edges: List[Edge] = []
 
     def generate(self) -> str:
-        return self.model_dump_json()
+        # ForceGraph.js expects "links" not "edges"
+        data = self.model_dump()
+        data["links"] = data.pop("edges")
+        return json.dumps(data)
