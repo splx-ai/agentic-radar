@@ -220,10 +220,10 @@ class SimpleFunctionCallAssignment(BaseModel):
         Returns:
             Union[str, int, float, bool, None]: The resolved value, or None if not found.
         """
-        if key in self.kwargs:
-            return self.kwargs[key]
         if 0 <= index < len(self.args):
             return self.args[index]
+        if key in self.kwargs:
+            return self.kwargs[key]
         return None
 
 
@@ -243,6 +243,7 @@ def parse_simple_function_call_assignment(
     """
     if isinstance(node, ast.Assign) and len(node.targets) == 1:
         target = node.targets[0]
+
         if not isinstance(target, ast.Name):
             return None
 
@@ -252,37 +253,68 @@ def parse_simple_function_call_assignment(
         else:
             value = node.value
 
-        if not isinstance(value, ast.Call):
-            return None
-
-        if not is_simple_identifier(value.func):
-            return None
-        function_name = get_simple_identifier_name(value.func)
-
-        def extract_value(
-            val: ast.AST
-        ) -> Union[str, int, float, bool, list, dict, None]:
-            if isinstance(val, ast.Constant):
-                return val.value
-            elif is_simple_identifier(val):
-                return get_simple_identifier_name(val)
-            elif isinstance(val, (ast.List, ast.Tuple)):
-                return [extract_value(item) for item in val.elts]
-            elif isinstance(val, ast.Dict):
-                return {
-                    extract_value(k): extract_value(v)
-                    for k, v in zip(val.keys, val.values)
-                    if isinstance(k, (ast.Constant, ast.Name, ast.Attribute))
-                }
-            else:
+        if isinstance(target, ast.Name) and isinstance(node.value, ast.Call):
+            parsed = parse_call(node.value)
+            if not parsed:
                 return None
+            function_name, args, kwargs = parsed
+            return SimpleFunctionCallAssignment(
+                target=target.id,
+                function_name=function_name,
+                args=args,
+                kwargs=kwargs,
+            )
 
-        args = [extract_value(arg) for arg in value.args]
-        kwargs = {kw.arg: extract_value(kw.value) for kw in value.keywords if kw.arg}
-        return SimpleFunctionCallAssignment(
-            target=target.id, function_name=function_name, args=args, kwargs=kwargs
-        )
     return None
+
+
+def parse_call(
+    call_node: ast.Call,
+) -> Optional[
+    tuple[
+        str,
+        list[Union[str, int, float, bool, list, None]],
+        dict[str, Union[str, int, float, bool, list, None]],
+    ]
+]:
+    """Parse a simple call expression into (function_name, args, kwargs).
+
+    A "simple" call is one where the function is either a bare name or an attribute
+    whose base is a bare name (e.g. func(), module.func()) so that we can extract a
+    single string function identifier. Argument values are converted using the same
+    rules as parse_simple_function_call_assignment previously:
+
+    - ast.Constant -> its underlying value
+    - simple identifier (Name or Attribute of Name) -> identifier string
+    - list/tuple literals -> recursively extracted list
+    - anything else -> None placeholder
+
+    Args:
+        call_node: The ast.Call node to parse
+
+    Returns:
+        tuple of (function_name, args, kwargs) or None if call is not simple.
+    """
+    if not isinstance(call_node, ast.Call):  # type: ignore[unreachable]
+        return None
+
+    if not is_simple_identifier(call_node.func):
+        return None
+
+    function_name = get_simple_identifier_name(call_node.func)
+
+    def extract_value(val: ast.AST) -> Union[str, int, float, bool, list, None]:
+        if isinstance(val, ast.Constant):
+            return val.value
+        if is_simple_identifier(val):
+            return get_simple_identifier_name(val)
+        if isinstance(val, (ast.List, ast.Tuple)):
+            return [extract_value(item) for item in val.elts]
+        return None
+
+    args = [extract_value(arg) for arg in call_node.args]
+    kwargs = {kw.arg: extract_value(kw.value) for kw in call_node.keywords if kw.arg}
+    return function_name, args, kwargs
 
 
 def walk_and_parse_python_files(

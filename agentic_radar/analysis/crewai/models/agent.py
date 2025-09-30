@@ -2,6 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from .mcp import CrewAIMCPServer
 from .tool import CrewAITool
 
 
@@ -10,6 +11,7 @@ class PartialCrewAIAgent(BaseModel):
     goal: Optional[str] = None
     backstory: Optional[str] = None
     tools: Optional[list[CrewAITool]] = None
+    mcp_servers: Optional[list[CrewAIMCPServer]] = None
     llm: Optional[str] = None
     system_template: Optional[str] = None
     prompt_template: Optional[str] = None
@@ -22,6 +24,7 @@ class CrewAIAgent(BaseModel):
     goal: str
     backstory: str
     tools: list[CrewAITool] = []
+    mcp_servers: list[CrewAIMCPServer] = []
     llm: str = "gpt-4"
     use_system_prompt: bool = True
     system_template: Optional[str] = None
@@ -42,6 +45,7 @@ class CrewAIAgent(BaseModel):
             goal=partial_agent.goal,
             backstory=partial_agent.backstory,
             tools=partial_agent.tools or [],
+            mcp_servers=partial_agent.mcp_servers or [],
             llm=partial_agent.llm or "gpt-4",
             system_template=partial_agent.system_template,
             prompt_template=partial_agent.prompt_template,
@@ -72,6 +76,7 @@ class CrewAIAgent(BaseModel):
             goal=goal,
             backstory=backstory,
             tools=code_partial_agent.tools or yaml_partial_agent.tools or [],
+            mcp_servers=code_partial_agent.mcp_servers or [],
             llm=code_partial_agent.llm or yaml_partial_agent.llm or "gpt-4",
             system_template=code_partial_agent.system_template
             or yaml_partial_agent.system_template,
