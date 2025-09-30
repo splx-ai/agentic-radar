@@ -1,4 +1,5 @@
 import ast
+from typing import Union
 
 from agentic_radar.analysis.ast_utils import parse_call
 from agentic_radar.analysis.utils import walk_python_files
@@ -37,11 +38,11 @@ def collect_dicts_and_mcp_params(root_dir: str) -> dict[str, dict[str, str]]:
     return mcp_params
 
 
-def parse_mcp_params(node: ast.Dict | ast.Call) -> dict[str, str]:
+def parse_mcp_params(node: Union[ast.Dict, ast.Call]) -> dict[str, str]:
     """Parse MCP server parameters from an AST node.
 
     Args:
-        node (ast.Dict | ast.Call): AST node representing MCP server parameters
+        node (Union[ast.Dict, ast.Call]): AST node representing MCP server parameters
     Returns:
         dict[str, str]: Parsed MCP server parameters
     """
