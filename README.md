@@ -312,7 +312,7 @@ This matrix shows which agentic frameworks support all the Agentic Radar feature
 | Feature       | Scan        | MCP Detection        | Prompt Hardening | Agentic Test
 |----------------|-------------|-------------|-------------|-------------|
 | OpenAI Agents  | ✅          | ✅          | ✅          |     ✅         |
-| CrewAI         | ✅          | ❌         | ✅          |      ❌        |
+| CrewAI         | ✅          | ✅         | ✅          |      ❌        |
 | n8n            | ✅          | ✅          | ❌          |     ❌        |
 | LangGraph      | ✅          | ✅          | ❌          |     ❌         |
 | Autogen     | ✅          | ✅          | ✅          |     ❌         |
