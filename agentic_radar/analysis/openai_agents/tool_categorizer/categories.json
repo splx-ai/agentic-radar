@@ -1,5 +1,8 @@
 {
     "FileSearchTool": "DOCUMENT_LOADER",
     "WebSearchTool": "WEB_SEARCH",
-    "ComputerTool": "DEFAULT"
+    "ComputerTool": "DEFAULT",
+    "CodeInterpreterTool": "CODE_INTERPRETER",
+    "ImageGenerationTool": "DEFAULT",
+    "LocalShellTool": "CODE_INTERPRETER"
 }

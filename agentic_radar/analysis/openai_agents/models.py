@@ -14,6 +14,8 @@ class Tool(BaseModel):
 class MCPServerType(str, Enum):
     STDIO = "stdio"
     SSE = "sse"
+    HTTP = "http"
+    HOSTED = "hosted"
 
 
 class MCPServerInfo(BaseModel):
@@ -25,10 +27,12 @@ class MCPServerInfo(BaseModel):
 
 class Guardrail(BaseModel):
     name: str
-    placement: Literal['input', 'output']
+    placement: Literal["input", "output"]
     uses_agent: bool
     guardrail_function_name: str
-    _guardrail_function_def: Optional[Union[ast.FunctionDef, ast.AsyncFunctionDef]] = PrivateAttr(default=None)
+    _guardrail_function_def: Optional[
+        Union[ast.FunctionDef, ast.AsyncFunctionDef]
+    ] = PrivateAttr(default=None)
     agent_instructions: Optional[str] = None
     agent_name: Optional[str] = None
 
