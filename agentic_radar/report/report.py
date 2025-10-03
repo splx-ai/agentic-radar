@@ -100,6 +100,14 @@ def _compute_workflow_layout(graph_data: dict) -> dict:
     for n in incoming:
         levels.setdefault(n, 0)
 
+    # Ensure END node(s) are placed at the bottom-most level
+    if levels:
+        end_nodes = [name for name in levels.keys() if name.upper() == 'END']
+        if end_nodes:
+            max_lvl = max(levels.values())
+            for en in end_nodes:
+                levels[en] = max_lvl + 1
+
     # Group by level preserving insertion order but sort labels for stability
     level_groups: Dict[int, List[str]] = {}
     for name, lvl in levels.items():
@@ -120,7 +128,14 @@ def _compute_workflow_layout(graph_data: dict) -> dict:
     elif total_nodes > 25:
         base_vertical_cap = 55
 
-    level_spacing = base_vertical_cap if max_level_index <= 0 else base_vertical_cap
+    level_spacing = base_vertical_cap
+    if max_level_index > 0:
+        # Keep vertical span within page-safe bounds while avoiding cramped layouts.
+        max_target_span = 680.0
+        calculated_spacing = max_target_span / max_level_index if max_level_index else base_vertical_cap
+        # Never let spacing collapse below a readable threshold, but honour tighter bounds for huge graphs.
+        min_spacing = 34 if total_nodes > 70 else 38 if total_nodes > 45 else 42
+        level_spacing = max(min_spacing, min(base_vertical_cap, calculated_spacing))
 
     # Horizontal spacing bounds (slightly reduced to compress width)
     min_h = 40
@@ -134,9 +149,58 @@ def _compute_workflow_layout(graph_data: dict) -> dict:
     center_x_offset = 0
     center_y_offset = 0
 
+    # Order nodes within each level using a barycenter (median) heuristic
+    # to preserve left-to-right logical flow and reduce crossings.
+    sorted_levels = sorted(level_groups.keys())
+    ordered_levels: Dict[int, List[str]] = {}
+
+    def base_sort_key(nm: str):
+        nm_upper = nm.upper()
+        if nm_upper in start_aliases:
+            return (0, -len(outgoing.get(nm, [])), nm)
+        elif nm_upper == 'END':
+            return (2, 0, nm)
+        else:
+            return (1, -len(outgoing.get(nm, [])), nm)
+
+    def nearest_prev_level(cur: int) -> Optional[int]:
+        prevs = [lv for lv in sorted_levels if lv < cur]
+        return prevs[-1] if prevs else None
+
+    if sorted_levels:
+        first_level = sorted_levels[0]
+        ordered_levels[first_level] = sorted(level_groups[first_level], key=base_sort_key)
+
+    for lvl in sorted_levels[1:]:
+        names_list = level_groups[lvl]
+        prev_lvl = nearest_prev_level(lvl)
+        if prev_lvl is None or prev_lvl not in ordered_levels:
+            ordered_levels[lvl] = sorted(names_list, key=base_sort_key)
+        else:
+            prev_order = ordered_levels[prev_lvl]
+            prev_index = {nm: i for i, nm in enumerate(prev_order)}
+
+            def barycenter(nm: str) -> float:
+                parents = [p for p in incoming.get(nm, []) if levels.get(p, -1) == prev_lvl]
+                if not parents:
+                    earlier_parents = [p for p in incoming.get(nm, []) if levels.get(p, 10**9) < lvl]
+                    if not earlier_parents:
+                        return float('inf')
+                    best_level = max(levels[p] for p in earlier_parents)
+                    parents = [p for p in earlier_parents if levels[p] == best_level]
+                idxs = [prev_index[p] for p in parents if p in prev_index]
+                if not idxs:
+                    return float('inf')
+                return sum(idxs) / len(idxs)
+
+            ordered_levels[lvl] = sorted(
+                names_list,
+                key=lambda nm: (barycenter(nm), -len(outgoing.get(nm, [])), nm),
+            )
+
     positions: Dict[str, Dict[str, float]] = {}
     for idx, lvl in enumerate(sorted_levels):
-        names = level_groups[lvl]
+        names = ordered_levels.get(lvl, level_groups[lvl])
         # Vertical position: stack centered
         total_vertical_span = max_level_index * level_spacing if max_level_index > 0 else 0
         y = (idx * level_spacing) - (total_vertical_span / 2) + center_y_offset
@@ -174,15 +238,16 @@ def _compute_workflow_layout(graph_data: dict) -> dict:
             for p in positions.values():
                 p["x"] = mid_x + (p["x"] - mid_x) * scale
 
-    # Apply positions
+    # Apply positions and annotate level for downstream rendering tweaks
     for n in nodes:
         name = n.get("name")
         if name in positions:
             n["fx"] = float(positions[name]["x"])
             n["fy"] = float(positions[name]["y"])
+            # Persist relative level index for template (stagger labels)
+            n["level"] = int(levels.get(name, 0))
 
     return graph_data
-
 
 def generate(graph: GraphDefinition, out_file: str, export_pdf: bool = False):
     svg = from_definition(graph).generate()
@@ -297,9 +362,14 @@ def generate(graph: GraphDefinition, out_file: str, export_pdf: bool = False):
 
             with sync_playwright() as p:
                 browser = p.chromium.launch(headless=True)
-                page = browser.new_page()
+                page = browser.new_page(viewport={'width': 1200, 'height': 1600})  # Set explicit viewport for A4-like ratio
+                
+                # Enable console logging to see debug messages
+                page.on("console", lambda msg: print(f"[BROWSER CONSOLE] {msg.type}: {msg.text}"))
+                
                 report_path = os.path.abspath(out_file).replace('\\', '/')
-                page.goto(f"file:///{report_path}", wait_until="domcontentloaded")
+                # Signal PDF mode so the template applies PDF-specific fitting/bias
+                page.goto(f"file:///{report_path}?pdf=true", wait_until="domcontentloaded")
                 # Wait for graph container & canvas
                 try:
                     page.wait_for_selector('#graph', timeout=12000)

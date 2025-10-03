@@ -9,10 +9,12 @@
 // Render-ready flag for PDF export to wait on
 window.__GRAPH_READY__ = false;
 const __INLINE_DATA = {{graph}};
+// Detect PDF mode early so renderer can adapt label sizing
+const __IS_PDF__ = window.location.search.includes('pdf=true');
 </script>
 <style>
 .main {
-    width: 95%;
+    width: 85%;
     margin: 0 auto;
     padding: 0 20px;
 
@@ -81,8 +83,20 @@ table, th, td {
     color: black;
 }
 
+/* Ensure the graph border is fully visible within its container */
+#graph { box-sizing: border-box; }
+#graph-panel { box-sizing: border-box; }
+
 /* Print-specific tweaks for PDF clarity */
 @media print {
+    /* Expand main width to full printable area and control padding */
+    .main { width: 100% !important; padding: 0 24px !important; margin: 0 auto !important; border: 0.5px solid #C3C3C3; box-sizing: border-box; }
+    /* Keep graph panel together but do NOT force a new page */
+    #graph-panel { break-inside: avoid; page-break-inside: avoid; }
+    /* Allow dynamic graph height; JS will set an exact height to fit remaining page area */
+    #graph { height: auto; max-height: 820px; min-height: 560px; box-sizing: border-box; }
+    /* Allow the dependency-check + graph section to flow without forcing a new page */
+    #graph-section { break-before: auto; page-break-before: auto; margin-top: 0 !important; }
     .force-graph-container canvas { image-rendering: optimizeQuality; }
     /* Slightly bump legend text */
     [data-svg-wrapper] + div { font-size: 11px !important; line-height: 14px !important; }
@@ -135,7 +149,7 @@ table, th, td {
                 </div>
             </div>
         </div>
-        <div style="width: 100%; margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
+        <div id="graph-section" style="width: 100%; margin-top: 20px; align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex">
             <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: flex">
                 <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Dependency Check</div>
                 <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
@@ -145,7 +159,7 @@ table, th, td {
                     <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
                         <div style="align-self:stretch; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Agentic Workflow Graph</div>
                     </div>
-                    <div style="align-self: stretch; padding: 12px; background: #F5F5F5; border: 0.50px #C3C3C3 solid; flex-direction: column; justify-content: center; align-items: flex-end; gap: 12px; display: flex">
+                    <div id="graph-panel" style="align-self: stretch; padding: 12px; background: #F5F5F5; border: 0.50px #C3C3C3 solid; flex-direction: column; justify-content: center; align-items: flex-end; gap: 12px; display: flex">
                         <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: flex">
                             <div style="text-align: justify; color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 16px; word-wrap: break-word">Legend</div>
                             <div style="justify-content: flex-start; align-items: center; gap: 32px; display: inline-flex">
@@ -350,38 +364,27 @@ table, th, td {
                     <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 20px; word-wrap: break-word">Tools</div>
                     <hr style="width: 100%; margin: 0; background: linear-gradient(270deg, rgba(0, 138, 168, 0.00) 0%, #004064 100%); height: 2px; border: 0;">
                 </div>
-                    
-                {% for tool in tools %}
-                    <div style="width: 100%; margin-top:20px; flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: inline-flex">
-                        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                            <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex">
-                                <div style="color: black; font-size: 12px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">{{tool.name|e}}</div>
-                            </div>
-                            <div style="align-self: stretch; border: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                                <div style="flex: 1 1 0; border-right: 0.50px #D4D4D4 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
-                                        <div style="flex: 40%; padding: 6px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Category</div>
-                                        </div>
-                                        <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{tool.category|e}}</div>
-                                        </div>
-                                    </div>
-                                    {% if tool.description %}
-                                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
-                                        <div style="flex: 40%; align-self: stretch; padding: 6px; background: #F5F5F5; border-right: 0.50px #D4D4D4 solid; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px; word-wrap: break-word">Description</div>
-                                        </div>
-                                        <div style="flex: 60%; padding: 6px; border-bottom: 0.50px #D4D4D4 solid; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                                            <div style="flex: 1 1 0; text-align: justify; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px; word-wrap: break-word">{{tool.description|e}}</div>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
+                
+                <table style="width: 100%; border-collapse: collapse; border: 0.50px #D4D4D4 solid; margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th style="background: #F5F5F5; border: 0.50px #D4D4D4 solid; padding: 8px; text-align: left; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px;">Tool Name</th>
+                            <th style="background: #F5F5F5; border: 0.50px #D4D4D4 solid; padding: 8px; text-align: left; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px;">Tool Category</th>
+                            <th style="background: #F5F5F5; border: 0.50px #D4D4D4 solid; padding: 8px; text-align: left; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px;">Tool Description</th>
+                            <th style="background: #F5F5F5; border: 0.50px #D4D4D4 solid; padding: 8px; text-align: left; color: black; font-size: 10px; font-family: Inter; font-weight: 600; line-height: 15px;">Number of Vulnerabilities</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tool in tools %}
+                        <tr>
+                            <td style="border: 0.50px #D4D4D4 solid; padding: 8px; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px;">{{tool.name|e}}</td>
+                            <td style="border: 0.50px #D4D4D4 solid; padding: 8px; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px;">{{tool.category|e}}</td>
+                            <td style="border: 0.50px #D4D4D4 solid; padding: 8px; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px;">{{tool.description|e}}</td>
+                            <td style="border: 0.50px #D4D4D4 solid; padding: 8px; text-align: center; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 15px;">{{tool.vulnerabilities|length}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             {% endif %}
             {% if mcp_servers %}
@@ -554,6 +557,61 @@ table, th, td {
 
     const container = document.getElementById('graph');
 
+    // When the graph has few nodes, shrink effective edge lengths by scaling
+    // node positions toward the center. This helps small graphs fit snugly.
+    (function shrinkEdgesForSmallGraphs() {
+        try {
+            const total = Array.isArray(gData.nodes) ? gData.nodes.length : 0;
+            if (!total || total > 10) return; // only for small graphs
+
+            // Choose a gentle shrink factor based on node count
+            let factor = 1.0;
+            if (total <= 4) factor = 0.78;
+            else if (total <= 6) factor = 0.84;
+            else /* <=10 */ factor = 0.90;
+
+            // Compute center from available fixed positions
+            let sumX = 0, sumY = 0, cnt = 0;
+            gData.nodes.forEach(n => {
+                const nx = Number.isFinite(n.fx) ? n.fx : (Number.isFinite(n.x) ? n.x : null);
+                const ny = Number.isFinite(n.fy) ? n.fy : (Number.isFinite(n.y) ? n.y : null);
+                if (nx !== null && ny !== null) { sumX += nx; sumY += ny; cnt++; }
+            });
+            if (!cnt) return;
+            const cx = sumX / cnt;
+            const cy = sumY / cnt;
+
+            // Scale each node's position toward the center
+            gData.nodes.forEach(n => {
+                const nx = Number.isFinite(n.fx) ? n.fx : (Number.isFinite(n.x) ? n.x : cx);
+                const ny = Number.isFinite(n.fy) ? n.fy : (Number.isFinite(n.y) ? n.y : cy);
+                const sx = cx + (nx - cx) * factor;
+                const sy = cy + (ny - cy) * factor;
+                n.fx = sx; n.fy = sy; // lock to scaled position
+                n.x = sx;  n.y = sy;  // keep x/y in sync for drawing pre-sim
+            });
+        } catch (_) {
+            // Skip scaling if anything unexpected occurs
+        }
+    })();
+
+    // Build level grouping for deterministic staggering of labels to mitigate overlap
+    const levelMap = new Map();
+    gData.nodes.forEach(n => {
+        const lvl = typeof n.level === 'number' ? n.level : 0;
+        if (!levelMap.has(lvl)) levelMap.set(lvl, []);
+        levelMap.get(lvl).push(n);
+    });
+    // Stable sort within a level by x, then name
+    for (const [lvl, arr] of levelMap.entries()) {
+        arr.sort((a,b)=> (a.fx ?? a.x ?? 0) - (b.fx ?? b.x ?? 0) || String(a.name).localeCompare(String(b.name)));
+        arr.forEach((n, idx) => { n.__levelIndex = idx; n.__levelCount = arr.length; });
+    }
+
+    // Determine adaptive size factor for small graphs in PDF exports
+    const __NODE_COUNT__ = (__INLINE_DATA && Array.isArray(__INLINE_DATA.nodes)) ? __INLINE_DATA.nodes.length : (gData.nodes?.length || 0);
+    const __PDF_SIZE_FACTOR__ = (__IS_PDF__ && __NODE_COUNT__ <= 10) ? (__NODE_COUNT__ <= 6 ? 0.85 : 0.92) : 1.0;
+
     const graph = new ForceGraph(container)
         .linkDirectionalArrowLength(2)
         .linkDirectionalArrowRelPos(1)
@@ -564,15 +622,18 @@ table, th, td {
     .height(container.clientHeight)
     .width(container.clientWidth)
         .nodeCanvasObject((n, ctx, scale) => {
+            // Precompute icon size for layout, but draw it LAST so it's never covered by labels
+            let iconSize = 0;
             if (n.image) {
-                // Larger icon so component is clearly visible beneath label
-                const size = 26;
-                ctx.drawImage(n.image, n.x - size / 2, n.y - size / 2, size, size);
-                n.__iconSize = size;
+                // Smaller icons in PDF; further reduce for very small graphs to fit neatly
+                const baseIcon = __IS_PDF__ ? 22 : 30;
+                iconSize = Math.max(16, Math.round(baseIcon * __PDF_SIZE_FACTOR__));
+                n.__iconSize = iconSize;
             }
             // Reduced text size for labels
-            const base = 16; // reduced base size
-            const computed = Math.max(7, Math.min(base/scale, 14));
+            const base = 18; // keep overall balance; we scale below for small graphs
+            const computedBase = Math.max(8, Math.min(base/scale, __IS_PDF__ ? 11 : 16));
+            const computed = Math.max(7, Math.round(computedBase * __PDF_SIZE_FACTOR__));
             ctx.font = `${computed}px Inter`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -594,27 +655,64 @@ table, th, td {
                 }
                 return out;
             };
+            // Hard max text width to discourage ultra-wide boxes; re-wrap by words if needed
+            const wrapWordsToWidth = (text, maxWidth) => {
+                const words = String(text).split(/\s+/);
+                const lines = [];
+                let current = '';
+                for (const w of words) {
+                    const trial = current ? current + ' ' + w : w;
+                    if (ctx.measureText(trial).width <= maxWidth || !current) {
+                        current = trial;
+                    } else {
+                        lines.push(current);
+                        current = w;
+                    }
+                }
+                if (current) lines.push(current);
+                return lines;
+            };
+
             const wrapped = wrapSeparators(n.label || '');
-            const lines = wrapped.split('\n');
-            const lineHeight = computed * 0.9;
+            // set a max text width relative to icon area
+            const targetMax = __IS_PDF__ ? Math.round(120 * __PDF_SIZE_FACTOR__) : 160; // narrower in PDF; scale for small graphs
+            let lines = [];
+            const prelim = wrapped.split('\n');
+            prelim.forEach(ln => {
+                const sub = wrapWordsToWidth(ln, targetMax);
+                lines.push(...sub);
+            });
+            const lineHeight = computed * 1.0; // a bit more separation
             // start drawing a bit below the icon; center the block vertically relative to first baseline anchor
             const iconOffset = (n.__iconSize || 26) / 2 + 8; // space below icon
-            const startY = n.y + iconOffset + (-(lines.length - 1) * lineHeight) / 2;
+            // Stagger labels per level to reduce overlap (zig-zag up/down and a slight x shift)
+            const lvl = typeof n.level === 'number' ? n.level : 0;
+            const idxInLvl = n.__levelIndex ?? 0;
+            const parity = idxInLvl % 2 === 0 ? 1 : -1; // alternate up/down
+            const staggerY = parity * Math.min(22, 10 + Math.floor(idxInLvl/2)*5); // much stronger vertical spacing
+            const staggerX = (idxInLvl % 3 === 0 ? -1 : idxInLvl % 3 === 1 ? 0 : 1) * 16; // [-16,0,16] wider cycle
+            const startY = n.y + iconOffset + (-(lines.length - 1) * lineHeight) / 2 + staggerY;
             // Measure widest line for background box
             let maxWidth = 0;
             lines.forEach(ln => {
                 const w = ctx.measureText(ln).width;
                 if (w > maxWidth) maxWidth = w;
             });
-            const padX = 4;
-            const padY = 2;
+            const padX = 6;
+            const padY = 3;
             const boxW = maxWidth + padX * 2;
             const boxH = lines.length * lineHeight + padY * 2;
-            const boxX = n.x - boxW / 2;
+            const boxX = (n.x + staggerX) - boxW / 2;
             const boxY = startY - lineHeight / 2 - padY;
+            // Persist last-computed label extents on the node for later bounding-box calculations
+            // These are in WORLD coordinates (same as node positions)
+            n.__labelMinX = boxX;
+            n.__labelMaxX = boxX + boxW;
+            n.__labelMinY = boxY;
+            n.__labelMaxY = boxY + boxH;
             // Draw background with slight transparency and border for readability
             ctx.save();
-            ctx.fillStyle = 'rgba(255,255,255,0.92)';
+            ctx.fillStyle = 'rgba(255,255,255,0.9)';
             ctx.strokeStyle = 'rgba(0,0,0,0.15)';
             ctx.lineWidth = 1/Math.max(1, scale); // keep thin border
             ctx.beginPath();
@@ -632,9 +730,29 @@ table, th, td {
             ctx.fill();
             ctx.stroke();
             ctx.restore();
+            // Optional connector from icon bottom to label box top for clarity
+            ctx.save();
+            ctx.strokeStyle = 'rgba(0,0,0,0.12)';
+            ctx.lineWidth = 1/Math.max(1, scale);
+            ctx.beginPath();
+            ctx.moveTo(n.x, n.y + (n.__iconSize || 26)/2);
+            ctx.lineTo(n.x + staggerX, boxY);
+            ctx.stroke();
+            ctx.restore();
+
             lines.forEach((ln, idx) => {
-                ctx.fillText(ln, n.x, startY + idx * lineHeight);
+                ctx.fillText(ln, n.x + staggerX, startY + idx * lineHeight);
             });
+
+            // Finally, draw the icon last so it's always on top of its label/background
+            if (n.image && iconSize > 0) {
+                ctx.drawImage(n.image, n.x - iconSize / 2, n.y - iconSize / 2, iconSize, iconSize);
+                // Persist icon extents as well
+                n.__iconMinX = n.x - iconSize / 2;
+                n.__iconMaxX = n.x + iconSize / 2;
+                n.__iconMinY = n.y - iconSize / 2;
+                n.__iconMaxY = n.y + iconSize / 2;
+            }
         })
         .nodeCanvasObjectMode(() => 'replace')
         .warmupTicks(150)
@@ -646,49 +764,246 @@ table, th, td {
     graph.d3Force('center', null);
 
     graph.onEngineStop(() => {
-        // Compression + left shift.
-        // URL params: ?scalex=0.7&shift=180
-        const qs = new URLSearchParams(window.location.search);
-        const paramScaleX = parseFloat(qs.get('scalex') || '');
-        const paramShift = parseInt(qs.get('shift') || '');
-    const SCALE_X = Number.isFinite(paramScaleX) ? paramScaleX : 0.90;
-    // SHIFT_LEFT now adaptive: large graphs get stronger left shift, small graphs slight right shift (negative value)
-    const USER_SHIFT = Number.isFinite(paramShift) ? paramShift : null; // allow override
-        let readySet = false; const setReady = () => { if(!readySet){window.__GRAPH_READY__=true; readySet=true;} };
+        // Detect PDF rendering
+        const isPDF = window.location.search.includes('pdf=true');
+        
+        let readySet = false; 
+        const setReady = () => { if(!readySet){window.__GRAPH_READY__=true; readySet=true;} };
+        
         const adjust = () => {
             try {
-                let bbox = graph.getGraphBbox();
-                const midX = (bbox.x[0]+bbox.x[1])/2; const spanX = bbox.x[1]-bbox.x[0];
-                if (SCALE_X < 0.999 && spanX > 150) {
-                    const data = graph.graphData();
-                    data.nodes.forEach(n => {
-                        if (typeof n.x === 'number') {
-                            const newX = midX + (n.x - midX) * SCALE_X;
-                            n.x = newX; if ('fx' in n) n.fx = newX;
+                const isPDF = window.location.search.includes('pdf=true');
+                
+                if (isPDF) {
+                    const container = document.getElementById('graph');
+                    const vh = (container && container.clientHeight) || 980;
+                    const vw = (container && container.clientWidth) || 980;
+
+                    const padding = {
+                        top: 12,
+                        right: 48,
+                        bottom: Math.max(72, Math.min(110, vh * 0.12)),
+                        left: 48
+                    };
+
+                    const collectWorldPoints = () => {
+                        const pts = [];
+                        const push = (x, y) => {
+                            if (Number.isFinite(x) && Number.isFinite(y)) {
+                                pts.push([x, y]);
+                            }
+                        };
+                        gData.nodes.forEach(n => {
+                            const nx = n.fx ?? n.x ?? 0;
+                            const ny = n.fy ?? n.y ?? 0;
+                            push(nx, ny);
+                            if (Number.isFinite(n.__labelMinX)) {
+                                push(n.__labelMinX, n.__labelMinY);
+                                push(n.__labelMinX, n.__labelMaxY);
+                                push(n.__labelMaxX, n.__labelMinY);
+                                push(n.__labelMaxX, n.__labelMaxY);
+                            }
+                            if (Number.isFinite(n.__iconMinX)) {
+                                push(n.__iconMinX, n.__iconMinY);
+                                push(n.__iconMinX, n.__iconMaxY);
+                                push(n.__iconMaxX, n.__iconMinY);
+                                push(n.__iconMaxX, n.__iconMaxY);
+                            }
+                        });
+                        gData.links.forEach(l => {
+                            const s = typeof l.source === 'object' ? l.source : gData.nodes.find(nn => nn.name === l.source);
+                            const t = typeof l.target === 'object' ? l.target : gData.nodes.find(nn => nn.name === l.target);
+                            if (s && t) {
+                                const sx = s.fx ?? s.x ?? 0;
+                                const sy = s.fy ?? s.y ?? 0;
+                                const tx = t.fx ?? t.x ?? 0;
+                                const ty = t.fy ?? t.y ?? 0;
+                                push(sx, sy);
+                                push(tx, ty);
+                            }
+                        });
+                        return pts;
+                    };
+
+                    const computeWorldExtents = (pts) => {
+                        if (!pts.length) return null;
+                        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+                        pts.forEach(([x, y]) => {
+                            minX = Math.min(minX, x);
+                            maxX = Math.max(maxX, x);
+                            minY = Math.min(minY, y);
+                            maxY = Math.max(maxY, y);
+                        });
+                        if (!isFinite(minX) || !isFinite(maxX) || !isFinite(minY) || !isFinite(maxY)) {
+                            return null;
                         }
-                    });
+                        const buffer = 14;
+                        return {
+                            minX: minX - buffer,
+                            maxX: maxX + buffer,
+                            minY: minY - buffer,
+                            maxY: maxY + buffer
+                        };
+                    };
+
+                    const computeScreenBounds = (pts) => {
+                        if (!pts.length) return null;
+                        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+                        pts.forEach(([wx, wy]) => {
+                            const coords = graph.graph2ScreenCoords(wx, wy);
+                            if (!coords) return;
+                            const { x, y } = coords;
+                            if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+                            minX = Math.min(minX, x);
+                            maxX = Math.max(maxX, x);
+                            minY = Math.min(minY, y);
+                            maxY = Math.max(maxY, y);
+                        });
+                        if (!isFinite(minX) || !isFinite(maxX) || !isFinite(minY) || !isFinite(maxY)) {
+                            return null;
+                        }
+                        return { minX, maxX, minY, maxY };
+                    };
+
+                    setTimeout(() => {
+                        const points = collectWorldPoints();
+                        if (!points.length) {
+                            graph.zoomToFit(200, 80, () => true);
+                            setTimeout(() => setReady(), 180);
+                            return;
+                        }
+
+                        const world = computeWorldExtents(points);
+                        if (!world) {
+                            graph.zoomToFit(200, 80, () => true);
+                            setTimeout(() => setReady(), 200);
+                            return;
+                        }
+
+                        const worldW = Math.max(1, world.maxX - world.minX);
+                        const worldH = Math.max(1, world.maxY - world.minY);
+                        const availW = Math.max(140, vw - (padding.left + padding.right));
+                        const availH = Math.max(220, vh - (padding.top + padding.bottom));
+
+                        let targetZoom = Math.min(availW / worldW, availH / worldH);
+                        if (!Number.isFinite(targetZoom) || targetZoom <= 0) {
+                            targetZoom = 1;
+                        }
+                        targetZoom = Math.min(targetZoom * 0.97, 3.5);
+                        graph.zoom(targetZoom, 0);
+
+                        let centerX = (world.minX + world.maxX) / 2;
+                        let centerY = (world.minY + world.maxY) / 2;
+                        const applyCenter = () => graph.centerAt(centerX, centerY, 0);
+                        applyCenter();
+
+                        const adjustWithinMargins = (attempts = 4) => {
+                            for (let i = 0; i < attempts; i += 1) {
+                                const screen = computeScreenBounds(points);
+                                if (!screen) break;
+                                const zoom = graph.zoom() || targetZoom;
+                                let moved = false;
+
+                                const leftOverflow = padding.left - screen.minX;
+                                if (leftOverflow > 0) {
+                                    centerX -= leftOverflow / zoom;
+                                    moved = true;
+                                }
+
+                                const rightOverflow = screen.maxX - (vw - padding.right);
+                                if (rightOverflow > 0) {
+                                    centerX += rightOverflow / zoom;
+                                    moved = true;
+                                }
+
+                                const topOverflow = padding.top - screen.minY;
+                                if (topOverflow > 0) {
+                                    centerY -= topOverflow / zoom;
+                                    moved = true;
+                                }
+
+                                const bottomOverflow = screen.maxY - (vh - padding.bottom);
+                                if (bottomOverflow > 0) {
+                                    centerY += bottomOverflow / zoom;
+                                    moved = true;
+                                }
+
+                                if (!moved) {
+                                    break;
+                                }
+                                applyCenter();
+                            }
+                        };
+
+                        adjustWithinMargins();
+
+                        // Apply aggressive upward positioning to eliminate excessive top whitespace
+                        setTimeout(() => {
+                            const currentScreen = computeScreenBounds(points);
+                            if (currentScreen) {
+                                const currentZoom = graph.zoom() || targetZoom;
+                                if (Number.isFinite(currentZoom) && currentZoom > 0) {
+                                    // Move graph to upper 35% of available vertical space
+                                    const availableHeight = vh - padding.top - padding.bottom;
+                                    const targetY = padding.top + (availableHeight * 0.35);
+                                    const currentCenterY = (currentScreen.minY + currentScreen.maxY) / 2;
+                                    
+                                    // REVERSED LOGIC: subtract to move up, add to move down
+                                    const shiftPx = targetY - currentCenterY;
+                                    if (Math.abs(shiftPx) > 5) {
+                                        centerY -= shiftPx / currentZoom;  // SUBTRACT to move UP
+                                        applyCenter();
+                                        adjustWithinMargins(3);
+                                        
+                                        // Second adjustment to ensure positioning
+                                        setTimeout(() => {
+                                            const screen2 = computeScreenBounds(points);
+                                            if (screen2) {
+                                                const center2Y = (screen2.minY + screen2.maxY) / 2;
+                                                const shift2Px = targetY - center2Y;
+                                                if (Math.abs(shift2Px) > 3) {
+                                                    centerY -= shift2Px / currentZoom;  // SUBTRACT to move UP
+                                                    applyCenter();
+                                                }
+                                            }
+                                        }, 30);
+                                    }
+                                }
+                            }
+                        }, 50);
+
+                        setTimeout(() => { setReady(); }, 260);
+                    }, 120);
+                } else {
+                    // HTML: Interactive view with slight bias
+                    const padding = 90;
+                    graph.zoomToFit(600, padding, () => true);
+                    
+                    setTimeout(()=>{
+                        const bb2 = graph.getGraphBbox();
+                        const mid2X = (bb2.x[0]+bb2.x[1])/2; 
+                        const mid2Y = (bb2.y[0]+bb2.y[1])/2;
+                        const widthW = Math.max(1, (bb2.x[1] - bb2.x[0]));
+                        const heightW = Math.max(1, (bb2.y[1] - bb2.y[0]));
+                        
+                        const biasX = 0.08;
+                        const biasY = 0.28;
+                        const targetX = mid2X + widthW * biasX;
+                        const targetY = mid2Y + heightW * biasY;
+                        graph.centerAt(targetX, targetY, 0);
+                        try {
+                            const curZ = graph.zoom();
+                            if (typeof curZ === 'number' && isFinite(curZ)) {
+                                graph.zoom(curZ * 0.98, 150);
+                            }
+                        } catch(_) {}
+                        setTimeout(() => { setReady(); }, 500);
+                    }, 90);
                 }
-                graph.zoomToFit(600, 30, () => true);
-                // Determine adaptive shift based on span after compression
-                let adaptiveShift = 50; // new gentler default
-                const spanAfter = (graph.getGraphBbox().x[1]-graph.getGraphBbox().x[0]);
-                if (spanAfter > 900) adaptiveShift = 120; // reduced from 160
-                else if (spanAfter > 700) adaptiveShift = 90;  // reduced from 120
-                else if (spanAfter > 500) adaptiveShift = 60;  // reduced from 90
-                else if (spanAfter < 200) adaptiveShift = 30;  // tiny graphs: slight left shift now
-                else if (spanAfter < 300) adaptiveShift = 20;  // small graphs: mild left shift
-                const SHIFT_LEFT = USER_SHIFT !== null ? USER_SHIFT : adaptiveShift;
-                // Apply camera shift AFTER fit (move camera center right to push content left; negative shift moves content right)
-                setTimeout(()=>{
-                    // recalc mid after potential compression
-                    const bb2 = graph.getGraphBbox();
-                    const mid2X = (bb2.x[0]+bb2.x[1])/2; const mid2Y = (bb2.y[0]+bb2.y[1])/2;
-                    graph.centerAt(mid2X + SHIFT_LEFT, mid2Y, 0);
-                    if(window.console) console.log('[GraphAdjust] scaleX', SCALE_X, 'shift', SHIFT_LEFT);
-                    setReady();
-                }, 90);
             } catch(e) {
-                graph.zoomToFit(600,30); setReady();
+                const padding = isPDF ? 180 : 80;
+                graph.zoomToFit(600, padding); 
+                setReady();
             }
         };
         adjust();
@@ -729,7 +1044,6 @@ document.addEventListener('click', function(event) {
     // 3. Check if the data attribute exists and has a value
     const textToCopy = button.dataset.copyValue;
     if (typeof textToCopy === 'undefined' || textToCopy === null) {
-         console.error("Error: data-copy-value attribute is missing or null on button:", button);
          return; // Exit if no value to copy
     }
 
@@ -738,7 +1052,6 @@ document.addEventListener('click', function(event) {
 
     // 4. Check if clipboard API is available
     if (!navigator.clipboard || !navigator.clipboard.writeText) {
-        console.error("Clipboard API (writeText) is not available. Requires HTTPS or localhost.");
         alert("Copying is not supported in this browser or context (requires HTTPS).");
         button.disabled = false; // Re-enable since we can't proceed
         return;
@@ -754,9 +1067,7 @@ document.addEventListener('click', function(event) {
             button.disabled = false;
         }, 1500);
 
-    }).catch(err => {
-        console.error('FAILURE: Could not copy text:', err.name, err.message, err); // DEBUG: Log specific error name and message
-
+    }).catch(() => {
         // Error handling - Re-enable button immediately on failure
         button.classList.remove('copied'); // Ensure icon is reset
         button.disabled = false;

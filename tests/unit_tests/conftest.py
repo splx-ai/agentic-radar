@@ -22,34 +22,44 @@ def pytest_runtest_protocol(item, nextitem):
     return None
 
 def pytest_runtest_logreport(report):
-    if report.when == "call":
-        meta = test_metadata.get(report.nodeid, {})
+    if report.when != "call":
+        return
 
-        markers = meta.get("markers", [])
-        docstring = meta.get("docstring", "")
-        lineno = meta.get("lineno", 0)
-        framework = FRAMEWORK_NAME_MAPPING.get(report.nodeid.removeprefix("tests/unit_tests/").split("/")[0], "Unknown (error while mapping name)")
-        category = report.nodeid.split("unit_tests/")[-1].split("/")[1]
-        docstring = meta.get("docstring", "").replace("\n", "")
-        outcome = "Unknown"
-        url = report.nodeid.split("::")[0] + f"#L{lineno}"
+    meta = test_metadata.get(report.nodeid) or {}
+    markers = meta.get("markers", [])
+    docstring = (meta.get("docstring") or "").replace("\n", "")
+    lineno = meta.get("lineno", 0)
 
-        if "supported" in markers:
-            if report.outcome == "passed":
-                outcome = "Passed✅"
-            elif report.outcome == "failed":
-                outcome = "Failed❌"
-        elif "not_supported" in markers:
-            outcome = "Unsupported⬜"
-        
-        result = {
-            "docstring": docstring,
-            "outcome": outcome,
-            "url": url,
-            "category": category
-        }
-        
-        all_results[framework].append(result)
+    relative_nodeid = report.nodeid.split("unit_tests/")[-1]
+    path_parts = relative_nodeid.split("/")
+    framework_key = path_parts[0].split("::")[0]
+    framework = FRAMEWORK_NAME_MAPPING.get(framework_key, "General")
+
+    if len(path_parts) > 1:
+        category = path_parts[1]
+    else:
+        file_part = path_parts[0].split("::")[0]
+        category = os.path.splitext(os.path.basename(file_part))[0] or "general"
+
+    outcome = "Unknown"
+    url = report.nodeid.split("::")[0] + f"#L{lineno}"
+
+    if "supported" in markers:
+        if report.outcome == "passed":
+            outcome = "Passed✅"
+        elif report.outcome == "failed":
+            outcome = "Failed❌"
+    elif "not_supported" in markers:
+        outcome = "Unsupported⬜"
+
+    result = {
+        "docstring": docstring,
+        "outcome": outcome,
+        "url": url,
+        "category": category
+    }
+
+    all_results[framework].append(result)
 
 def pytest_sessionfinish(session, exitstatus):
     with open("test-report.md", "w", encoding="utf-8") as f:

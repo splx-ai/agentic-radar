@@ -4,7 +4,7 @@ from typing import Optional
 import importlib_resources as resources
 from pydantic import BaseModel
 
-from ...graph import ToolType
+from ...graph import NodeType, ToolType
 
 
 def _image_to_data_url(path: str) -> str:
@@ -17,6 +17,8 @@ class Node(BaseModel):
     name: str
     label: str
     image: str
+    node_type: str
+    tool_category: Optional[str] = None
 
 
 class AgentNode(Node):
@@ -27,6 +29,7 @@ class AgentNode(Node):
             image=_image_to_data_url(
                 str(resources.files(__package__) / "assets" / "agent.svg")
             ),
+            node_type=str(NodeType.AGENT),
         )
 
 
@@ -38,6 +41,7 @@ class BasicNode(Node):
             image=_image_to_data_url(
                 str(resources.files(__package__) / "assets" / "basic.svg")
             ),
+            node_type=str(NodeType.BASIC),
         )
 
 
@@ -50,6 +54,8 @@ class ToolNode(Node):
             image=_image_to_data_url(
                 str(resources.files(__package__) / "assets" / "tools" / f"{ttype}.svg")
             ),
+            node_type=str(NodeType.TOOL),
+            tool_category=ttype,
         )
 
 
@@ -61,6 +67,7 @@ class CustomToolNode(Node):
             image=_image_to_data_url(
                 str(resources.files(__package__) / "assets" / "custom_tool.svg")
             ),
+            node_type=str(NodeType.CUSTOM_TOOL),
         )
 
 
@@ -72,4 +79,5 @@ class MCPServerNode(Node):
             image=_image_to_data_url(
                 str(resources.files(__package__) / "assets" / "mcp_server.svg")
             ),
+            node_type=str(NodeType.MCP_SERVER),
         )
