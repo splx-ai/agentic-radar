@@ -26,6 +26,8 @@ def convert_nodes(
             type = n8n_node_types_dict.get(n8n_node.type)
         elif n8n_node.type.strip("tool") in n8n_node_types_dict:
             type = n8n_node_types_dict.get(n8n_node.type.strip("tool"))
+        else:
+            type = {"node_type": NodeType.BASIC}
 
         if type:
             if type.get("tool_type", False):
@@ -47,11 +49,17 @@ def convert_nodes(
                     )
                 )
             else:
+                description = (
+                    json.dumps(n8n_node.parameters)
+                    if type.get("node_type") == "mcp_server"
+                    else None
+                )
                 nodes.append(
                     NodeDefinition(
                         type=type.get("node_type"),
                         name=n8n_node.name,
                         label=n8n_node.name,
+                        description=description,
                     )
                 )
 

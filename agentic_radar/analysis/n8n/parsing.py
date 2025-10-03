@@ -7,7 +7,12 @@ def parse_n8n_nodes(nodes_list: List[Dict]) -> List[N8nNode]:
     n8n_nodes = []
     for node in nodes_list:
         n8n_nodes.append(
-            N8nNode(id=node["id"], name=node["name"], type=node["type"].lower())
+            N8nNode(
+                id=node["id"],
+                name=node["name"],
+                type=node["type"].lower(),
+                parameters=node.get("parameters", {}),
+            )
         )
 
     return n8n_nodes

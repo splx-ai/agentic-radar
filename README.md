@@ -313,7 +313,7 @@ This matrix shows which agentic frameworks support all the Agentic Radar feature
 |----------------|-------------|-------------|-------------|-------------|
 | OpenAI Agents  | ✅          | ✅          | ✅          |     ✅         |
 | CrewAI         | ✅          | ❌         | ✅          |      ❌        |
-| n8n            | ✅          | ❌          | ❌          |     ❌        |
+| n8n            | ✅          | ✅          | ❌          |     ❌        |
 | LangGraph      | ✅          | ✅          | ❌          |     ❌         |
 | Autogen     | ✅          | ❌          | ✅          |     ❌         |
 
