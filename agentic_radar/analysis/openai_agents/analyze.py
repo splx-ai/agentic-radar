@@ -37,6 +37,6 @@ class OpenAIAgentsAnalyzer(Analyzer):
             graph_name=Path(root_directory).name,
             agent_assignments=agent_assignments,
             tool_categories=tool_categories,
-            guardrails=guardrails
+            guardrails=guardrails,
         )
         return graph_definition

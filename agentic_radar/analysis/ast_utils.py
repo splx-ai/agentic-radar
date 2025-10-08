@@ -253,8 +253,8 @@ def parse_simple_function_call_assignment(
         else:
             value = node.value
 
-        if isinstance(target, ast.Name) and isinstance(node.value, ast.Call):
-            parsed = parse_call(node.value)
+        if isinstance(target, ast.Name) and isinstance(value, ast.Call):
+            parsed = parse_call(value)
             if not parsed:
                 return None
             function_name, args, kwargs = parsed
@@ -273,8 +273,8 @@ def parse_call(
 ) -> Optional[
     tuple[
         str,
-        list[Union[str, int, float, bool, list, None]],
-        dict[str, Union[str, int, float, bool, list, None]],
+        list[Union[str, int, float, bool, dict[str, str], list, None]],
+        dict[str, Union[str, int, float, bool, dict[str, str], list, None]],
     ]
 ]:
     """Parse a simple call expression into (function_name, args, kwargs).
@@ -303,14 +303,21 @@ def parse_call(
 
     function_name = get_simple_identifier_name(call_node.func)
 
-    def extract_value(val: ast.AST) -> Union[str, int, float, bool, list, None]:
+    def extract_value(val: ast.AST) -> Union[str, int, float, bool, list, dict, None]:
         if isinstance(val, ast.Constant):
             return val.value
-        if is_simple_identifier(val):
+        elif is_simple_identifier(val):
             return get_simple_identifier_name(val)
-        if isinstance(val, (ast.List, ast.Tuple)):
+        elif isinstance(val, (ast.List, ast.Tuple)):
             return [extract_value(item) for item in val.elts]
-        return None
+        elif isinstance(val, ast.Dict):
+            return {
+                extract_value(k): extract_value(v)
+                for k, v in zip(val.keys, val.values)
+                if isinstance(k, (ast.Constant, ast.Name, ast.Attribute))
+            }
+        else:
+            return None
 
     args = [extract_value(arg) for arg in call_node.args]
     kwargs = {kw.arg: extract_value(kw.value) for kw in call_node.keywords if kw.arg}
