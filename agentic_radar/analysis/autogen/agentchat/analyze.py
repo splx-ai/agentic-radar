@@ -5,6 +5,11 @@ from agentic_radar.analysis.ast_utils import walk_and_parse_python_files
 from agentic_radar.graph import GraphDefinition
 
 from .graph import create_graph_definition
+from .mcp import (
+    find_listed_mcp_tool_adapters,
+    find_server_params,
+    find_single_mcp_tool_adapters,
+)
 from .parse import (
     find_agent_assignments,
     find_all_functions,
@@ -25,8 +30,16 @@ class AutogenAgentChatAnalyzer(Analyzer):
         model_imports = find_model_client_imports(trees)
         model_clients = find_model_client_assignments(trees, model_imports)
         function_tools = find_function_tool_assignments(trees, all_functions)
+        mcp_servers = find_server_params(trees)
+        mcp_adapters_to_servers = find_single_mcp_tool_adapters(trees, mcp_servers)
+        listed_mcp_tool_adapters = find_listed_mcp_tool_adapters(trees, mcp_servers)
         agent_assignments = find_agent_assignments(
-            trees, model_clients, function_tools, all_functions
+            trees,
+            model_clients,
+            function_tools,
+            all_functions,
+            mcp_adapters_to_servers,
+            listed_mcp_tool_adapters,
         )
         teams = find_teams(trees, agent_assignments)
 

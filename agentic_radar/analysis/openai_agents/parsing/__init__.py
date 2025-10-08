@@ -11,5 +11,5 @@ __all__ = [
     "load_predefined_tools",
     "collect_mcp_servers",
     "collect_guardrails",
-    "get_agent_vulnerabilities"
+    "get_agent_vulnerabilities",
 ]

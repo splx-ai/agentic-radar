@@ -18,12 +18,19 @@ class FunctionTool(BaseModel):
     description: str
 
 
+class MCPServer(BaseModel):
+    name: str
+    description: str
+    tools: set[str] = set()
+
+
 class Agent(BaseModel):
     name: str
     tools: list[FunctionTool]
     llm: str = ""
     system_prompt: str = ""
     handoffs: list[str] = []
+    mcp_servers: list[MCPServer] = []
 
 
 class TeamType(str, Enum):

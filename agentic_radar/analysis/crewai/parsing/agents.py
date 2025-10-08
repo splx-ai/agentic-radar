@@ -3,8 +3,13 @@ from typing import Optional
 
 from pydantic import ValidationError
 
+from agentic_radar.analysis.ast_utils import (
+    get_keyword_arg_value,
+    get_nth_arg_value,
+)
 from agentic_radar.analysis.crewai.models import (
     CrewAIAgent,
+    CrewAIMCPServer,
     CrewAITool,
     PartialCrewAIAgent,
 )
@@ -22,19 +27,25 @@ from agentic_radar.analysis.crewai.tool_descriptions import (
 )
 from agentic_radar.analysis.utils import walk_python_files
 
+from .mcp import parse_mcp_params
+
 
 class AgentsVisitor(ast.NodeVisitor):
     CREWAI_AGENT_CLASS = "Agent"
+    CREWAI_MCP_SERVER_ADAPTER_CLASS = "MCPServerAdapter"
 
     def __init__(
         self,
         known_tool_aliases: set[str],
         predefined_tools: dict[str, CrewAITool],
         custom_tools: dict[str, CrewAITool],
+        mcp_params: dict[str, dict[str, str]],
     ):
         self.known_tool_aliases = known_tool_aliases
         self.predefined_tools = predefined_tools
         self.custom_tools = custom_tools
+        self.mcp_params = mcp_params
+        self.crew_base_mcps: Optional[list[CrewAIMCPServer]] = None
 
         self.crewai_tool_descriptions = get_crewai_tools_descriptions()
 
@@ -156,11 +167,19 @@ class AgentsVisitor(ast.NodeVisitor):
         if use_system_prompt is None:
             use_system_prompt = True
 
+        mcp_servers: list[CrewAIMCPServer] = []
+        tools_node = get_keyword_arg_value(agent_node, "tools")
+        if tools_node and is_function_call(tools_node, "get_mcp_tools"):
+            # Special case: MCP servers read from CrewBase class attribute mcp_server_params
+            if self.crew_base_mcps is not None:
+                mcp_servers = self.crew_base_mcps
+
         return PartialCrewAIAgent(
             role=role,
             goal=goal,
             backstory=backstory,
             tools=tools,
+            mcp_servers=mcp_servers,
             llm=llm,
             system_template=system_template,
             prompt_template=prompt_template,
@@ -184,8 +203,108 @@ class AgentsVisitor(ast.NodeVisitor):
 
         self.generic_visit(node)
 
+    def visit_With(self, node):
+        """Track with statements that create an MCPServerAdapter instance and pass it to an Agent constructor as tools."""
+
+        for item in node.items:
+            if isinstance(item.context_expr, ast.Call) and is_function_call(
+                item.context_expr, self.CREWAI_MCP_SERVER_ADAPTER_CLASS
+            ):
+                mcp_server_var = item.optional_vars
+                if not mcp_server_var or not isinstance(mcp_server_var, ast.Name):
+                    self.generic_visit(node)
+                    return
+                mcp_server_adapter_call = item.context_expr
+                if mcp_server_adapter_call.args:
+                    serverparams_arg = get_nth_arg_value(mcp_server_adapter_call, 0)
+                elif mcp_server_adapter_call.keywords:
+                    serverparams_arg = get_keyword_arg_value(
+                        mcp_server_adapter_call, "serverparams"
+                    )
+                else:
+                    continue
+
+                if not serverparams_arg or not isinstance(serverparams_arg, ast.Name):
+                    continue
+
+                if serverparams_arg.id in self.mcp_params:
+                    params = self.mcp_params[serverparams_arg.id]
+                    mcp_server = CrewAIMCPServer(
+                        name=serverparams_arg.id, params=params
+                    )
+                else:
+                    print(
+                        f"Cannot find MCP server params for variable: {serverparams_arg.id}"
+                    )
+                    continue
+
+                # Look for Agent constructor calls within the async with body
+                for stmt in node.body:
+                    if not isinstance(stmt, ast.Assign):
+                        continue
+                    if not isinstance(stmt.value, ast.Call):
+                        continue
+                    if not self._is_agent_constructor(stmt.value):
+                        continue
+
+                    tools_node = get_keyword_arg_value(stmt.value, "tools")
+                    if not tools_node:
+                        continue
+
+                    uses_mcp_tools = False
+                    if (
+                        isinstance(tools_node, ast.Name)
+                        and tools_node.id == mcp_server_var.id
+                    ):
+                        # Handles cases like agent = Agent(..., tools=mcp_tools)
+                        uses_mcp_tools = True
+                    elif isinstance(tools_node, ast.List):
+                        # Handles cases like agent = Agent(..., tools=[mcp_tools["some_tool"], other_tool])
+                        for tool_node in tools_node.elts:
+                            if (
+                                isinstance(tool_node, ast.Subscript)
+                                and isinstance(tool_node.value, ast.Name)
+                                and tool_node.value.id == mcp_server_var.id
+                            ):
+                                uses_mcp_tools = True
+                                break
+
+                    for target in stmt.targets:
+                        if isinstance(target, ast.Name):
+                            try:
+                                agent = self._extract_agent(stmt.value)
+                                if uses_mcp_tools:
+                                    # Add the MCP server to the agent
+                                    if not agent.mcp_servers:
+                                        agent.mcp_servers = []
+                                    agent.mcp_servers.append(mcp_server)
+                                self.agents[target.id] = agent
+                            except (ValueError, TypeError) as e:
+                                print(
+                                    f"Cannot extract agent {ast.dump(stmt.value)}. Error: {e}"
+                                )
+
     def visit_Assign(self, node):
         """Track assignments that return an Agent instance."""
+        if (
+            len(node.targets) == 1
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id == "mcp_server_params"
+            and isinstance(node.value, ast.List)
+        ):
+            self.crew_base_mcps = []
+            # Handle mcp_server_params = [...] assignment in CrewBase classes
+            for i, elt in enumerate(node.value.elts):
+                if isinstance(elt, (ast.Dict, ast.Call)):
+                    params = parse_mcp_params(elt)
+                    if params:
+                        mcp_server = CrewAIMCPServer(
+                            name=f"mcp_server_params_{i+1}", params=params
+                        )
+                        self.crew_base_mcps.append(mcp_server)
+
+            return
+
         if not isinstance(node.value, ast.Call):
             self.generic_visit(node)
             return
@@ -222,6 +341,7 @@ def collect_agents(
     known_tool_aliases: set[str],
     predefined_tools: dict[str, CrewAITool],
     custom_tools: dict[str, CrewAITool],
+    mcp_params: dict[str, dict[str, str]],
 ) -> dict[str, CrewAIAgent]:
     """Parses all Python modules and YAML configs in the given directory and collects agents.
 
@@ -230,6 +350,7 @@ def collect_agents(
         known_tool_aliases (set[str]): Set of predefined tool aliases parsed from import statements
         predefined_tools (dict[str, CrewAITool]): Dictionary mapping variable name to predefined tool
         custom_tools (dict[str, CrewAITool]): Dictionary mapping variable name to custom tool
+        mcp_params (dict[str, dict[str, str]]): Dictionary mapping variable name to corresponding MCP parameters
 
     Returns:
         dict[str, CrewAIAgent]: A dictionary mapping agent variable to CrewAIAgent object
@@ -250,6 +371,7 @@ def collect_agents(
                 known_tool_aliases=known_tool_aliases,
                 predefined_tools=predefined_tools,
                 custom_tools=custom_tools,
+                mcp_params=mcp_params,
             )
             agents_visitor.visit(tree)
             code_agents = agents_visitor.agents

@@ -2,7 +2,15 @@ import ast
 
 from agentic_radar.analysis.ast_utils import parse_simple_function_call_assignment
 
-from .models import Agent, FunctionDefinition, FunctionTool, ModelClient, Team, TeamType
+from .models import (
+    Agent,
+    FunctionDefinition,
+    FunctionTool,
+    MCPServer,
+    ModelClient,
+    Team,
+    TeamType,
+)
 
 AUTOGEN_MODELS_IMPORT_PREFIX = "autogen_ext.models"
 
@@ -113,6 +121,8 @@ def find_agent_assignments(
     model_clients: dict[str, ModelClient],
     function_tools: dict[str, FunctionTool],
     all_functions: dict[str, FunctionDefinition],
+    mcp_adapters_to_servers: dict[str, MCPServer],
+    listed_mcp_tool_adapters: dict[str, MCPServer],
 ) -> dict[str, Agent]:
     """
     Tracks assignments like:
@@ -168,7 +178,9 @@ def find_agent_assignments(
 
             tools_arg = simple_function_call_assignment.kwargs.get("tools", [])
             tools = []
+            mcp_servers = []
             if isinstance(tools_arg, list):
+                # It's a list of tool variable names
                 for tool_arg in tools_arg:
                     if not isinstance(tool_arg, str):
                         continue
@@ -183,6 +195,12 @@ def find_agent_assignments(
                                 description=function_def.description,
                             )
                         )
+                    if tool_arg in mcp_adapters_to_servers:
+                        mcp_servers.append(mcp_adapters_to_servers[tool_arg])
+            if isinstance(tools_arg, str):
+                # It's a variable name which contains a list of tools
+                if tools_arg in listed_mcp_tool_adapters:
+                    mcp_servers.append(listed_mcp_tool_adapters[tools_arg])
 
             handoffs = simple_function_call_assignment.kwargs.get("handoffs", [])
             if not isinstance(handoffs, list):
@@ -195,6 +213,7 @@ def find_agent_assignments(
                 llm=llm or model,
                 system_prompt=system_prompt or instructions,
                 handoffs=handoffs,
+                mcp_servers=mcp_servers,
             )
 
     return agents
