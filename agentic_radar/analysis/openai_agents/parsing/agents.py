@@ -14,6 +14,7 @@ from ...ast_utils import (
 from ...utils import walk_python_files
 from ..exceptions import InvalidAgentConstructorError, InvalidHandoffDefinitionError
 from ..models import Agent, MCPServerInfo, Tool
+from .mcp import HOSTED_MCP_SERVER_TOOL_FUNC_NAME, _extract_hosted_mcp_tool
 
 
 class AgentsVisitor(ast.NodeVisitor):
@@ -84,7 +85,7 @@ class AgentsVisitor(ast.NodeVisitor):
 
             model = get_string_keyword_arg(agent_node, "model")
             mcp_servers = self._extract_agent_mcp_servers(agent_node)
-
+            mcp_servers += self._extract_hosted_mcp_servers_from_tools(agent_node)
             guardrails = self._extract_agent_guardrails(agent_node)
 
             return Agent(
@@ -122,6 +123,10 @@ class AgentsVisitor(ast.NodeVisitor):
 
         tools = []
         for tool_node in tools_node.elts:
+            if self._is_tool_node_hosted_mcp_server(tool_node):
+                # Skip HostedMCPServer tool here, it will be handled as MCP server
+                continue
+
             try:
                 tool = self._extract_agent_tool(tool_node)
                 tools.append(tool)
@@ -173,6 +178,17 @@ class AgentsVisitor(ast.NodeVisitor):
 
         return handoffs
 
+    def _is_tool_node_hosted_mcp_server(self, tool_node: ast.AST) -> bool:
+        return (
+            isinstance(tool_node, ast.Call)
+            and is_simple_identifier(tool_node.func)
+            and get_simple_identifier_name(tool_node.func)
+            == HOSTED_MCP_SERVER_TOOL_FUNC_NAME
+        ) or (
+            is_simple_identifier(tool_node)
+            and get_simple_identifier_name(tool_node) in self.mcp_servers
+        )
+
     def _extract_agent_mcp_servers(self, agent_node: ast.Call) -> list[MCPServerInfo]:
         mcp_servers_node = get_keyword_arg_value(agent_node, "mcp_servers")
         if not mcp_servers_node or not isinstance(mcp_servers_node, ast.List):
@@ -222,6 +238,34 @@ class AgentsVisitor(ast.NodeVisitor):
             return self.predefined_tools[func_name]
         else:
             raise TypeError(f"Unknown tool node type: {type(tool_node)}")
+
+    def _extract_hosted_mcp_servers_from_tools(
+        self, agent_node: ast.Call
+    ) -> list[MCPServerInfo]:
+        # Handle special case: HostedMCPServer tool
+        mcp_servers: list[MCPServerInfo] = []
+        tools_node = get_keyword_arg_value(agent_node, "tools")
+        if not tools_node or not isinstance(tools_node, ast.List):
+            return mcp_servers
+        for tool_node in tools_node.elts:
+            if (
+                isinstance(tool_node, ast.Call)
+                and is_simple_identifier(tool_node.func)
+                and get_simple_identifier_name(tool_node.func)
+                == HOSTED_MCP_SERVER_TOOL_FUNC_NAME
+            ):
+                hosted_mcp_info = _extract_hosted_mcp_tool(tool_node)
+                if hosted_mcp_info:
+                    mcp_servers.append(hosted_mcp_info)
+            elif (
+                is_simple_identifier(tool_node)
+                and get_simple_identifier_name(tool_node) in self.mcp_servers
+            ):
+                mcp_server_var = get_simple_identifier_name(tool_node)
+                mcp_server_info = self.mcp_servers[mcp_server_var]
+                mcp_servers.append(mcp_server_info)
+
+        return mcp_servers
 
     def _extract_handoff(self, handoff_node: ast.AST) -> str:
         """Extract handoffs from AST node.
