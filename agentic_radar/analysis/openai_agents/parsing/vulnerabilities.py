@@ -122,57 +122,66 @@ The second field is "mitigated", which is a boolean in which you say if there is
     }
 }"""
 
+
 def promptify_guardrail(guardrail: Guardrail) -> str:
     guardrail_text = ""
     if guardrail.uses_agent:
-        guardrail_text+=f"""-Guardrail type: AI agent
+        guardrail_text += f"""-Guardrail type: AI agent
 -Guardrail AI agent instructions: {guardrail.agent_instructions}
 """
-    
+
     else:
         if guardrail._guardrail_function_def:
-            guardrail_text+=f"""-Guardrail type: Python function
+            guardrail_text += f"""-Guardrail type: Python function
 -Guardrail function definition: {ast.unparse(guardrail._guardrail_function_def)}
 """
-    
+
     return guardrail_text
 
-def get_agent_vulnerabilities(agent_assignments: dict[str, Agent], guardrails: dict[str, Guardrail]) -> None:
 
+def get_agent_vulnerabilities(
+    agent_assignments: dict[str, Agent], guardrails: dict[str, Guardrail]
+) -> None:
     print("Analyzing Agent vulnerabilities and mitigations")
 
     try:
         client = (
-                openai.AzureOpenAI() if "AZURE_OPENAI_API_KEY" in os.environ else openai.OpenAI()
-            )
+            openai.AzureOpenAI()
+            if "AZURE_OPENAI_API_KEY" in os.environ
+            else openai.OpenAI()
+        )
     except openai.OpenAIError:
         print("Analysis stopped because the OpenAI client could not be initialized")
         return
-    
+
     for agent_name, agent in agent_assignments.items():
         if agent.is_guardrail:
             continue
         agent_guardrails = []
         for guardrail_name in agent.guardrails["output"]:
-            if (value := guardrails.get(guardrail_name)):
+            if value := guardrails.get(guardrail_name):
                 agent_guardrails.append(value)
         for guardrail_name in agent.guardrails["input"]:
-            if (value := guardrails.get(guardrail_name)):
+            if value := guardrails.get(guardrail_name):
                 agent_guardrails.append(value)
         agent_guardrails_prompt = "List of security guardrails:"
         for i, agent_guardrail in enumerate(agent_guardrails):
-            agent_guardrails_prompt+=f"""
+            agent_guardrails_prompt += f"""
 {i+1}. {agent_guardrail.name}
 """
-            agent_guardrails_prompt+=promptify_guardrail(agent_guardrail)
+            agent_guardrails_prompt += promptify_guardrail(agent_guardrail)
 
         response = client.chat.completions.create(
-            messages = [
+            messages=[
                 {"role": "system", "content": GUARDRAILS_SYSTEM_PROMPT},
-                {"role": "user", "content": "The list of guardrails for the system:\n"+agent_guardrails_prompt}
+                {
+                    "role": "user",
+                    "content": "The list of guardrails for the system:\n"
+                    + agent_guardrails_prompt,
+                },
             ],
-            model = "gpt-4o",
-            response_format = {"type": "json_object"}
+            model="gpt-4o",
+            response_format={"type": "json_object"},
         )
 
         content = response.choices[0].message.content or "{}"
@@ -180,12 +189,20 @@ def get_agent_vulnerabilities(agent_assignments: dict[str, Agent], guardrails: d
         guardrails_response = json.loads(content)
 
         response = client.chat.completions.create(
-            messages = [
+            messages=[
                 {"role": "system", "content": INSTRUCTIONS_SYSTEM_PROMPT},
-                {"role": "user", "content": "The system prompt/instructions of the AI agent:\n"+ (agent.instructions if agent.instructions else "There are no instructions for this agent, so respond that there are no mitigations.")}
+                {
+                    "role": "user",
+                    "content": "The system prompt/instructions of the AI agent:\n"
+                    + (
+                        agent.instructions
+                        if agent.instructions
+                        else "There are no instructions for this agent, so respond that there are no mitigations."
+                    ),
+                },
             ],
-            model = "gpt-4o",
-            response_format = {"type": "json_object"}
+            model="gpt-4o",
+            response_format={"type": "json_object"},
         )
 
         content = response.choices[0].message.content or "{}"
@@ -195,29 +212,41 @@ def get_agent_vulnerabilities(agent_assignments: dict[str, Agent], guardrails: d
         for vulnerability in guardrails_response:
             mitigation_level: MitigationLevel = "None"
             if vulnerability in instructions_response:
-                if guardrails_response[vulnerability]["mitigated"] and instructions_response[vulnerability]["mitigated"]:
+                if (
+                    guardrails_response[vulnerability]["mitigated"]
+                    and instructions_response[vulnerability]["mitigated"]
+                ):
                     mitigation_level = "Full"
-                elif guardrails_response[vulnerability]["mitigated"] or instructions_response[vulnerability]["mitigated"]:
+                elif (
+                    guardrails_response[vulnerability]["mitigated"]
+                    or instructions_response[vulnerability]["mitigated"]
+                ):
                     mitigation_level = "Partial"
 
                 agent_vulnerability = AgentVulnerability(
                     name=vulnerability,
                     mitigation_level=mitigation_level,
-                    guardrail_explanation=guardrails_response[vulnerability]["explanation"],
-                    instruction_explanation=instructions_response[vulnerability]["explanation"]
+                    guardrail_explanation=guardrails_response[vulnerability][
+                        "explanation"
+                    ],
+                    instruction_explanation=instructions_response[vulnerability][
+                        "explanation"
+                    ],
                 )
 
                 agent.vulnerabilities.append(agent_vulnerability)
-            
+
             else:
                 if guardrails_response[vulnerability]["mitigated"]:
                     mitigation_level = "Full"
-                
+
                 agent_vulnerability = AgentVulnerability(
                     name=vulnerability,
                     mitigation_level=mitigation_level,
-                    guardrail_explanation=guardrails_response[vulnerability]["explanation"],
-                    instruction_explanation=""
+                    guardrail_explanation=guardrails_response[vulnerability][
+                        "explanation"
+                    ],
+                    instruction_explanation="",
                 )
 
                 agent.vulnerabilities.append(agent_vulnerability)

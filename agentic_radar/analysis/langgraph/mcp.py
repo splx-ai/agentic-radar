@@ -7,16 +7,13 @@ from agentic_radar.analysis.utils import walk_python_files_and_notebooks
 STDIO_SERVER_PARAMS_CLASS = "mcp.StdioServerParameters"
 MULTISERVER_MCP_CLIENT_CLASS = "langchain_mcp_adapters.client.MultiServerMCPClient"
 
+
 class MCPServerInstanceTracker(ast.NodeVisitor):
     """
     A node visitor that finds instances of connections to MCP servers.
     """
 
-    def __init__(
-        self,
-        stdio_server_params_fqcn: str,
-        multiserver_mcp_client_fqcn: str
-    ):
+    def __init__(self, stdio_server_params_fqcn: str, multiserver_mcp_client_fqcn: str):
         self.stdio_server_params_fqcn = stdio_server_params_fqcn
         self.multiserver_mcp_client_fqcn = multiserver_mcp_client_fqcn
 
@@ -25,7 +22,7 @@ class MCPServerInstanceTracker(ast.NodeVisitor):
 
         self.stdio_server_params_instances: List[dict] = []
 
-        self.multiserver_mcp_client_instances: dict[str,dict] = {}
+        self.multiserver_mcp_client_instances: dict[str, dict] = {}
 
         self.mcp_client_vars: set[str] = set()
 
@@ -63,24 +60,30 @@ class MCPServerInstanceTracker(ast.NodeVisitor):
         callee_fq = self._resolve_fq_name(node.func)
 
         if callee_fq == self.stdio_server_params_fqcn:
-            self.stdio_server_params_instances.append({
-                    kw.arg: ast.unparse(kw.value) for kw in node.keywords
-                }
+            self.stdio_server_params_instances.append(
+                {kw.arg: ast.unparse(kw.value) for kw in node.keywords}
             )
 
         elif isinstance(node.func, ast.Attribute):
-            if isinstance(node.func.value, ast.Name) and node.func.value.id in self.mcp_client_vars:
+            if (
+                isinstance(node.func.value, ast.Name)
+                and node.func.value.id in self.mcp_client_vars
+            ):
                 if node.func.attr == "connect_to_server":
                     if node.args:
                         arg0 = node.args[0]
-                        if isinstance(arg0, ast.Constant) and isinstance(arg0.value, str):
+                        if isinstance(arg0, ast.Constant) and isinstance(
+                            arg0.value, str
+                        ):
                             server_name = arg0.value
                         else:
                             server_name = ast.unparse(arg0)
                     else:
                         server_name = "<missing_server_name>"
 
-                    self.multiserver_mcp_client_instances[server_name] = {kw.arg: ast.unparse(kw.value) for kw in node.keywords}
+                    self.multiserver_mcp_client_instances[server_name] = {
+                        kw.arg: ast.unparse(kw.value) for kw in node.keywords
+                    }
 
         self.generic_visit(node)
 
@@ -110,14 +113,22 @@ class MCPServerInstanceTracker(ast.NodeVisitor):
         for key_node, value_node in zip(config_dict.keys, config_dict.values):
             if key_node is None:
                 continue
-            server_name = ast.literal_eval(key_node) if isinstance(key_node, ast.Constant) else ast.unparse(key_node)
+            server_name = (
+                ast.literal_eval(key_node)
+                if isinstance(key_node, ast.Constant)
+                else ast.unparse(key_node)
+            )
 
             if isinstance(value_node, ast.Dict):
                 config = {}
                 for k, v in zip(value_node.keys, value_node.values):
                     if k is None:
                         continue
-                    key_str = ast.literal_eval(k) if isinstance(k, ast.Constant) else ast.unparse(k)
+                    key_str = (
+                        ast.literal_eval(k)
+                        if isinstance(k, ast.Constant)
+                        else ast.unparse(k)
+                    )
                     val_str = ast.unparse(v)
                     config[key_str] = val_str
             else:
@@ -140,20 +151,20 @@ class MCPServerInstanceTracker(ast.NodeVisitor):
             return node.attr
         return ""
 
+
 def get_all_mcp_servers_from_directory(
     directory_path: str,
 ) -> Dict[str, str]:
-
     all_mcp_servers = {}
 
     for file_path in walk_python_files_and_notebooks(directory_path):
         mcp_tracker = MCPServerInstanceTracker(
-            STDIO_SERVER_PARAMS_CLASS,
-            MULTISERVER_MCP_CLIENT_CLASS)
+            STDIO_SERVER_PARAMS_CLASS, MULTISERVER_MCP_CLIENT_CLASS
+        )
         if file_path.endswith(".py"):
             with open(file_path, "r", encoding="utf-8") as f:
                 file_content = f.read()
-                
+
                 tree = ast.parse(file_content)
                 mcp_tracker.visit(tree)
 
@@ -169,11 +180,15 @@ def get_all_mcp_servers_from_directory(
                 tree = ast.parse(file_content)
                 mcp_tracker.visit(tree)
 
-        for i, stdio_server_params in enumerate(mcp_tracker.stdio_server_params_instances):
+        for i, stdio_server_params in enumerate(
+            mcp_tracker.stdio_server_params_instances
+        ):
             all_mcp_servers[f"Unnamed Server {i+1}"] = str(stdio_server_params)
 
-        for server_name, server_parameters in mcp_tracker.multiserver_mcp_client_instances.items():
+        for (
+            server_name,
+            server_parameters,
+        ) in mcp_tracker.multiserver_mcp_client_instances.items():
             all_mcp_servers[server_name] = str(server_parameters)
-
 
     return all_mcp_servers

@@ -1,7 +1,10 @@
+import json
 from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel, Field
+
+from agentic_radar.analysis.crewai.models.mcp import CrewAIMCPServer
 
 from .tool import CrewAITool
 
@@ -11,6 +14,7 @@ class CrewAINodeType(str, Enum):
     TOOL = "Tool"
     CUSTOM_TOOL = "CustomTool"
     BASIC = "Basic"
+    MCP = "MCP"
 
 
 class CrewAINode(BaseModel):
@@ -58,6 +62,31 @@ class CrewAIGraph(BaseModel):
             description = tool.description
             self.nodes.add(
                 CrewAINode(name=tool_name, type=tool_type, description=description)
+            )
+
+    def create_mcp_servers(self, mcp_servers: list[CrewAIMCPServer]):
+        seen_mcp_names = set()
+        for mcp_server in mcp_servers:
+            if mcp_server.name not in seen_mcp_names:
+                seen_mcp_names.add(mcp_server.name)
+                self.nodes.add(
+                    CrewAINode(
+                        name=mcp_server.name,
+                        type=CrewAINodeType.MCP,
+                        description=json.dumps(mcp_server.params),
+                    )
+                )
+
+    def connect_agent_to_mcps(self, agent: str, mcp_servers: list[CrewAIMCPServer]):
+        if not self.is_agent_in_graph(agent):
+            return
+
+        for mcp_server in mcp_servers:
+            mcp_name = mcp_server.name
+            self.edges.add(
+                CrewAIEdge(
+                    start_node=agent, end_node=mcp_name, condition="mcp_connection"
+                )
             )
 
     def connect_agent_to_tools(self, agent: str, tools: list[CrewAITool]):

@@ -34,6 +34,8 @@ def convert_graph(
             node_type = NodeType.CUSTOM_TOOL
         elif node.type == CrewAINodeType.BASIC:
             node_type = NodeType.BASIC
+        elif node.type == CrewAINodeType.MCP:
+            node_type = NodeType.MCP_SERVER
         else:
             node_type = NodeType.DEFAULT
 
