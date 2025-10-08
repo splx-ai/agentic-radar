@@ -1,3 +1,5 @@
+import re
+
 from agentic_radar.graph import (
     Agent,
     EdgeDefinition,
@@ -102,6 +104,22 @@ def _add_agent_node(
         label=agent.name,
     )
     nodes.append(agent_node)
+
+    for mcp_server in agent.mcp_servers:
+        name_from_desc = re.findall(
+            r"\"@modelcontextprotocol/(.+)\"", mcp_server.description
+        )
+        name = name_from_desc[0] if name_from_desc else mcp_server.name
+        mcp_node = NodeDefinition(
+            name=name,
+            label=name,
+            description=mcp_server.description,
+            type=NodeType.MCP_SERVER,
+        )
+        nodes.append(mcp_node)
+        edges.append(
+            EdgeDefinition(start=agent.name, end=mcp_node.name, condition="uses_mcp")
+        )
 
     if agent.tools:
         for tool in agent.tools:

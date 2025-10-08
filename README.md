@@ -315,7 +315,7 @@ This matrix shows which agentic frameworks support all the Agentic Radar feature
 | CrewAI         | ✅          | ❌         | ✅          |      ❌        |
 | n8n            | ✅          | ❌          | ❌          |     ❌        |
 | LangGraph      | ✅          | ✅          | ❌          |     ❌         |
-| Autogen     | ✅          | ❌          | ✅          |     ❌         |
+| Autogen     | ✅          | ✅          | ✅          |     ❌         |
 
 Are there some features you would like to see happen first? Vote anonymously [here](https://strawpoll.com/w4nWWMqqlnA) or [open a GitHub Issue](https://github.com/splx-ai/agentic-radar/issues/new/choose).
 

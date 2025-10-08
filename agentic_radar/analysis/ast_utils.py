@@ -198,8 +198,8 @@ class SimpleFunctionCallAssignment(BaseModel):
 
     target: str
     function_name: str
-    args: list[Union[str, int, float, bool, list, None]]
-    kwargs: dict[str, Union[str, int, float, bool, list, None]]
+    args: list[Union[str, int, float, bool, list, dict, None]]
+    kwargs: dict[str, Union[str, int, float, bool, list, dict, None]]
 
     def __str__(self) -> str:
         args_str = ", ".join(repr(arg) for arg in self.args)
@@ -243,28 +243,45 @@ def parse_simple_function_call_assignment(
     """
     if isinstance(node, ast.Assign) and len(node.targets) == 1:
         target = node.targets[0]
-        if isinstance(target, ast.Name) and isinstance(node.value, ast.Call):
-            if not is_simple_identifier(node.value.func):
+        if not isinstance(target, ast.Name):
+            return None
+
+        if isinstance(node.value, ast.Await):
+            # Unwrap await expressions
+            value = node.value.value
+        else:
+            value = node.value
+
+        if not isinstance(value, ast.Call):
+            return None
+
+        if not is_simple_identifier(value.func):
+            return None
+        function_name = get_simple_identifier_name(value.func)
+
+        def extract_value(
+            val: ast.AST
+        ) -> Union[str, int, float, bool, list, dict, None]:
+            if isinstance(val, ast.Constant):
+                return val.value
+            elif is_simple_identifier(val):
+                return get_simple_identifier_name(val)
+            elif isinstance(val, (ast.List, ast.Tuple)):
+                return [extract_value(item) for item in val.elts]
+            elif isinstance(val, ast.Dict):
+                return {
+                    extract_value(k): extract_value(v)
+                    for k, v in zip(val.keys, val.values)
+                    if isinstance(k, (ast.Constant, ast.Name, ast.Attribute))
+                }
+            else:
                 return None
-            function_name = get_simple_identifier_name(node.value.func)
 
-            def extract_value(val: ast.AST) -> Union[str, int, float, bool, list, None]:
-                if isinstance(val, ast.Constant):
-                    return val.value
-                elif is_simple_identifier(val):
-                    return get_simple_identifier_name(val)
-                elif isinstance(val, (ast.List, ast.Tuple)):
-                    return [extract_value(item) for item in val.elts]
-                else:
-                    return None
-
-            args = [extract_value(arg) for arg in node.value.args]
-            kwargs = {
-                kw.arg: extract_value(kw.value) for kw in node.value.keywords if kw.arg
-            }
-            return SimpleFunctionCallAssignment(
-                target=target.id, function_name=function_name, args=args, kwargs=kwargs
-            )
+        args = [extract_value(arg) for arg in value.args]
+        kwargs = {kw.arg: extract_value(kw.value) for kw in value.keywords if kw.arg}
+        return SimpleFunctionCallAssignment(
+            target=target.id, function_name=function_name, args=args, kwargs=kwargs
+        )
     return None
 
 
@@ -278,3 +295,12 @@ def walk_and_parse_python_files(
                 yield file_path, tree
             except Exception:
                 continue
+
+
+def kwargize_params(args: list, kwargs: dict, param_names: list[str]) -> dict:
+    params = {param_name: None for param_name in param_names}
+    for i, arg in enumerate(args):
+        if i < len(param_names):
+            params[param_names[i]] = arg
+    params.update(kwargs)
+    return params
