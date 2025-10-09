@@ -342,6 +342,24 @@ A: The main features (static workflow analysis and vulnerability mapping) are ru
 ## Contributing 💻 
 
 [CONTRIBUTING](CONTRIBUTING.md)
+## PDF Export
+
+Agentic Radar can export generated reports to PDF. There are two supported approaches:
+
+- Playwright (recommended): renders the HTML in a headless Chromium and prints to PDF, ensuring client-side JavaScript (graph rendering) is executed. Install with:
+
+```powershell
+python -m pip install -e '.[pdf-browser]'
+python -m playwright install
+```
+
+- WeasyPrint (static): converts HTML to PDF but does not execute JavaScript. Useful when dynamic graphs are not required. Install with:
+
+```powershell
+python -m pip install -e '.[pdf]'
+```
+
+If you run `agentic-radar scan ... --export-pdf` the tool will try Playwright first, then fall back to WeasyPrint. If neither is available, the HTML report will still be generated and a message will explain how to enable PDF export.
 
 ## Code Of Conduct 📜
 [CODE OF CONDUCT](CODE_OF_CONDUCT.md)

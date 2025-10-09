@@ -99,6 +99,7 @@ class LangGraphAnalyzer(Analyzer):
             tools.append(
                 Node(
                     name=predefined_tool["name"],
+                    description=predefined_tool.get("description"),
                     type=NodeType.TOOL,
                     category=ToolType(predefined_tool["category"]),
                     vulnerabilities=[],  # TODO Add vulnerability mapping
