@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.14.0](https://github.com/splx-ai/agentic-radar/compare/v0.13.0...v0.14.0) (2025-10-08)
+
+
+### Features
+
+* **autogen:** add mcp detection for autogen agentchat ([#111](https://github.com/splx-ai/agentic-radar/issues/111)) ([902a4cd](https://github.com/splx-ai/agentic-radar/commit/902a4cd2736d05b799df8719fd86c475b7d318df))
+* **crewai:** add support for crewai mcp server detection ([#112](https://github.com/splx-ai/agentic-radar/issues/112)) ([9e1f302](https://github.com/splx-ai/agentic-radar/commit/9e1f302fb510b811aada992b8855c0cd3b24c484))
+* **n8n:** add mcp detection in n8n ([#114](https://github.com/splx-ai/agentic-radar/issues/114)) ([f3e7035](https://github.com/splx-ai/agentic-radar/commit/f3e7035b7abbed53fdd7ac8f6ce0e74237fce579))
+
+
+### Bug Fixes
+
+* **openai-agents:** improve mcp detection coverage ([#113](https://github.com/splx-ai/agentic-radar/issues/113)) ([036ed80](https://github.com/splx-ai/agentic-radar/commit/036ed80fc963434c6785c5d096e8de8e9b428d29))
+
 ## [0.13.0](https://github.com/splx-ai/agentic-radar/compare/v0.12.0...v0.13.0) (2025-07-17)
 
 
