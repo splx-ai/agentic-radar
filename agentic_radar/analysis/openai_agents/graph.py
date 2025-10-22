@@ -25,16 +25,19 @@ def create_graph_definition(
     tools = []
 
     graph_mcp_server_nodes: set[str] = set()
+    seen_tools: set[str] = set()
 
     for agent in agent_assignments.values():
         nodes.append(_get_agent_node(agent))
 
     for agent in agent_assignments.values():
         for tool in agent.tools:
-            category = tool_categories.get(tool.name, ToolType.DEFAULT)
-            tool_node = _get_tool_node(tool, category)
-            nodes.append(tool_node)
-            tools.append(tool_node.model_copy(deep=True))
+            if tool.name not in seen_tools:
+                category = tool_categories.get(tool.name, ToolType.DEFAULT)
+                tool_node = _get_tool_node(tool, category)
+                nodes.append(tool_node)
+                seen_tools.add(tool.name)
+                tools.append(tool_node.model_copy(deep=True))
             edges.append(
                 EdgeDefinition(start=agent.name, end=tool.name, condition="tool_call")
             )
