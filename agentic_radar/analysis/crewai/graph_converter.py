@@ -51,6 +51,7 @@ def convert_graph(
             label=node.name,
             category=category,
             description=node.description,
+            vulnerabilities=[],  # explicit empty list so downstream fallback sees attribute
         )
 
         nodes.append(output_node.model_copy(deep=True))

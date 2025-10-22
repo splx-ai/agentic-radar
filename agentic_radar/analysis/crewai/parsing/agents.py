@@ -360,6 +360,7 @@ def collect_agents(
         str, dict[str, PartialCrewAIAgent]
     ] = collect_agents_from_config(root_dir)
 
+    # First pass: collect agents from code and note yaml references
     for file in walk_python_files(root_dir):
         with open(file, "r") as f:
             try:
@@ -376,7 +377,7 @@ def collect_agents(
             agents_visitor.visit(tree)
             code_agents = agents_visitor.agents
 
-            # Add agents from found YAML config files
+            # Add agents from found YAML config files (merge code & yaml or yaml-only)
             for found_config_path in agents_visitor.yaml_config_paths:
                 for (
                     config_path,
@@ -407,9 +408,12 @@ def collect_agents(
 
                         all_agents[agent_name] = agent
 
-            # Add agents from code
+            # Add agents from code only (where not already created / merged)
             for agent_name, code_agent in code_agents.items():
                 if agent_name in all_agents:
+                    continue
+                # Skip pure placeholder definitions (all critical text fields missing)
+                if not any([code_agent.role, code_agent.goal, code_agent.backstory]):
                     continue
                 try:
                     agent = CrewAIAgent.from_partial_agent(code_agent)
@@ -420,5 +424,19 @@ def collect_agents(
                     continue
 
                 all_agents[agent_name] = agent
+
+    # Second pass: include any remaining YAML-defined agents that were not referenced in code
+    for config_path, yaml_agents in yaml_file_to_agents.items():
+        for agent_name, yaml_agent in yaml_agents.items():
+            if agent_name in all_agents:
+                continue
+            try:
+                agent = CrewAIAgent.from_partial_agent(yaml_agent)
+            except (ValidationError, ValueError) as e:
+                print(
+                    f"Cannot create agent {agent_name} from YAML config (unreferenced): {yaml_agent}. Error: {e}"
+                )
+                continue
+            all_agents[agent_name] = agent
 
     return all_agents
