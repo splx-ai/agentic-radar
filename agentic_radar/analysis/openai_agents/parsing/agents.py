@@ -109,8 +109,6 @@ class AgentsVisitor(ast.NodeVisitor):
 
         if isinstance(name_node, ast.Constant) and isinstance(name_node.value, str):
             return name_node.value
-        elif isinstance(name_node, ast.Str):
-            return name_node.s
         else:
             raise ValueError(
                 f"Unrecognized type of name node for Agent: {type(name_node)}. Node representing a string is required."

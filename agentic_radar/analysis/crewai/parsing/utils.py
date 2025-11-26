@@ -100,14 +100,12 @@ def get_string_kwarg_value(node: ast.Call, kwarg_name: str) -> Optional[str]:
     """
     for kwarg in node.keywords:
         if isinstance(kwarg, ast.keyword) and kwarg.arg == kwarg_name:
-            if not isinstance(kwarg.value, (ast.Str, ast.Constant)):
+            if not isinstance(kwarg.value, ast.Constant):
                 raise TypeError(
-                    f"Wrong type for string keyword argument: {kwarg_name}. Expected ast.Str or ast.Constant, got {type(kwarg.value).__name__}"
+                    f"Wrong type for string keyword argument: {kwarg_name}. Expected ast.Constant, got {type(kwarg.value).__name__}"
                 )
 
-            if isinstance(kwarg.value, ast.Str):
-                return kwarg.value.s
-            elif isinstance(kwarg.value, ast.Constant) and isinstance(
+            if isinstance(kwarg.value, ast.Constant) and isinstance(
                 kwarg.value.value, str
             ):
                 return kwarg.value.value
@@ -127,13 +125,7 @@ def get_bool_kwarg_value(node: ast.Call, kwarg_name: str) -> Optional[bool]:
     """
     for kwarg in node.keywords:
         if isinstance(kwarg, ast.keyword) and kwarg.arg == kwarg_name:
-            if isinstance(kwarg.value, ast.NameConstant):  # Python 3.7 and earlier
-                if kwarg.value.value is True or kwarg.value.value is False:
-                    return kwarg.value.value
-                raise TypeError(
-                    f"Wrong type for boolean keyword argument: {kwarg_name}. Expected True or False, got {kwarg.value.value}"
-                )
-            elif isinstance(kwarg.value, ast.Constant):  # Python 3.8+
+            if isinstance(kwarg.value, ast.Constant):
                 if isinstance(kwarg.value.value, bool):
                     return kwarg.value.value
                 raise TypeError(
@@ -146,6 +138,6 @@ def get_bool_kwarg_value(node: ast.Call, kwarg_name: str) -> Optional[bool]:
                 return kwarg.value.id == "True"
             else:
                 raise TypeError(
-                    f"Wrong type for boolean keyword argument: {kwarg_name}. Expected ast.NameConstant, ast.Constant, or ast.Name with id 'True'/'False', got {type(kwarg.value).__name__}"
+                    f"Wrong type for boolean keyword argument: {kwarg_name}. Expected ast.Constant, or ast.Name with id 'True'/'False', got {type(kwarg.value).__name__}"
                 )
     return None
