@@ -541,7 +541,7 @@ description = "The Real First Universal Charset Detector. Open, modern and activ
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and python_version < \"3.13\" and (extra == \"crewai\" or extra == \"openai-agents\") or extra == \"openai-agents\""
+markers = "python_version >= \"3.10\" and (python_version < \"3.13\" or extra == \"openai-agents\") and (extra == \"crewai\" or extra == \"openai-agents\")"
 files = [
     {file = "charset_normalizer-3.4.4-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:e824f1492727fa856dd6eda4f7cee25f8518a12f3c4a56a74e8095695089cf6d"},
     {file = "charset_normalizer-3.4.4-cp310-cp310-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:4bd5d4137d500351a30687c2d3971758aac9a19208fc110ccb9d7188fbe709e8"},
@@ -750,7 +750,7 @@ files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
 ]
-markers = {main = "python_version >= \"3.10\" and python_version < \"3.13\" and (extra == \"crewai\" or extra == \"openai-agents\") and os_name == \"nt\" or platform_system == \"Windows\" or python_version >= \"3.10\" and python_version < \"3.13\" and (extra == \"crewai\" or extra == \"openai-agents\") and sys_platform == \"win32\" or extra == \"openai-agents\"", dev = "sys_platform == \"win32\""}
+markers = {main = "(python_version >= \"3.10\" or platform_system == \"Windows\") and (python_version < \"3.13\" or extra == \"openai-agents\" or platform_system == \"Windows\") and (extra == \"crewai\" or extra == \"openai-agents\" or platform_system == \"Windows\") and (os_name == \"nt\" or platform_system == \"Windows\" or sys_platform == \"win32\" or extra == \"openai-agents\")", dev = "sys_platform == \"win32\""}
 
 [[package]]
 name = "coloredlogs"
@@ -1407,28 +1407,12 @@ grpc = ["grpcio (>=1.44.0,<2.0.0)"]
 
 [[package]]
 name = "griffe"
-version = "1.14.0"
-description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
-optional = true
-python-versions = ">=3.9"
-groups = ["main"]
-markers = "python_version < \"3.13\" and extra == \"openai-agents\""
-files = [
-    {file = "griffe-1.14.0-py3-none-any.whl", hash = "sha256:0e9d52832cccf0f7188cfe585ba962d2674b241c01916d780925df34873bceb0"},
-    {file = "griffe-1.14.0.tar.gz", hash = "sha256:9d2a15c1eca966d68e00517de5d69dd1bc5c9f2335ef6c1775362ba5b8651a13"},
-]
-
-[package.dependencies]
-colorama = ">=0.4"
-
-[[package]]
-name = "griffe"
 version = "1.15.0"
 description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
 optional = true
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "python_version >= \"3.13\" and extra == \"openai-agents\""
+markers = "python_version >= \"3.10\" and extra == \"openai-agents\""
 files = [
     {file = "griffe-1.15.0-py3-none-any.whl", hash = "sha256:6f6762661949411031f5fcda9593f586e6ce8340f0ba88921a0f2ef7a81eb9a3"},
     {file = "griffe-1.15.0.tar.gz", hash = "sha256:7726e3afd6f298fbc3696e67958803e7ac843c1cfe59734b6251a40cdbfb5eea"},
@@ -2218,27 +2202,28 @@ referencing = ">=0.31.0"
 
 [[package]]
 name = "kubernetes"
-version = "34.1.0"
+version = "33.1.0"
 description = "Kubernetes python client"
 optional = true
 python-versions = ">=3.6"
 groups = ["main"]
 markers = "python_version >= \"3.10\" and extra == \"crewai\" and python_version < \"3.13\""
 files = [
-    {file = "kubernetes-34.1.0-py2.py3-none-any.whl", hash = "sha256:bffba2272534e224e6a7a74d582deb0b545b7c9879d2cd9e4aae9481d1f2cc2a"},
-    {file = "kubernetes-34.1.0.tar.gz", hash = "sha256:8fe8edb0b5d290a2f3ac06596b23f87c658977d46b5f8df9d0f4ea83d0003912"},
+    {file = "kubernetes-33.1.0-py2.py3-none-any.whl", hash = "sha256:544de42b24b64287f7e0aa9513c93cb503f7f40eea39b20f66810011a86eabc5"},
+    {file = "kubernetes-33.1.0.tar.gz", hash = "sha256:f64d829843a54c251061a8e7a14523b521f2dc5c896cf6d65ccf348648a88993"},
 ]
 
 [package.dependencies]
 certifi = ">=14.05.14"
 durationpy = ">=0.7"
 google-auth = ">=1.0.1"
+oauthlib = ">=3.2.2"
 python-dateutil = ">=2.5.3"
 pyyaml = ">=5.4.1"
 requests = "*"
 requests-oauthlib = "*"
 six = ">=1.9.0"
-urllib3 = ">=1.24.2,<2.4.0"
+urllib3 = ">=1.24.2"
 websocket-client = ">=0.32.0,<0.40.0 || >0.40.0,<0.41.dev0 || >=0.43.dev0"
 
 [package.extras]
@@ -3244,7 +3229,7 @@ description = "OpenAI Agents SDK"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"openai-agents\""
+markers = "python_version >= \"3.10\" and extra == \"openai-agents\""
 files = [
     {file = "openai_agents-0.6.1-py3-none-any.whl", hash = "sha256:7bde01c8d2fd723b0c72c9b207dcfeb12a8d211078f5d259945fb163a6f52b89"},
     {file = "openai_agents-0.6.1.tar.gz", hash = "sha256:067d2b66669c390c840effeb02d80939b4ac4a4db53e9735b74895a6d916b840"},
@@ -5046,7 +5031,7 @@ description = "Python HTTP for Humans."
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and python_version < \"3.13\" and (extra == \"crewai\" or extra == \"openai-agents\") or extra == \"openai-agents\""
+markers = "python_version >= \"3.10\" and (python_version < \"3.13\" or extra == \"openai-agents\") and (extra == \"crewai\" or extra == \"openai-agents\")"
 files = [
     {file = "requests-2.32.5-py3-none-any.whl", hash = "sha256:2462f94637a34fd532264295e186976db0f5d453d1cdd31473c85a6a161affb6"},
     {file = "requests-2.32.5.tar.gz", hash = "sha256:dbba0bac56e100853db0ea71b82b4dfd5fe2bf6d3754a8893c3af500cec7d7cf"},
@@ -5672,7 +5657,7 @@ description = "Typing stubs for requests"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"openai-agents\""
+markers = "python_version >= \"3.10\" and extra == \"openai-agents\""
 files = [
     {file = "types_requests-2.32.4.20250913-py3-none-any.whl", hash = "sha256:78c9c1fffebbe0fa487a418e0fa5252017e9c60d1a2da394077f1780f655d7e1"},
     {file = "types_requests-2.32.4.20250913.tar.gz", hash = "sha256:abd6d4f9ce3a9383f269775a9835a4c24e5cd6b9f647d64f88aa4613c33def5d"},
@@ -5710,31 +5695,12 @@ typing-extensions = ">=4.12.0"
 
 [[package]]
 name = "urllib3"
-version = "2.3.0"
-description = "HTTP library with thread-safe connection pooling, file post, and more."
-optional = true
-python-versions = ">=3.9"
-groups = ["main"]
-markers = "(python_version >= \"3.10\" or extra == \"openai-agents\") and python_version < \"3.13\" and (extra == \"crewai\" or extra == \"openai-agents\")"
-files = [
-    {file = "urllib3-2.3.0-py3-none-any.whl", hash = "sha256:1cee9ad369867bfdbbb48b7dd50374c0967a0bb7710050facf0dd6911440e3df"},
-    {file = "urllib3-2.3.0.tar.gz", hash = "sha256:f8c5449b3cf0861679ce7e0503c7b44b5ec981bec0d1d3795a07f1ba96f0204d"},
-]
-
-[package.extras]
-brotli = ["brotli (>=1.0.9) ; platform_python_implementation == \"CPython\"", "brotlicffi (>=0.8.0) ; platform_python_implementation != \"CPython\""]
-h2 = ["h2 (>=4,<5)"]
-socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
-zstd = ["zstandard (>=0.18.0)"]
-
-[[package]]
-name = "urllib3"
 version = "2.5.0"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "python_version >= \"3.13\" and extra == \"openai-agents\""
+markers = "python_version >= \"3.10\" and (python_version < \"3.13\" or extra == \"openai-agents\") and (extra == \"crewai\" or extra == \"openai-agents\")"
 files = [
     {file = "urllib3-2.5.0-py3-none-any.whl", hash = "sha256:e6b01673c0fa6a13e374b50871808eb3bf7046c4b125b216f6bf1cc604cff0dc"},
     {file = "urllib3-2.5.0.tar.gz", hash = "sha256:3fc47733c7e419d4bc3f6b3dc2b4f890bb743906a30d56ba4a5bfa4bbff92760"},
@@ -5783,7 +5749,7 @@ description = "The lightning-fast ASGI server."
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "python_version >= \"3.10\" and (python_version < \"3.13\" or extra == \"openai-agents\") and sys_platform != \"emscripten\" and (extra == \"crewai\" or extra == \"openai-agents\")"
+markers = "python_version >= \"3.10\" and (python_version < \"3.13\" or extra == \"openai-agents\") and (python_version < \"3.13\" or sys_platform != \"emscripten\") and (extra == \"crewai\" or sys_platform != \"emscripten\") and (extra == \"crewai\" or extra == \"openai-agents\")"
 files = [
     {file = "uvicorn-0.38.0-py3-none-any.whl", hash = "sha256:48c0afd214ceb59340075b4a052ea1ee91c16fbc2a9b1469cca0e54566977b02"},
     {file = "uvicorn-0.38.0.tar.gz", hash = "sha256:fd97093bdd120a2609fc0d3afe931d4d4ad688b6e75f0f929fde1bc36fe0e91d"},
@@ -6304,4 +6270,4 @@ openai-agents = ["openai-agents"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9"
-content-hash = "7bc4309e7a53b3348ef6b5f6525b40cde82fa314526d02146c77528303594591"
+content-hash = "3eb910ffe34e0f44d270fa48c019116fe65a52547a6f50c41939e794b4676e36"
