@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.14.1](https://github.com/splx-ai/agentic-radar/compare/v0.14.0...v0.14.1) (2025-11-27)
+
+
+### Bug Fixes
+
+* **openai-agents:** prevent duplicate tool nodes in graph definition ([#118](https://github.com/splx-ai/agentic-radar/issues/118)) ([eb3184d](https://github.com/splx-ai/agentic-radar/commit/eb3184d5a3fa7f65b9a7e03035ca716a501d04a9))
+* update vulnerable dependencies ([#120](https://github.com/splx-ai/agentic-radar/issues/120)) ([fc6788e](https://github.com/splx-ai/agentic-radar/commit/fc6788ef18711510a88bb5f9b9e783b8b07250a1))
+
 ## [0.14.0](https://github.com/splx-ai/agentic-radar/compare/v0.13.0...v0.14.0) (2025-10-08)
 
 
