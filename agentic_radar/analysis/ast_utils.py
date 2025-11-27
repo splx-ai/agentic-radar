@@ -303,21 +303,28 @@ def parse_call(
 
     function_name = get_simple_identifier_name(call_node.func)
 
-    def extract_value(val: ast.AST) -> Union[str, int, float, bool, list, dict, None]:
+    AllowedValue = Union[str, int, float, bool, list, dict[str, str], None]
+
+    def extract_value(val: ast.AST) -> AllowedValue:
         if isinstance(val, ast.Constant):
-            return val.value
-        elif is_simple_identifier(val):
-            return get_simple_identifier_name(val)
-        elif isinstance(val, (ast.List, ast.Tuple)):
-            return [extract_value(item) for item in val.elts]
-        elif isinstance(val, ast.Dict):
-            return {
-                extract_value(k): extract_value(v)
-                for k, v in zip(val.keys, val.values)
-                if isinstance(k, (ast.Constant, ast.Name, ast.Attribute))
-            }
-        else:
+            if isinstance(val.value, (str, int, float, bool)) or val.value is None:
+                return val.value
             return None
+        if is_simple_identifier(val):
+            return get_simple_identifier_name(val)
+        if isinstance(val, (ast.List, ast.Tuple)):
+            return [extract_value(item) for item in val.elts]
+        if isinstance(val, ast.Dict):
+            result: dict[str, str] = {}
+            for key_node, value_node in zip(val.keys, val.values):
+                if key_node is None or value_node is None:
+                    continue
+                key_val = extract_value(key_node)
+                val_val = extract_value(value_node)
+                if isinstance(key_val, str) and isinstance(val_val, str):
+                    result[key_val] = val_val
+            return result
+        return None
 
     args = [extract_value(arg) for arg in call_node.args]
     kwargs = {kw.arg: extract_value(kw.value) for kw in call_node.keywords if kw.arg}

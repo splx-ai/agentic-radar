@@ -49,7 +49,12 @@ def parse_mcp_params(node: Union[ast.Dict, ast.Call]) -> dict[str, str]:
     params: dict[str, str] = {}
     if isinstance(node, ast.Dict):
         for key, value in zip(node.keys, node.values):
-            if isinstance(key, ast.Constant) and isinstance(value, ast.Constant):
+            if (
+                isinstance(key, ast.Constant)
+                and isinstance(value, ast.Constant)
+                and isinstance(key.value, str)
+                and isinstance(value.value, str)
+            ):
                 params[key.value] = value.value
     else:
         parsed_call = parse_call(node)

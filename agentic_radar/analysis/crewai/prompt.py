@@ -1,3 +1,5 @@
+from typing import cast
+
 from agentic_radar.analysis.crewai.models import CrewAIAgent
 
 
@@ -10,7 +12,7 @@ def build_system_prompt(agent: CrewAIAgent) -> str:
     i18n = I18N()
     prompts = Prompts(
         i18n=i18n,
-        tools=agent.tools,
+        # tools=agent.tools,
         system_template=agent.system_template,
         prompt_template=agent.prompt_template,
         response_template=agent.response_template,
@@ -18,7 +20,7 @@ def build_system_prompt(agent: CrewAIAgent) -> str:
         agent=agent,
     )
 
-    built_prompts = prompts.task_execution()
+    built_prompts = cast(dict[str, str], prompts.task_execution())
 
     return (
         built_prompts["system"]
