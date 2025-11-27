@@ -1,5 +1,5 @@
 import json
-from typing import Any, List, Tuple
+from typing import Any, List, Optional, Tuple
 
 import importlib_resources as resources
 
@@ -17,7 +17,7 @@ def convert_nodes(
         n8n_node_types_dict = json.load(f)
 
     for n8n_node in n8n_nodes:
-        node_type_data: dict[str, Any] | None = None
+        node_type_data: Optional[dict[str, Any]] = None
         if n8n_node.type in n8n_node_types_dict:
             node_type_data = n8n_node_types_dict.get(n8n_node.type)
         elif n8n_node.type.strip("tool") in n8n_node_types_dict:
