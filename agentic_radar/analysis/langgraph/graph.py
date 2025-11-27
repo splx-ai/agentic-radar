@@ -386,6 +386,12 @@ class GraphInstanceTracker(ast.NodeVisitor):
 
         returns: List[str] = []
 
+        def _as_str(value: object) -> Optional[str]:
+            # Limit return collection to string representations mypy expects.
+            if value is None:
+                return None
+            return str(value)
+
         class ReturnCollector(ast.NodeVisitor):
             """
             Inner visitor class that visits Return nodes in the function body.
@@ -410,7 +416,9 @@ class GraphInstanceTracker(ast.NodeVisitor):
                 if return_node.value is not None and isinstance(
                     return_node.value, ast.Constant
                 ):
-                    returns.append(return_node.value.value)
+                    rendered = _as_str(return_node.value.value)
+                    if rendered is not None:
+                        returns.append(rendered)
 
             def visit_Assign(inner_self, node: ast.Assign) -> Any:
                 """
@@ -429,13 +437,12 @@ class GraphInstanceTracker(ast.NodeVisitor):
                     # If the right side is a literal list or dict, store it for later.
                     if isinstance(node.value, ast.Constant):
                         # and node.value accounts for None
-                        if (
-                            var_name not in inner_self.variables
-                            and node.value.value is not None
-                        ):
-                            inner_self.variables[var_name] = [node.value.value]
-                        elif node.value.value:
-                            inner_self.variables[var_name].append(node.value.value)
+                        rendered = _as_str(node.value.value)
+                        if rendered is not None:
+                            if var_name not in inner_self.variables:
+                                inner_self.variables[var_name] = [rendered]
+                            else:
+                                inner_self.variables[var_name].append(rendered)
                     elif isinstance(node.value, ast.Name):
                         # example var1 = var2
                         if node.value.id in inner_self.variables:
@@ -537,13 +544,16 @@ class GraphInstanceTracker(ast.NodeVisitor):
                     # If the right side is a literal list or dict, store it for later.
                     if isinstance(node.value, ast.Constant):
                         # and node.value accounts for None
-                        if (
-                            var_name not in inner_self.variables
-                            and node.value.value is not None
-                        ):
-                            inner_self.variables[var_name] = [node.value.value]
-                        elif node.value.value:
-                            inner_self.variables[var_name].append(node.value.value)
+                        rendered = (
+                            str(node.value.value)
+                            if node.value.value is not None
+                            else None
+                        )
+                        if rendered is not None:
+                            if var_name not in inner_self.variables:
+                                inner_self.variables[var_name] = [rendered]
+                            else:
+                                inner_self.variables[var_name].append(rendered)
                     elif isinstance(node.value, ast.Name):
                         # example var1 = var2
                         if node.value.id in inner_self.variables:

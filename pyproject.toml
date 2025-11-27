@@ -64,6 +64,10 @@ disable_error_code = ["import-untyped"] # pydot is untyped
 module = "openai"
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = "agents"
+ignore_missing_imports = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
