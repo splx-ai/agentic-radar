@@ -3,6 +3,7 @@ import random
 from typing import Any
 
 from pydantic import BaseModel
+import os
 
 from agents import Agent, RunContextWrapper, RunHooks, Runner, Tool, Usage, function_tool
 
@@ -69,6 +70,7 @@ def multiply_by_two(x: int) -> int:
 class FinalResult(BaseModel):
     number: int
 
+model_name = os.getenv("OPENAI_MODEL", "gemini-3.5-flash-lite")
 
 multiply_agent = Agent(
     name="Multiply Agent",

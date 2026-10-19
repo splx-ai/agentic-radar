@@ -83,6 +83,7 @@ class BaseLauncher(ABC):
                 print(f"[Launcher] Running test: {test.name}")
                 result = await test.run(agent)
                 results.append(result)
+                await asyncio.sleep(4.5)
             print(f"[Launcher] Finished running tests on agent: {agent.name}")
         print("[Launcher] All tests finished.")
         print("[Launcher] Displaying test results:")
