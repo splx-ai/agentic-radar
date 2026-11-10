@@ -221,7 +221,14 @@ def test(
         ),
     ] = None,
 ):
-    split_args = shlex.split(entrypoint_script_with_args)
+    try:
+        split_args = shlex.split(entrypoint_script_with_args)
+    except ValueError:
+        print(f"Could not parse entrypoint script: {entrypoint_script_with_args}")
+        raise typer.Exit(code=1)
+    if not split_args:
+        print("Entrypoint script '' does not exist.")
+        raise typer.Exit(code=1)
     entrypoint_script = split_args[0]
     extra_args = split_args[1:]
     if not os.path.isfile(entrypoint_script):

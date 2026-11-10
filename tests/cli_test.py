@@ -98,3 +98,15 @@ def test_autogen(params):
     result = runner.invoke(app, ["scan", "autogen", "-i", i, "-o", o])
     assert result.exit_code == 0
     assert o in result.stdout
+
+
+def test_test_command_rejects_empty_entrypoint():
+    result = runner.invoke(app, ["test", "langgraph", ""])
+    assert result.exit_code == 1
+    assert "does not exist" in result.output
+
+
+def test_test_command_rejects_unbalanced_quotes():
+    result = runner.invoke(app, ["test", "langgraph", '"unclosed'])
+    assert result.exit_code == 1
+    assert "Could not parse" in result.output
