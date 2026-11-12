@@ -34,9 +34,28 @@ from agentic_radar.report import (
 from agentic_radar.test import Test, load_tests
 from agentic_radar.utils import sanitize_graph
 
-load_dotenv()
-
 app = typer.Typer()
+
+# .env files are only loaded when passed explicitly. An implicit load_dotenv() would
+# search upward from the installed package directory, which can pick up a .env from a
+# scanned (untrusted) repository and redirect API requests, e.g. via OPENAI_BASE_URL.
+EnvFileOption = Annotated[
+    Optional[Path],
+    typer.Option(
+        "--env-file",
+        help="Path to a .env file with environment variables to load (e.g. OPENAI_API_KEY). "
+        "Variables already set in the environment take precedence. No .env file is loaded unless this option is given.",
+        exists=True,
+        dir_okay=False,
+        readable=True,
+        envvar="AGENTIC_RADAR_ENV_FILE",
+    ),
+]
+
+
+def load_env_file(env_file: Optional[Path]) -> None:
+    if env_file is not None:
+        load_dotenv(dotenv_path=env_file, override=False)
 
 
 class AgenticFramework(str, Enum):
@@ -89,7 +108,7 @@ def scan(
         bool,
         typer.Option(
             "--harden-prompts",
-            help="Harden detected system prompts. Requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY. You can set it in .env file or as an environment variable.",
+            help="Harden detected system prompts. Requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY, set as an environment variable or in a file passed via --env-file.",
             is_flag=True,
             envvar="AGENTIC_RADAR_HARDEN_PROMPTS",
         ),
@@ -103,7 +122,10 @@ def scan(
             envvar="AGENTIC_RADAR_EXPORT_GRAPH_JSON",
         ),
     ] = False,
+    env_file: EnvFileOption = None,
 ):
+    load_env_file(env_file)
+
     if not os.path.isdir(input_directory):
         print(f"Input directory '{input_directory}' does not exist.")
         raise typer.Exit(code=1)
@@ -165,7 +187,7 @@ def analyze_and_generate_report(
         if not os.getenv("OPENAI_API_KEY") and not os.getenv("AZURE_OPENAI_API_KEY"):
             print(
                 "Hardening system prompts requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY. "
-                "You can set it in .env file or as an environment variable."
+                "Set it as an environment variable or in a file passed via --env-file."
             )
             raise typer.Exit(code=1)
         print("Hardening system prompts")
@@ -220,7 +242,10 @@ def test(
             envvar="AGENTIC_RADAR_TEST_CONFIG_FILE",
         ),
     ] = None,
+    env_file: EnvFileOption = None,
 ):
+    load_env_file(env_file)
+
     split_args = shlex.split(entrypoint_script_with_args)
     entrypoint_script = split_args[0]
     extra_args = split_args[1:]
