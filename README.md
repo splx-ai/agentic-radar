@@ -217,7 +217,7 @@ Agentic Prompt Hardening automatically improves detected system prompts in your 
 > Currently supported frameworks (with more to come): OpenAI Agents, CrewAI, Autogen
 
 It is quite straightforward to use:
-1. Set your OPENAI_API_KEY environment variable by running `export OPENAI_API_KEY=<api_key>`.
+1. Set your OPENAI_API_KEY environment variable by running `export OPENAI_API_KEY=<api_key>`. Alternatively, pass a .env file explicitly with `--env-file path/to/.env` (Agentic Radar never loads a .env file automatically).
 
 2. Run Agentic Radar with the `--harden-prompts` flag, for example:
 ```sh
@@ -246,7 +246,7 @@ Currently supported for:
 The test command launches your agentic workflow with a test suite designed to simulate malicious or adversarial inputs. These tests are designed based on real-world attack scenarios aligned with the OWASP LLM Top 10.
 
 > [!NOTE]  
-> This feature requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY set as an environment variable. You can set it via command line or inside a .env file.
+> This feature requires OPENAI_API_KEY or AZURE_OPENAI_API_KEY set as an environment variable. You can set it via command line or load it from a .env file with `--env-file path/to/.env`.
 
 Test is run like:
 ```sh
