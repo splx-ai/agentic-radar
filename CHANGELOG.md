@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.2](https://github.com/splx-ai/agentic-radar/compare/v0.14.1...v0.14.2) (2026-11-13)
+
+
+### Bug Fixes
+
+* load .env only from an explicit --env-file path ([#134](https://github.com/splx-ai/agentic-radar/issues/134)) ([b99bb14](https://github.com/splx-ai/agentic-radar/commit/b99bb14fc1d9c4bab0bf2752d4547f79077960fe))
+
 ## [0.14.1](https://github.com/splx-ai/agentic-radar/compare/v0.14.0...v0.14.1) (2025-11-27)
 
 
