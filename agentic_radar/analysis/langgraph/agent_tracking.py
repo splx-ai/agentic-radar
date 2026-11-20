@@ -6,7 +6,11 @@ from agentic_radar.analysis.utils import walk_python_files_and_notebooks
 
 def find_agent_llm_variables(root_dir: str) -> set[str]:
     """
-    Scan all .py files in root_dir for assignments like `llm_var = llm_var.bind_tools(...)`.
+    Scan all .py files in root_dir for agent assignments.
+    Detects two patterns:
+    1. `llm_var = llm_var.bind_tools(...)` - traditional LangChain pattern
+    2. `agent_var = create_react_agent(...)` - LangGraph prebuilt pattern (Issue #94)
+
     Returns a set of variable names that are LLM agents.
     """
     agent_vars = set()
@@ -19,7 +23,7 @@ def find_agent_llm_variables(root_dir: str) -> set[str]:
 
         for node in ast.walk(tree):
             if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
-                # Look for pattern: var = var.bind_tools(...)
+                # Pattern 1: var = var.bind_tools(...)
                 if (
                     isinstance(node.value.func, ast.Attribute)
                     and node.value.func.attr == "bind_tools"
@@ -27,6 +31,27 @@ def find_agent_llm_variables(root_dir: str) -> set[str]:
                     and isinstance(node.targets[0], ast.Name)
                 ):
                     agent_vars.add(node.targets[0].id)
+
+                # Pattern 2: var = create_react_agent(...) - Issue #94
+                # Detects: agent_var = create_react_agent(llm, tools=[...])
+                elif (
+                    isinstance(node.value.func, ast.Name)
+                    and node.value.func.id == "create_react_agent"
+                    and len(node.targets) == 1
+                    and isinstance(node.targets[0], ast.Name)
+                ):
+                    agent_vars.add(node.targets[0].id)
+
+                # Pattern 2b: from langgraph.prebuilt import create_react_agent
+                # Can also be accessed as module.create_react_agent
+                elif (
+                    isinstance(node.value.func, ast.Attribute)
+                    and node.value.func.attr == "create_react_agent"
+                    and len(node.targets) == 1
+                    and isinstance(node.targets[0], ast.Name)
+                ):
+                    agent_vars.add(node.targets[0].id)
+
     return agent_vars
 
 
