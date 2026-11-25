@@ -4,7 +4,8 @@ from typing import Optional
 import yaml
 from pydantic import BaseModel
 
-from .test import OracleBasedTest, Test
+from .test import IndirectPoisoningTest, OracleBasedTest, Test
+from .tool_interceptor import load_indirect_payloads
 
 
 class TestConfig(BaseModel):
@@ -54,22 +55,48 @@ def _read_yaml_config(config_path: Path) -> GlobalTestConfig:
     return config
 
 
-def load_tests(config_path: Optional[Path] = None) -> list[Test]:
+def load_indirect_tests(
+    payloads_path: Optional[Path] = None,
+) -> list[Test]:
+    """Loads the indirect tool poisoning tests from a YAML payloads file."""
+    payloads = load_indirect_payloads(payloads_path=payloads_path)
+    return [
+        IndirectPoisoningTest(
+            name=f"[Indirect] {payload.name}",
+            payload=payload,
+        )
+        for payload in payloads
+    ]
+
+
+def load_tests(
+    config_path: Optional[Path] = None,
+    include_indirect: bool = False,
+    indirect_only: bool = False,
+    indirect_payloads_path: Optional[Path] = None,
+) -> list[Test]:
     """
-    Loads the tests from a YAML file or uses default tests.
+    Loads tests from a YAML file or uses default tests, optionally including
+    or exclusively running the indirect tool poisoning test suite.
     """
+    if indirect_only:
+        return load_indirect_tests(payloads_path=indirect_payloads_path)
+
     if not config_path:
-        return [
+        tests: list[Test] = [
             OracleBasedTest(**test_config.model_dump()) for test_config in DEFAULT_TESTS
         ]
+    else:
+        config = _read_yaml_config(config_path)
+        tests_config = list(config.custom_tests)
+        if config.include_default_tests:
+            tests_config += DEFAULT_TESTS
 
-    config = _read_yaml_config(config_path)
-    tests_config = config.custom_tests
-    if config.include_default_tests:
-        tests_config += DEFAULT_TESTS
+        tests = [
+            OracleBasedTest(**test_config.model_dump()) for test_config in tests_config
+        ]
 
-    tests: list[Test] = [
-        OracleBasedTest(**test_config.model_dump()) for test_config in tests_config
-    ]
+    if include_indirect:
+        tests.extend(load_indirect_tests(payloads_path=indirect_payloads_path))
 
     return tests

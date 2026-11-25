@@ -1,9 +1,10 @@
 import ast
-import json
 import os
-from typing import Literal
+from typing import Any, Literal
 
 import openai
+
+from agentic_radar.test.json_repair import extract_and_repair_json
 
 from ..models import Agent, AgentVulnerability, Guardrail
 
@@ -185,8 +186,7 @@ def get_agent_vulnerabilities(
         )
 
         content = response.choices[0].message.content or "{}"
-
-        guardrails_response = json.loads(content)
+        guardrails_response: dict[str, Any] = extract_and_repair_json(content)
 
         response = client.chat.completions.create(
             messages=[
@@ -206,47 +206,40 @@ def get_agent_vulnerabilities(
         )
 
         content = response.choices[0].message.content or "{}"
+        instructions_response: dict[str, Any] = extract_and_repair_json(content)
 
-        instructions_response = json.loads(content)
+        for vulnerability, guardrail_entry in guardrails_response.items():
+            if not isinstance(guardrail_entry, dict):
+                continue
 
-        for vulnerability in guardrails_response:
+            guardrail_mitigated = bool(guardrail_entry.get("mitigated", False))
+            guardrail_explanation = str(guardrail_entry.get("explanation", ""))
+
             mitigation_level: MitigationLevel = "None"
-            if vulnerability in instructions_response:
-                if (
-                    guardrails_response[vulnerability]["mitigated"]
-                    and instructions_response[vulnerability]["mitigated"]
-                ):
+            instr_entry = instructions_response.get(vulnerability)
+            if isinstance(instr_entry, dict):
+                instr_mitigated = bool(instr_entry.get("mitigated", False))
+                instr_explanation = str(instr_entry.get("explanation", ""))
+                if guardrail_mitigated and instr_mitigated:
                     mitigation_level = "Full"
-                elif (
-                    guardrails_response[vulnerability]["mitigated"]
-                    or instructions_response[vulnerability]["mitigated"]
-                ):
+                elif guardrail_mitigated or instr_mitigated:
                     mitigation_level = "Partial"
 
                 agent_vulnerability = AgentVulnerability(
                     name=vulnerability,
                     mitigation_level=mitigation_level,
-                    guardrail_explanation=guardrails_response[vulnerability][
-                        "explanation"
-                    ],
-                    instruction_explanation=instructions_response[vulnerability][
-                        "explanation"
-                    ],
+                    guardrail_explanation=guardrail_explanation,
+                    instruction_explanation=instr_explanation,
                 )
-
-                agent.vulnerabilities.append(agent_vulnerability)
-
             else:
-                if guardrails_response[vulnerability]["mitigated"]:
+                if guardrail_mitigated:
                     mitigation_level = "Full"
 
                 agent_vulnerability = AgentVulnerability(
                     name=vulnerability,
                     mitigation_level=mitigation_level,
-                    guardrail_explanation=guardrails_response[vulnerability][
-                        "explanation"
-                    ],
+                    guardrail_explanation=guardrail_explanation,
                     instruction_explanation="",
                 )
 
-                agent.vulnerabilities.append(agent_vulnerability)
+            agent.vulnerabilities.append(agent_vulnerability)

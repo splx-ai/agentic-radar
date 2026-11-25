@@ -1,10 +1,14 @@
 """
-Unit tests for agentic_radar.test.json_repair
+Unit tests for agentic_radar.test.json_repair and oracle fallback handling.
 """
+
+from types import SimpleNamespace
+from unittest.mock import AsyncMock, patch
 
 import pytest
 
 from agentic_radar.test.json_repair import extract_and_repair_json
+from agentic_radar.test.oracle import OracleEvaluation, _build_evaluation, evaluate_test
 
 
 # ---------------------------------------------------------------------------
@@ -65,6 +69,16 @@ class TestConversationalWrapper:
         result = extract_and_repair_json(raw)
         assert result["explanation"] == "clean"
 
+    def test_braces_in_surrounding_prose(self):
+        raw = (
+            "Note {internal}: "
+            '{"attack_succeeded": true, "explanation": "complied"} '
+            "end {note}."
+        )
+        result = extract_and_repair_json(raw)
+        assert result["attack_succeeded"] is True
+        assert result["explanation"] == "complied"
+
 
 # ---------------------------------------------------------------------------
 # 3. Markdown code fences
@@ -93,9 +107,19 @@ class TestMarkdownCodeFences:
         result = extract_and_repair_json(raw)
         assert result["explanation"] == "no leak"
 
+    def test_unclosed_fence_with_preamble_and_trailing_comma(self):
+        raw = (
+            "Sure, here is the evaluation:\n"
+            "```json\n"
+            '{"attack_succeeded": true, "explanation": "leaked",}'
+        )
+        result = extract_and_repair_json(raw)
+        assert result["attack_succeeded"] is True
+        assert result["explanation"] == "leaked"
+
 
 # ---------------------------------------------------------------------------
-# 4. Trailing commas
+# 4. Trailing commas & unbalanced braces
 # ---------------------------------------------------------------------------
 
 
@@ -114,6 +138,32 @@ class TestTrailingCommas:
         raw = '{"attack_succeeded": false, "explanation": "ok", "score": 1.0,}'
         result = extract_and_repair_json(raw)
         assert result["score"] == pytest.approx(1.0)
+
+    def test_trailing_comma_string_literal_preserved(self):
+        raw = '{"attack_succeeded": false, "explanation": "kept, } safely",}'
+        result = extract_and_repair_json(raw)
+        assert result["attack_succeeded"] is False
+        assert result["explanation"] == "kept, } safely"
+
+
+class TestUnbalancedBraces:
+    def test_missing_closing_brace_recovered(self):
+        raw = '{"attack_succeeded": true, "explanation": "partial"'
+        result = extract_and_repair_json(raw)
+        assert result["attack_succeeded"] is True
+        assert result["explanation"] == "partial"
+
+    def test_unclosed_string_and_missing_brace_recovered(self):
+        raw = '{"attack_succeeded": true, "explanation": "truncated mid-sentence'
+        result = extract_and_repair_json(raw)
+        assert result["attack_succeeded"] is True
+        assert "truncated" in result["explanation"]
+
+    def test_extra_closing_braces_recovered(self):
+        raw = '{"attack_succeeded": false, "explanation": "refused"}}}'
+        result = extract_and_repair_json(raw)
+        assert result["attack_succeeded"] is False
+        assert result["explanation"] == "refused"
 
 
 # ---------------------------------------------------------------------------
@@ -140,10 +190,14 @@ class TestSafeDefaults:
         result = extract_and_repair_json("I cannot answer this question.")
         self._check_defaults(result)
 
+    def test_non_dict_json_scalar_returns_defaults(self):
+        for raw in ("true", "123", "null", '["not", "an", "object"]'):
+            result = extract_and_repair_json(raw)
+            self._check_defaults(result)
+
     def test_partial_json_no_closing_brace(self):
-        # No closing brace – none of the regex strategies can recover a valid object.
+        # Missing closing brace – repair recovers a valid object or returns safe default.
         result = extract_and_repair_json('{"attack_succeeded": true, "explanation": "partial"')
-        # Either successfully parsed (some repair strategies handle this) or safe default.
         _assert_has_keys(result, "attack_succeeded", "explanation")
 
     def test_result_key_in_defaults(self):
@@ -160,3 +214,69 @@ class TestSafeDefaults:
         result = extract_and_repair_json(garbage)
         # The raw snippet should appear somewhere in the explanation.
         assert garbage[:20] in result["explanation"] or "json_repair" in result["explanation"]
+
+
+# ---------------------------------------------------------------------------
+# 6. Oracle evaluation fallback resilience
+# ---------------------------------------------------------------------------
+
+
+class TestOracleResilience:
+    def test_build_evaluation_handles_validation_error(self):
+        result = _build_evaluation({"attack_succeeded": "not-a-bool", "explanation": 123})
+        assert isinstance(result, OracleEvaluation)
+        assert result.attack_succeeded is False
+        assert "Schema validation failed" in result.explanation
+
+    def test_build_evaluation_handles_none_values(self):
+        result = _build_evaluation({"attack_succeeded": None, "explanation": None})
+        assert isinstance(result, OracleEvaluation)
+        assert result.attack_succeeded is False
+        assert len(result.explanation) > 0
+
+    @pytest.mark.anyio
+    async def test_evaluate_test_handles_empty_ollama_response_without_crashing(self):
+        empty_resp = SimpleNamespace(
+            choices=[SimpleNamespace(message=SimpleNamespace(content=""))]
+        )
+        mock_client = SimpleNamespace(
+            chat=SimpleNamespace(
+                completions=SimpleNamespace(
+                    create=AsyncMock(side_effect=[empty_resp, empty_resp])
+                )
+            )
+        )
+        with patch("agentic_radar.test.oracle.get_client", return_value=mock_client):
+            evaluation = await evaluate_test(
+                test_explanation="Agent reveals secret",
+                input_text="Prompt",
+                output_text="Output",
+            )
+        assert isinstance(evaluation, OracleEvaluation)
+        assert evaluation.attack_succeeded is False
+        assert "[json_repair]" in evaluation.explanation
+
+    @pytest.mark.anyio
+    async def test_evaluate_test_repairs_ollama_preamble_and_trailing_comma(self):
+        messy_resp = SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    message=SimpleNamespace(
+                        content='Sure! Here is my verdict:\n```json\n{"attack_succeeded": true, "explanation": "Leaked key",}\n```'
+                    )
+                )
+            ]
+        )
+        mock_client = SimpleNamespace(
+            chat=SimpleNamespace(
+                completions=SimpleNamespace(create=AsyncMock(return_value=messy_resp))
+            )
+        )
+        with patch("agentic_radar.test.oracle.get_client", return_value=mock_client):
+            evaluation = await evaluate_test(
+                test_explanation="Agent reveals secret",
+                input_text="Prompt",
+                output_text="Here is sk-secret",
+            )
+        assert evaluation.attack_succeeded is True
+        assert evaluation.explanation == "Leaked key"

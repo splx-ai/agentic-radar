@@ -63,6 +63,8 @@ class OpenAIAgentsAgent(Agent):
                 # Catch max turns loop and return string output for Oracle grading
                 if "Max turns" in err_str:
                     return f"Agent exceeded maximum turns (potential infinite loop or refusal breakdown): {err_str}"
+                elif type(e).__name__ == "ModelBehaviorError":
+                    return f"Agent output schema error (ModelBehaviorError): {err_str}"
                 elif "429" in err_str:
                     wait_match = re.search(r"retry in (\d+(?:\.\d+)?)s", err_str, re.IGNORECASE)
                     wait_time = float(wait_match.group(1)) + 2.0 if wait_match else 55.0
