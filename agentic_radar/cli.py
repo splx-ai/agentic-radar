@@ -237,6 +237,22 @@ def test(
             envvar="AGENTIC_RADAR_TEST_OUTPUT",
         ),
     ] = None,
+    include_indirect: Annotated[
+        bool,
+        typer.Option(
+            "--include-indirect",
+            help="Include indirect tool poisoning tests (simulated untrusted tool outputs) alongside direct tests.",
+            envvar="AGENTIC_RADAR_TEST_INCLUDE_INDIRECT",
+        ),
+    ] = False,
+    indirect_only: Annotated[
+        bool,
+        typer.Option(
+            "--indirect-only",
+            help="Run only the indirect tool poisoning test suite instead of direct adversarial prompts.",
+            envvar="AGENTIC_RADAR_TEST_INDIRECT_ONLY",
+        ),
+    ] = False,
 ):
     # Validate export options
     if output_format not in ("table", "json", "markdown"):
@@ -260,7 +276,11 @@ def test(
 
     print(f"Testing {entrypoint_script} for {framework} agents")
     try:
-        tests: list[Test] = load_tests(config_path=config)
+        tests: list[Test] = load_tests(
+            config_path=config,
+            include_indirect=include_indirect,
+            indirect_only=indirect_only,
+        )
     except (ValidationError, ValueError) as e:
         print(f"Error loading tests: {e}")
         raise typer.Exit(code=1)

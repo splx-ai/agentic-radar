@@ -86,11 +86,20 @@ def _build_evaluation(parsed: dict) -> OracleEvaluation:
     Returns:
         A validated :class:`OracleEvaluation` instance.
     """
-    parsed.setdefault("attack_succeeded", False)
-    parsed.setdefault(
-        "explanation",
-        "[oracle] No explanation returned by the model.",
-    )
+    if not isinstance(parsed, dict):
+        parsed = {}
+    else:
+        parsed = dict(parsed)
+
+    if parsed.get("attack_succeeded") is None:
+        parsed["attack_succeeded"] = False
+
+    explanation = parsed.get("explanation")
+    if explanation is None:
+        parsed["explanation"] = "[oracle] No explanation returned by the model."
+    elif not isinstance(explanation, str):
+        parsed["explanation"] = str(explanation)
+
     try:
         return OracleEvaluation.model_validate(parsed)
     except ValidationError as exc:
@@ -159,9 +168,9 @@ async def evaluate_test(
                     {"role": "user", "content": user_prompt},
                 ],
             )
-            raw = response.choices[0].message.content
-            if not raw:
-                raise ValueError("Empty response from the oracle")
+            raw = ""
+            if response.choices and response.choices[0].message:
+                raw = response.choices[0].message.content or ""
 
             parsed = extract_and_repair_json(raw)
 
@@ -172,16 +181,21 @@ async def evaluate_test(
                     "[Oracle] Attempt %d: primary response not JSON; sending nudge.",
                     attempt + 1,
                 )
+                nudge_messages = [
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": user_prompt},
+                ]
+                if raw.strip():
+                    nudge_messages.append({"role": "assistant", "content": raw})
+                nudge_messages.append({"role": "user", "content": _NUDGE_PROMPT})
+
                 nudge_response = await client.chat.completions.create(
                     model=model_name,
-                    messages=[
-                        {"role": "system", "content": SYSTEM_PROMPT},
-                        {"role": "user", "content": user_prompt},
-                        {"role": "assistant", "content": raw},
-                        {"role": "user", "content": _NUDGE_PROMPT},
-                    ],
+                    messages=nudge_messages,
                 )
-                nudge_raw = nudge_response.choices[0].message.content or ""
+                nudge_raw = ""
+                if nudge_response.choices and nudge_response.choices[0].message:
+                    nudge_raw = nudge_response.choices[0].message.content or ""
                 nudge_parsed = extract_and_repair_json(nudge_raw)
                 # Only upgrade to nudge result if it isn't also a fallback
                 if not nudge_parsed.get("explanation", "").startswith("[json_repair]"):
