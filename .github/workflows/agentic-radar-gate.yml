@@ -1,0 +1,46 @@
+name: Agentic Radar Security Gate
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  security-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: Run Agentic Radar tests (JSON & Markdown)
+        env:
+          OPENAI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENAI_BASE_URL: https://generativelanguage.googleapis.com/v1beta/openai/
+          OPENAI_MODEL: gemini-3.5-flash-lite
+        run: |
+          echo "2" | agentic-radar test openai-agents examples/openai-agents/basic/lifecycle_example/lifecycle_example.py --format json -o results.json
+          echo "2" | agentic-radar test openai-agents examples/openai-agents/basic/lifecycle_example/lifecycle_example.py --format markdown -o results.md
+
+      - name: Post Markdown report to Pull Request
+        if: always() && hashFiles('results.md') != ''
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          header: agentic-radar-report
+          path: results.md
+
+      - name: Enforce security gate
+        run: python scripts/check_radar_gate.py results.json
